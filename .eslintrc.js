@@ -7,8 +7,8 @@ module.exports = {
     sourceType: 'module',
     ecmaVersion: 6,
     ecmaFeatures: {
-      experimentalObjectRestSpread: true
-    }
+      experimentalObjectRestSpread: true,
+    },
   },
   env: {
     browser: true,
@@ -16,7 +16,7 @@ module.exports = {
   extends: 'standard',
   // required to lint *.vue files
   plugins: [
-    'html'
+    'html',
   ],
   // add your custom rules here
   rules: {
@@ -26,6 +26,14 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'eol-last': 0,
-    'space-before-function-paren': 0
-  }
+    'space-before-function-paren': 0,
+    'comma-dangle': [
+      'error', {
+        'arrays': 'ignore',
+        'objects': 'ignore',
+        'imports': 'never',
+        'exports': 'never',
+        'functions': 'ignore',
+      }],
+  },
 }

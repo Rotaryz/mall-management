@@ -32,9 +32,4 @@
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
 
-  .other-pages
-    fill-box()
-    bottom: $tab-height
-    z-index :50
-    background: azure
 </style>

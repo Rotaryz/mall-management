@@ -18,100 +18,118 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const HEIGHT = 69
+  const HEIGHT = 58
   const NAVLIST = [
     {
       title: '用户管理',
-      url: '/data-overview',
+      url: '/user-manager',
       icon: require('./icon-data@2x.png'),
       childrenIndex: 0,
-      isSelected: false,
+      isSelected: true,
       showHeight: HEIGHT,
-      children: []
+      children: [],
     },
     {
       title: '商家管理',
-      url: '/member-list',
+      url: '',
       icon: require('./icon-shop_select@2x.png'),
       childrenIndex: 0,
       isSelected: false,
       showHeight: HEIGHT,
-      children: []
+      children: [],
     },
     {
       title: '商品管理',
-      url: '/agent-order',
+      url: '',
       icon: require('./icon-client_select@2x.png'),
       childrenIndex: 0,
       isSelected: false,
       children: [
         {
           title: '折扣商品',
-          url: '/agent-order'
+          url: '/goods-manager?pageType=money',
         },
         {
           title: '播豆商品',
-          url: '/retail-order'
-        }
+          url: '/goods-manager?pageType=integrals',
+        },
       ],
-      showHeight: HEIGHT
+      showHeight: HEIGHT,
     },
     {
       title: '订单管理',
       icon: require('./icon-goods_select@2x.png'),
-      url: '/commodity',
+      url: '',
       childrenIndex: 0,
       isSelected: false,
       children: [
         {
           title: '用户订单',
-          url: '/commodity'
+          url: '/order-manager?pageType=user',
         },
         {
           title: '商家订单',
-          url: ''
-        }
+          url: '/order-manager?pageType=merchant',
+        },
       ],
-      showHeight: HEIGHT
+      showHeight: HEIGHT,
     },
     {
       title: '大礼包',
       icon: require('./icon-activity_select@2x.png'),
-      url: '/activity',
+      url: '',
       childrenIndex: 0,
       isSelected: false,
       children: [
         {
           title: '用户礼包',
-          url: '/commodity'
+          url: '',
         },
         {
           title: '商家礼包',
-          url: ''
-        }
+          url: '',
+        },
       ],
-      showHeight: HEIGHT
-    }
+      showHeight: HEIGHT,
+    },
   ]
   export default {
     name: '',
     data() {
       return {
         navList: NAVLIST,
-        preTabIndex: 0
+        preTabIndex: 0,
       }
     },
     methods: {
       checkTab(index) {
-        if (this.preTabIndex === index) return
+        let flag = this.$route.fullPath === this.navList[index].url
+        if (this.preTabIndex === index && flag) {
+          return
+        }
         this.navList[this.preTabIndex].isSelected = false
         this.preTabIndex = index
         this.navList[index].isSelected = true
+        // 路由跳转
+        let url = ''
+        let currentNav = this.navList[index]
+        if (this.navList[index].children.length) {
+          let childrenIndex = currentNav.childrenIndex
+          url = currentNav.children[childrenIndex].url
+          this.$router.push(url)
+        } else {
+          url = currentNav.url
+          this.$router.push(url)
+        }
       },
       selectPage(idx) {
+        let flag = this.$route.fullPath === this.navList[this.preTabIndex].url
+        if (this.navList[this.preTabIndex].childrenIndex === idx && flag) return
         this.navList[this.preTabIndex].childrenIndex = idx
-      }
-    }
+        // 路由跳转
+        this.$router.push(this.navList[this.preTabIndex].children[idx].url)
+      },
+    },
   }
 </script>
 
@@ -121,13 +139,16 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
 
-  .t-a
-    text-align: center
-
   .navigation
-    background: #202230
+    position: fixed
+    top: 0
+    left: 0
+    background: #222742;
+    box-shadow: 3px 0 4px 0 rgba(0,8,39,0.30);
     width: 200px
     min-height: 100vh
+    z-index: 1000
+    overflow-y: auto
     header
       layout(row)
       height: 80px
@@ -152,6 +173,7 @@
         width: 100%
         height: $tab-height
         overflow: hidden
+        box-sizing: border-box
         &:last-child
           border-bottom: 1px solid $color-menu-line
         &.child-wrapper
@@ -172,7 +194,8 @@
           flex: 1
           overflow: hidden
           background: rgba(255, 255, 255, 0)
-          transition : background 0.2s
+          transition: background 0.2s
+          box-sizing: border-box
           &.active
             border-left: 5px solid #4985fc
             background: rgba(255, 255, 255, 0.1)
