@@ -2,8 +2,9 @@
   <div class="admin-select">
     <div class="select-item" v-for="(item,index) in city" :key="index"
          @click.stop="selectType(item.type, index)">
+      <span class="title">{{titleArr[index]}}</span>
       <div class="admin-big-box" :class="{'input-height':item.select}" v-for="(items,idx) in item.children" :key="idx">
-        <div class="admin-select-box input-height-item" :class="{'admin-select-box-active': item.show}">{{items.content}}
+        <div class="admin-select-box input-height-item animate-hover" :class="{'admin-select-box-active': item.show}">{{items.content}}
           <img src="./icon-dropdown@2x.png" class="city-tap-top" :class="{'city-tap-top-active': item.select}">
           <transition name="fade">
             <ul class="select-child" v-show="item.select" @mouseleave="leaveHide(index)" @mouseenter="endShow">
@@ -39,20 +40,25 @@
     data() {
       return {
         setTime: '',
-        content: [],
+        content: {
+          province: '',
+          city: '',
+          area: ''
+        },
         city: [{
           select: false,
           show: false,
-          children: [{content: '选择省', data: []}]
+          children: [{content: '请选择', data: []}]
         }, {
           select: false,
           show: false,
-          children: [{content: '选择市', data: []}]
+          children: [{content: '请选择', data: []}]
         }, {
           select: false,
           show: false,
-          children: [{content: '选择区', data: []}]
-        }]
+          children: [{content: '请选择', data: []}]
+        }],
+        titleArr: ['省', '市', '区/县']
       }
     },
     created() {
@@ -65,7 +71,7 @@
     },
     methods: {
       clickHide(index) {
-        this.select[index].select = false
+        this.city[index].select = false
       },
       endShow() {
         clearTimeout(this.setTime)
@@ -79,35 +85,29 @@
         if (!this.isUse) {
           return
         }
-        this.select[index].select = !this.select[index].select
-        this.select.forEach((item, idx) => {
+        this.city[index].select = !this.city[index].select
+        this.city.forEach((item, idx) => {
           if (idx !== index) {
             item.select = false
           }
         })
-        this.select[index].show = true
-        this.$emit('selectType', type, this.select)
+        this.city[index].show = true
+        this.$emit('selectType', type, this.city)
       },
       setValue(value, index, idx) {
-        this.select[index].select = false
-        this.select[index].children[idx].content = value.title
+        this.city[index].select = false
+        this.city[index].children[idx].content = value.title
         switch (value.type) {
           case 'pro':
             let index = regionArr.findIndex(child => child.name === value.title)
             this.cityIndex = index
-            this.city[1].children[0].content = '请选择'
-            this.city[2].children[0].content = '请选择'
             this._infoCity(index)
             this.content.province = value.title
-            this.content.city = '选择市'
-            this.content.area = '选择区'
             break
           case 'city' :
             let idx = regionArr[this.cityIndex].sub.findIndex(child => child.name === value.title)
             this._infoArea(idx)
-            this.city[2].children[0].content = '请选择'
             this.content.city = value.title
-            this.content.area = '请选择'
             break
           case 'area' :
             this.content.area = value.title
@@ -154,21 +154,20 @@
     position: relative
     &:first-child
       margin-left: 0px
-
-  .select-title
-    font-size: $font-size-14
-    line-height: 17px
-    no-wrap()
-
+    .title
+      color: $color-text-main
+      font-size: $font-size-14
+      margin-left: 20px
   .admin-big-box
     cursor: pointer
     margin-left: 10px
-    /*border: 2px solid $color-white*/
     box-sizing: border-box
     border-radius: 4px
     font-size: $font-size-14
     color: $color-text-little
     position: relative
+    width: 102px
+    height: 28px
     .admin-select-box
       min-width: 48px
       border-radius: 4px
@@ -204,7 +203,22 @@
         margin-top: 4px
         max-height: 228px
         overflow-y: auto
-        &.fade-enter, &.fade-leave-to
+        &::-webkit-scrollbar
+          width: 10px
+          height: 10px
+          background-color: #F5F5F5
+        &::-webkit-scrollbar-track
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1)
+          border-radius: 10px
+          background-color: #F5F5F5
+
+        /*定义滑块 内阴影+圆角*/
+        &::-webkit-scrollbar-thumb
+          border-radius: 10px
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1)
+          background-color: #ccc
+
+    &.fade-enter, &.fade-leave-to
           opacity: 0
         &.fade-enter-to, &.fade-leave-to
           transition: opacity .3s ease-in-out

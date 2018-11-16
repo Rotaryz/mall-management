@@ -53,10 +53,11 @@
       transition: all 0.4s ease-out
       .input-box
         position: relative
-        z-index: 10
+        z-index: 2
         border: 0.5px solid $color-text-D9
+        border-right: 0
         width: 224px
-        border-radius: 4px
+        border-radius: 4px 0 0 4px
         height: 27px
         font-size: $font-size-12
         font-family: $font-family-regular
@@ -70,24 +71,21 @@
         border-bottom: 0.5px solid transparent
         position: absolute
         z-index: 5
-        height: 29px
+        height: 27px
         width: 0
         right: 0
-        top: -1px
-        box-sizing: content-box
-        border-radius 4px
+        top: 0
+        border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       .before
-        border-right: 0.5px solid transparent
         border-left: 0.5px solid transparent
         position: absolute
         z-index: 5
         height: 0
         width: 225.5px
         bottom: 0
-        left: -1px
-        box-sizing: content-box
-        border-radius 4px
+        left: 0
+        border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       &:hover
         .input-box
@@ -115,20 +113,18 @@
       color: $color-ccc
     }
     .btn-box
-      background: $color-4985FC
-      width: 52px
+      background: $color-main
+      width: 48px
       height: 28px
       text-align: center
       line-height: 28px
-      border-radius: 4px
+      border-radius: 0 4px 4px 0
       box-sizing: border-box
       font-family: $font-family-regular
       color: $color-white
-      margin-left: 20px
       font-size: $font-size-12
       transition: font-size 0.4s ease-out
       &:hover
-        transition: font-size 0.4s ease-out
         font-size: 13px
 
 

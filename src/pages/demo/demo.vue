@@ -4,8 +4,9 @@
     <!--日期选择-->
     <el-date-picker
       v-model="time"
+      size="small"
       type="daterange"
-      range-separator="至"
+      range-separator="~"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
       :picker-options="pickerOptions"
@@ -13,10 +14,10 @@
     </el-date-picker>
 
     <!--导出按钮-->
-    <a :href="excelUrl" class="excel" @click="showConfirm" target="_blank">导出Excel</a>
+    <a :href="excelUrl" class="excel animate-hover" @click="showConfirm" target="_blank">导出Excel</a>
 
     <!--搜索-->
-    <search @search="search" placeholerTxt="请输入手机号" ref="search"></search>
+    <search @search="search" placeholerTxt="请输入" ref="search"></search>
 
     <!--翻页器-->
     <page-detail ref="pageDetail" :pageDtail="pageDetail" @addPage="addPage"></page-detail>
