@@ -82,7 +82,7 @@
         position: absolute
         z-index: 5
         height: 0
-        width: 225.5px
+        width: 224.5px
         bottom: 0
         left: 0
         border-radius 4px 0 0 4px
@@ -90,11 +90,12 @@
       &:hover
         .input-box
           border: 0.5px solid transparent
+          border-right: 0
           transition: all 0.4s ease-out
         .after
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          width: 225.5px
+          width: 224.5px
         .before
           border-color: $color-text-999
           transition: all 0.4s ease-out
