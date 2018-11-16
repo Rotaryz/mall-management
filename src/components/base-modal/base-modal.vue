@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <section class="base-modal" v-show="isShow">
+    <section class="base-modal" v-show="isShow" :style="styles">
       <slot></slot>
     </section>
   </transition>
@@ -8,19 +8,14 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
-      return {
-        isShow: false
-      }
-    },
-    methods: {
-      show() {
-        if (this.isShow) return
-        this.isShow = true
+    props: {
+      styles: {
+        type: String,
+        default: ''
       },
-      hide() {
-        if (!this.isShow) return
-        this.isShow = false
+      isShow: {
+        type: Boolean,
+        default: false
       }
     }
   }
@@ -38,4 +33,7 @@
     right: 0
     left: $menu-width
     z-index: 888
+    layout()
+    justify-content :center
+    align-items :center
 </style>

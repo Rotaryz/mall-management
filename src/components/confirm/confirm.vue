@@ -1,35 +1,30 @@
 <template>
-  <transition name="fade">
-    <div class="confirm-box" v-show="show">
-      <div class="confirm-content" :class="showActive ? 'model-active' : 'model-noactive'">
-        <!--<div class="title">{{title}}</div>-->
-        <div class="text">{{text}}</div>
-        <div class="btns">
-          <span @click="confirm" class="btn confirm">确定</span>
-          <span @click="cancel" class="btn cancel">取消</span>
-        </div>
+  <base-modal :isShow="show">
+    <div class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
+      <!--<div class="title">{{title}}</div>-->
+      <div class="text">{{text}}</div>
+      <div class="btn-group">
+        <span @click="confirm" class="btn confirm">确定</span>
+        <span @click="cancel" class="btn cancel">取消</span>
       </div>
     </div>
-  </transition>
+  </base-modal>
 </template>
 
 <script type="text/ecmascript-6">
+  import BaseModal from 'components/base-modal/base-modal'
+
   export default {
-    props: {
-      // title: {
-      //   type: String
-      // },
-      // text: {
-      //   type: String
-      // }
+    components: {
+      BaseModal,
     },
     data() {
       return {
-        show: false,
         title: '',
         text: '',
+        show: false,
         timeout: true,
-        showActive: false
+        showActive: false,
       }
     },
     methods: {
@@ -59,8 +54,8 @@
         }, 100)
         this.showActive = false
         this.$emit('cancel')
-      }
-    }
+      },
+    },
   }
 </script>
 
@@ -68,80 +63,69 @@
   @import '~common/stylus/variable'
   @import '~common/stylus/mixin'
 
-  .confirm-box
-    z-index: 888
-    position: fixed
-    top: 0
-    left: 200px
-    bottom: 0
-    right: 0
-    display: flex
-    align-items: center
-    justify-content: center
-    background: rgba(0,0,0,0.4)
-    .confirm-content
-      width: 356px
-      height: 200px
-      background: $color-white
-      border-radius: 3px
-      box-shadow: 0 0 5px 0 rgba(12, 6, 14, 0.6)
+  .confirm-content
+    width: 356px
+    height: 200px
+    background: $color-white
+    border-radius: 3px
+    box-shadow: 0 0 5px 0 rgba(12, 6, 14, 0.6)
+    text-align: center
+    .btn-group
       text-align: center
-      .btns
-        text-align: center
-        display: flex
-        justify-content: center
-        .btn
-          width: 96px
-          height: 40px
-          line-height: 40px
-          border-radius: 3px
-          border: 1px solid $color-text-D9
-        .confirm
-          border-right: 1px solid $color-line
-        .cancel
-          background: $color-main
-          color: $color-white
-          margin-left: 20px
-      .title
-        font-size: $font-size-16
-        font-family: $font-family-medium
-        height: 44px
-        line-height: 44px
-        padding: 0 15px
-      .text
-        font-size: $font-size-16
-        color: $color-text-main
-        height: 126px
-        display: flex
-        align-items: center
-        justify-content: center
-        padding: 0 15px
-        padding-top: 10px
+      display: flex
+      justify-content: center
+      .btn
+        width: 96px
+        height: 40px
+        line-height: 40px
+        border-radius: 3px
+        border: 1px solid $color-text-D9
+      .confirm
+        border-right: 1px solid $color-line
+      .cancel
+        background: $color-main
+        color: $color-white
+        margin-left: 20px
+    .title
+      font-size: $font-size-16
+      font-family: $font-family-medium
+      height: 44px
+      line-height: 44px
+      padding: 0 15px
+    .text
+      font-size: $font-size-16
+      color: $color-text-main
+      height: 126px
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 0 15px
+      padding-top: 10px
 
   .model-active
     animation: layerFadeIn .3s
 
-  .model-noactive
+  .model-un-active
     animation: hideFadeIn .4s
 
   @keyframes layerFadeIn {
     0% {
-      opacity: 0;
+      opacity: 0
       transform: scale(.5)
     }
     100% {
-      opacity: 1;
+      opacity: 1
       transform: scale(1)
     }
   }
 
   @keyframes hideFadeIn {
     0% {
-      opacity: 1;
+      opacity: 1
       transform: scale(1)
     }
     100% {
-      transform: scale(.5);
+      transform: scale(.5)
       opacity: 0
     }
   }

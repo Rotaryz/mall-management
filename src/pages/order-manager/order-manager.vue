@@ -1,6 +1,8 @@
 <template>
     <div class="goods-manager">
       <h1 @click="test">1231sdsadsadadad</h1>
+      <hr>
+      <router-link tag="h1" to="/demo">1231231demo</router-link>
       <modal ref="modal"></modal>
     </div>
 </template>

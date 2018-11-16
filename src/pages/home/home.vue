@@ -2,7 +2,7 @@
   <div class="home" @touchmove.prevent>
     <navigation></navigation>
     <panel>
-      <router-view style="background: red"></router-view>
+      <router-view></router-view>
     </panel>
   </div>
 </template>
