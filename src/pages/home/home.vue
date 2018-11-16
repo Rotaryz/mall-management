@@ -1,11 +1,9 @@
 <template>
   <div class="home" @touchmove.prevent>
     <navigation></navigation>
-    <div class="content">
-      <panel>
-        <router-view></router-view>
-      </panel>
-    </div>
+    <panel>
+      <router-view style="background: red"></router-view>
+    </panel>
   </div>
 </template>
 
@@ -27,9 +25,4 @@
   @import '~common/stylus/mixin'
   .home
     layout(row, block, nowrap)
-    .content
-      overflow: auto
-      padding-left: 200px
-      box-sizing: border-box
-      flex: 1
 </style>
