@@ -48,6 +48,122 @@ body, html
     height: 100%
     transform-origin: left 0
 
+//  鼠标移入时变手
+.hand
+  cursor: pointer
+
+//  导出excel的类名
+.excel
+  cursor: pointer
+  background: #4985FC
+  color: $color-text-excel
+  width: 84px
+  line-height: 28px
+  text-align: center
+  display: block
+  font-size: $font-size-12
+  border-radius: 4px
+  transition: all 0.4s ease-out
+  &:hover
+    transition: all 0.4s ease-out
+    font-size: 13px
+
+.animate-hover
+  position: relative
+  z-index: 10
+  border: 0.5px solid $color-text-D9
+  width: 224px
+  border-radius: 4px
+  height: 27px
+  font-size: $font-size-12
+  font-family: $font-family-regular
+  color: $color-text-333
+  outline: none
+  text-indent: 8px
+  line-height: 28px
+  transition: all 0.4s ease-out
+.after
+  border-top: 0.5px solid transparent
+  border-bottom: 0.5px solid transparent
+  position: absolute
+  z-index: 5
+  height: 29px
+  width: 0
+  right: 0
+  top: -1px
+  box-sizing: content-box
+  border-radius 4px
+  transition: all 0.4s ease-out
+.before
+  border-right: 0.5px solid transparent
+  border-left: 0.5px solid transparent
+  position: absolute
+  z-index: 5
+  height: 0
+  width: 225.5px
+  bottom: 0
+  left: -1px
+  box-sizing: content-box
+  border-radius 4px
+  transition: all 0.4s ease-out
+&:hover
+  .input-box
+    border: 0.5px solid transparent
+    transition: all 0.4s ease-out
+  .after
+    border-color: $color-text-999
+    transition: all 0.4s ease-out
+    width: 225.5px
+  .before
+    border-color: $color-text-999
+    transition: all 0.4s ease-out
+    height: 29px
+
+
+.animate
+  border: 0.5px solid $color-text-D9
+  position: relative
+  transition: all 0.3s ease-out
+  &:after
+    content: ''
+    border-top: 0.5px solid transparent
+    border-bottom: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 100%
+    width: 0
+    right: 0
+    top: -0.5px
+    box-sizing: content-box
+    transition: all 0.3s ease-out
+    border-radius: 3px
+  &:before
+    content: ''
+    border-right: 0.5px solid transparent
+    border-left: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 0
+    width: 100%
+    bottom: 0
+    left: 0
+    box-sizing: content-box
+    transition: all 0.3s ease-out
+    border-radius: 3px
+.animate-active
+  border: 0.5px solid transparent
+  transition: all 0.3s ease-out
+  color: $color-4985FC
+  &:after
+    border-color: $color-4985FC
+    transition: all 0.3s ease-out
+    width: 100%
+  &:before
+    border-color: $color-4985FC
+    transition: all 0.3s ease-out
+    height: 100%
+
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
   .border-top-1px
     &:before

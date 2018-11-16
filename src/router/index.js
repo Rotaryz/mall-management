@@ -5,6 +5,7 @@ import storage from 'storage-controller'
 const HelloWorld = () => import('pages/hello-world/hello-world')
 const OtherPages = () => import('pages/other-pages/other-pages')
 const Home = () => import('pages/home/home')
+const Demo = () => import('pages/demo/demo')
 
 Vue.use(Router)
 
@@ -35,6 +36,13 @@ const route = new Router({
           component: OtherPages,
           meta: {
             title: 'tab-two'
+          }
+        },
+        {
+          path: 'demo',
+          component: Demo,
+          meta: {
+            title: 'demo'
           }
         }
       ]

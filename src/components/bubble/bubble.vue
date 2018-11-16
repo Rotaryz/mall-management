@@ -48,8 +48,8 @@
     methods: {
       _draw() {
         const bubble = this.$refs.bubble
-        let ctx = bubble.getContext('2d')
-        ctx.clearRect(0, 0, bubble.width, bubble.height)
+        let ctx = confirm.getContext('2d')
+        ctx.clearRect(0, 0, confirm.width, confirm.height)
         this._drawBubble(ctx)
         this._drawArrow(ctx)
       },
