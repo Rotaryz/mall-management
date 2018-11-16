@@ -1,17 +1,19 @@
 <template>
-    <div class="goods-manager">
-      <h1>商品管理</h1>
-      <router-link to="/goods-detail">去商品详情</router-link>
-    </div>
+  <panel></panel>
 </template>
 
 <script type="text/ecmascript-6">
+  import Panel from 'components/panel/panel'
+
   export default {
+    components: {
+      Panel,
+    },
     watch: {
       $route(to, from) {
         console.log(to.query.pageType)
-      }
-    }
+      },
+    },
   }
 </script>
 

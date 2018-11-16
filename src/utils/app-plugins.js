@@ -5,7 +5,6 @@ import { ERR_OK } from 'common/js/config'
 import * as handle from './cos/handle'
 import { fileType } from './cos/file-config'
 import * as cos from './cos/cos'
-import RouterViewCommon from 'components/router-view-common'
 import Toast from 'components/toast'
 import Loading from 'components/loading'
 import createQrCode from './create-qr-code'
@@ -27,6 +26,5 @@ const AppPlugin = {
 Vue.use(AppPlugin)
 Vue.use(Toast)
 Vue.use(Loading)
-Vue.use(RouterViewCommon)
 Vue.use(DatePicker)
 Window.$storage = storage

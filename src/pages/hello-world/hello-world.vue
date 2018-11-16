@@ -1,7 +1,8 @@
 <template>
   <div class="demo">
+    <h1 @click="toastTest">toast</h1>
+    <hr>
     <h1>截图上传</h1>
-    <cropper ref="cropper" @confirm="cropperConfirm($event)"></cropper>
     <input type="file" @change="_fileChange($event, 'images')" accept="image/*"/>
     <hr>
     <h1>直接上传</h1>
@@ -15,16 +16,12 @@
     <h1>二维码</h1>
     <button @click="createQrCode">生成二维码</button>
     <router-link tag="h1" to="/hello-world/other-pages">跳其他页面</router-link>
-    <router-view-common></router-view-common>
   </div>
 </template>
 
 <script>
-  import Cropper from 'components/cropper/cropper'
-
   export default {
     components: {
-      Cropper
     },
     data() {
       return {
@@ -40,6 +37,9 @@
       // this._getWxSdk()
     },
     methods: {
+      toastTest() {
+        this.$toast.show('asdaskh撒谎打开手机大厦快点哈达克阿萨大大撒旦djasd')
+      },
       createQrCode() {
         let str = JSON.stringify({ 'code': 8297128291, 'store_id': 8 }) // todo
         let img = this.$createQrCode.png(str) // png

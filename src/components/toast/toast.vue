@@ -29,8 +29,6 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
-  @import '~common/stylus/mixin'
 
   .toast
     position: fixed
@@ -42,12 +40,12 @@ export default {
     border-radius: 6px
     transition: all .5s ease-out
     text-align: center
-    background-color: $color-mask-bgc
+    background-color: rgba(54, 53, 71, .8)
     .content
       min-width :150px
       max-width :260px
       text-align: center
-      font-family: $font-family-medium
+      font-family: PingFangSC-Medium
       line-height: 16px
       font-size: 14px
       color: #FFFFFF
