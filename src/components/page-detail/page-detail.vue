@@ -318,7 +318,7 @@
         margin-right: 0
         padding: 0 15px
         height: 25px
-        line-height: 25px
+        line-height: 28px
         cursor: pointer
       div.page-total
         cursor: pointer
