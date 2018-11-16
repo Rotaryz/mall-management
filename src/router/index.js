@@ -9,6 +9,7 @@ const GoodsManager = () => import('pages/goods-manager/goods-manager')
 const OrderManager = () => import('pages/order-manager/order-manager')
 const UserManager = () => import('pages/user-manager/user-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
+const Demo = () => import('pages/demo/demo')
 
 Vue.use(Router)
 
@@ -58,6 +59,13 @@ const route = new Router({
           component: OtherPages,
           meta: {
             title: 'tab-two'
+          }
+        },
+        {
+          path: 'demo',
+          component: Demo,
+          meta: {
+            title: 'demo'
           }
         }
       ]
