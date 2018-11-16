@@ -29,12 +29,14 @@
     data() {
       return {
         image: `http://musicugc.qianqian.com/ugcdiy/pic/15be740121443b5a0f83fbd8104aadf5.jpg`,
-        showLogout: false
+        showLogout: false,
+        showModal: false
       }
     },
     methods: {
       logoutHandle() {
         console.log(1)
+        this.showModalHandle()
       },
       showLogoutHandle() {
         this.showLogout = true
@@ -56,9 +58,10 @@
     transition: all 0.2s
 
   .fade-enter, .fade-leave-to
-    opacity: 0
+    transition: opacity .2s ease-in-out
 
   .panel
+    position :relative
     overflow: auto
     padding-left: 200px
     box-sizing: border-box
