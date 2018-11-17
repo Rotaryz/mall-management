@@ -34,7 +34,7 @@
     data() {
       return {
         pageType: '',
-        navUrl: '',
+        navUrl: '/goods-manager/goods-money/goods-detail',
       }
     },
     created() {

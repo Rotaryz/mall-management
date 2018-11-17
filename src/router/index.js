@@ -58,6 +58,20 @@ const route = new Router({
                 title: '播豆商品',
               },
             },
+            {
+              path: 'goods-money/goods-detail',
+              component: GoodsDetail,
+              meta: {
+                title: '新建商品',
+              },
+            },
+            {
+              path: 'goods-integrals/goods-detail',
+              component: GoodsDetail,
+              meta: {
+                title: '新建商品',
+              },
+            },
           ],
         },
         {
