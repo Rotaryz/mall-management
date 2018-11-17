@@ -17,7 +17,7 @@
           </transition>
         </section>
       </header>
-      <section>
+      <section class="router-content">
         <slot></slot>
       </section>
     </div>
@@ -72,6 +72,7 @@
       min-height: 100vh
       overflow: auto
       common-scroll-bar()
+      layout()
       & > header
         layout(row)
         justify-content: flex-end
@@ -143,4 +144,8 @@
                 background-size: 100% 100%
                 background-image url("./icon-exit@2x.png")
 
+      .router-content
+        flex: 1
+        overflow :auto
+        layout()
 </style>

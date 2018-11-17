@@ -1,13 +1,15 @@
 <template>
-  <panel></panel>
+  <base-panel>
+    <div style="background: red; height: 1000px">222</div>
+  </base-panel>
 </template>
 
 <script type="text/ecmascript-6">
-  import Panel from 'components/panel/panel'
+  import BasePanel from 'components/base-panel/base-panel'
 
   export default {
     components: {
-      Panel,
+      BasePanel,
     },
     watch: {
       $route(to, from) {
