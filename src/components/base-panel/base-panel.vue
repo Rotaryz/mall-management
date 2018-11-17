@@ -1,6 +1,6 @@
 <template>
   <div class="base-panel" :style="styles">
-    <section class="base-panel-content">
+    <section class="base-panel-content" :style="slotStyles">
       <slot name="content"></slot>
     </section>
     <footer v-if="isShowPageDetails">
@@ -20,6 +20,10 @@
       styles: {
         type: String,
         default: '',
+      },
+      slotStyles: {
+        type: String,
+        default: ''
       },
       isShowPageDetails: {
         type: Boolean,
