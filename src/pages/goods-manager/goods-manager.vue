@@ -1,6 +1,6 @@
 <template>
   <base-panel>
-    <div style="background: red; height: 1000px">222</div>
+    <div slot="content" style="background: red; height: 1000px">222</div>
   </base-panel>
 </template>
 

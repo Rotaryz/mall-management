@@ -1,6 +1,6 @@
 <template>
   <base-modal :isShow="show">
-    <div class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
+    <div slot="content" class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
       <!--<div class="title">{{title}}</div>-->
       <div class="text">{{text}}</div>
       <div class="btn-group">

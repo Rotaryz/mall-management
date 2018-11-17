@@ -1,6 +1,6 @@
 <template>
   <div class="base-panel" :style="styles">
-    <slot></slot>
+    <slot name="content"></slot>
     <footer>
       <page-detail :pageDtail="pageDetails" @addPage="addPage"></page-detail>
     </footer>
