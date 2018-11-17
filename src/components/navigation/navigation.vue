@@ -250,5 +250,7 @@
           color: $color-menu-text-active
         &.father-item
           border-left: 5px solid transparent
+          .arrow-right
+            transform: rotate(90deg)
 
 </style>
