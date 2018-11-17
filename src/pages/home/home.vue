@@ -24,5 +24,5 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
   .home
-    layout(row, block, nowrap)
+    layout(column, block, nowrap)
 </style>

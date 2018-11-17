@@ -6,10 +6,6 @@ import router from './router'
 import store from './store'
 import 'utils/env-clear'
 import 'common/stylus/index.styl'
-import 'element-ui/lib/theme-chalk/index.css'
-import {DatePicker} from 'element-ui'
-
-Vue.use(DatePicker)
 
 /* eslint-disable no-new */
 export default new Vue({

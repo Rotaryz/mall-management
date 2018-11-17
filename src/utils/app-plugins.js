@@ -5,10 +5,11 @@ import { ERR_OK } from 'common/js/config'
 import * as handle from './cos/handle'
 import { fileType } from './cos/file-config'
 import * as cos from './cos/cos'
-import RouterViewCommon from 'components/router-view-common'
 import Toast from 'components/toast'
 import Loading from 'components/loading'
 import createQrCode from './create-qr-code'
+import {DatePicker} from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 // 定义插件
 const AppPlugin = {
@@ -25,5 +26,5 @@ const AppPlugin = {
 Vue.use(AppPlugin)
 Vue.use(Toast)
 Vue.use(Loading)
-Vue.use(RouterViewCommon)
-Window.$storage = storage
+Vue.use(DatePicker)
+window.$storage = storage

@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <section class="base-modal" v-show="isShow" :style="styles">
-      <slot></slot>
+      <slot name="content"></slot>
     </section>
   </transition>
 </template>

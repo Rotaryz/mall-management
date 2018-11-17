@@ -6,18 +6,18 @@ const LOCAL_URL = {
 }
 
 const DEV_URL = {
-  api: 'https://zhidian-api.jerryf.cn',
-  upload: 'https://zhidian-api.jerryf.cn'
+  api: 'exchange-mall-api.jerryf.cn',
+  upload: 'exchange-mall-api.jerryf.cn'
 }
 
 const TEST_URL = {
-  api: 'https://zhidian-api.jkweixin.net' + version,
-  upload: 'https://zhidian-api.jkweixin.net' + version
+  api: 'exchange-mall-api.jkweixin.net' + version,
+  upload: 'exchange-mall-api.jkweixin.net' + version
 }
 
 const PROD_URL = {
-  api: 'https://zhidian-api.jkweixin.com' + version,
-  upload: 'https://zhidian-api.jkweixin.com' + version
+  api: 'exchange-mall-api.jkweixin.com' + version,
+  upload: 'exchange-mall-api.jkweixin.com' + version
 }
 
 export const BASE_URL = env.NODE_ENV === 'production' ? PROD_URL : env.NODE_ENV === 'test' ? TEST_URL : env.NODE_ENV === 'dev' ? DEV_URL : LOCAL_URL

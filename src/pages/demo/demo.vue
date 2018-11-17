@@ -11,7 +11,7 @@
     <search @search="search" placeholerTxt="请输入" ref="search"></search>
 
     <!--翻页器-->
-    <page-detail ref="pageDetail" :pageDtail="pageDetail" @addPage="addPage"></page-detail>
+    <page-detail ref="pageDetail" :pageDetail="pageDetail" @addPage="addPage"></page-detail>
 
     <!--弹窗-->
     <confirm

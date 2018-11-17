@@ -8,5 +8,9 @@ export default {
   jssdkConfig (data, loading = false) {
     let url = '/api/wechat/jssdk'
     return request.get(url, data, loading)
+  },
+  login (data, loading = true) {
+    let url = '/api/wechat/jssdk'
+    return request.get(url, data, loading)
   }
 }

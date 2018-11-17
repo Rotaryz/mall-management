@@ -1,6 +1,6 @@
 <template>
   <base-modal :isShow="show">
-    <div class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
+    <div slot="content" class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
       <!--<div class="title">{{title}}</div>-->
       <div class="text">{{text}}</div>
       <div class="btn-group">
@@ -27,6 +27,9 @@
         showActive: false,
       }
     },
+    destroyed() {
+      this.timeout && clearTimeout(this.timeout)
+    },
     methods: {
       showConfirm(title, text) {
         this.title = title
@@ -36,7 +39,6 @@
       },
       confirm() {
         if (this.timeout) {
-          console.log('confirm')
           setTimeout(() => {
             this.show = false
           }, 100)
@@ -83,6 +85,7 @@
       .confirm
         border-right: 1px solid $color-line
       .cancel
+        border-right: 1px solid $color-main
         background: $color-main
         color: $color-white
         margin-left: 20px
