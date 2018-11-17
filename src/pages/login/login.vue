@@ -27,14 +27,12 @@
         登录
       </div>
     </div>
-    <toast ref="toast"></toast>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {Login} from 'api'
-  import Toast from 'components/toast/toast'
-  import storage from 'storage-controller'
+  // import {Global} from 'api'
+  // import storage from 'storage-controller'
 
   export default {
     data() {
@@ -66,30 +64,28 @@
       },
       login() {
         if (this.user === '') {
-          this.$refs.toast.show('请输入用户名')
+          this.$toast.show('请输入用户名')
           return false
         } else if (this.password === '') {
-          this.$refs.toast.show('请输入密码')
+          this.$toast.show('请输入密码')
           return false
         }
-        let data = {username: this.user, password: this.password}
-        Login.adminLogin(data).then((res) => {
-          if (!res.error) {
-            let data = res.data
-            this.$refs.toast.show('登陆成功')
-            storage.set('aiToken', data.access_token)
-            storage.set('userName', data.admin_info.username)
-            setTimeout(() => {
-              this.$router.push('/user-manager')
-            }, 300)
-          } else if (res.error) {
-            this.$refs.toast.show(res.message)
-          }
-        })
+        this.$router.push('/user-manager')
+        // let data = {username: this.user, password: this.password}
+        // Global.login(data).then((res) => {
+        //   if (!res.error) {
+        //     let data = res.data
+        //     this.$refs.toast.show('登陆成功')
+        //     storage.set('aiToken', data.access_token)
+        //     storage.set('userName', data.admin_info.username)
+        //     setTimeout(() => {
+        //       this.$router.push('/user-manager')
+        //     }, 300)
+        //   } else if (res.error) {
+        //     this.$refs.toast.show(res.message)
+        //   }
+        // })
       }
-    },
-    components: {
-      'toast': Toast
     }
   }
 </script>

@@ -27,4 +27,4 @@ Vue.use(AppPlugin)
 Vue.use(Toast)
 Vue.use(Loading)
 Vue.use(DatePicker)
-Window.$storage = storage
+window.$storage = storage
