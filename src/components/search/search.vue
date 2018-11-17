@@ -103,15 +103,19 @@
 
     .input-box::-webkit-input-placeholder { /* WebKit browsers */
       color: $color-ccc
+      font-size: 12px
     }
     :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
       color: $color-ccc
+      font-size: 12px
     }
     ::-moz-placeholder { /* Mozilla Firefox 19+ */
       color: $color-ccc
+      font-size: 12px
     }
     :-ms-input-placeholder { /* Internet Explorer 10+ */
       color: $color-ccc
+      font-size: 12px
     }
     .btn-box
       background: $color-main

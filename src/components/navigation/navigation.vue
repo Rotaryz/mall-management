@@ -33,7 +33,7 @@
     },
     {
       title: '商家管理',
-      url: '',
+      url: '/merchant-manager',
       icon: require('./icon-shop@2x.png'),
       iconSelected: require('./icon-shop_select@2x.png'),
       childrenIndex: 0,
@@ -135,7 +135,7 @@
         // 路由跳转
         this.$router.push(this.navList[this.preTabIndex].children[idx].url)
       },
-    },
+    }
   }
 </script>
 
@@ -148,6 +148,7 @@
   @import '~common/stylus/mixin'
 
   .navigation
+    user-select: none
     position: fixed
     top: 0
     left: 0

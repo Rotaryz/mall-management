@@ -10,6 +10,7 @@ const Home = () => import('pages/home/home')
 const GoodsManager = () => import('pages/goods-manager/goods-manager')
 const OrderManager = () => import('pages/order-manager/order-manager')
 const UserManager = () => import('pages/user-manager/user-manager')
+const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 
 Vue.use(Router)
@@ -25,6 +26,13 @@ const route = new Router({
           component: UserManager,
           meta: {
             title: '用户管理'
+          }
+        },
+        {
+          path: 'merchant-manager',
+          component: MerchantManager,
+          meta: {
+            title: '商家管理'
           }
         },
         {
