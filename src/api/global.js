@@ -10,7 +10,7 @@ export default {
     return request.get(url, data, loading)
   },
   login (data, loading = true) {
-    let url = '/api/wechat/jssdk'
-    return request.get(url, data, loading)
+    let url = '/api/admin/login'
+    return request.post(url, data, loading)
   }
 }

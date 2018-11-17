@@ -31,8 +31,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // import {Global} from 'api'
-  // import storage from 'storage-controller'
+  import {Global} from 'api'
 
   export default {
     data() {
@@ -70,22 +69,22 @@
           this.$toast.show('请输入密码')
           return false
         }
-        this.$router.push('/user-manager')
-        window.$storage.set('token', 'asdhajskhdasdh')
-        // let data = {username: this.user, password: this.password}
-        // Global.login(data).then((res) => {
-        //   if (!res.error) {
-        //     let data = res.data
-        //     this.$refs.toast.show('登陆成功')
-        //     storage.set('aiToken', data.access_token)
-        //     storage.set('userName', data.admin_info.username)
-        //     setTimeout(() => {
-        //       this.$router.push('/user-manager')
-        //     }, 300)
-        //   } else if (res.error) {
-        //     this.$refs.toast.show(res.message)
-        //   }
-        // })
+        let data = {account: this.user, password: this.password}
+        this.$loading.show()
+        Global.login(data).then((res) => {
+          this.$loading.hide()
+          if (this.$ERR_OK !== res.error) {
+            this.$toast.show(res.message)
+            return
+          }
+          let data = res.data || {}
+          this.$toast.show('登陆成功')
+          window.$storage.set('token', data.access_token)
+          window.$storage.set('info', data.info)
+          setTimeout(() => {
+            this.$router.push('/user-manager')
+          }, 300)
+        })
       }
     }
   }

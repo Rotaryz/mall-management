@@ -8,13 +8,11 @@ const LOCAL_URL = {
 const DEV_URL = {
   api: 'http://exchange-mall-api.jerryf.cn',
   upload: 'http://exchange-mall-api.jerryf.cn',
-  // upload: 'https://zhidian-api.jkweixin.net/v1' + version // todo
 }
 
 const TEST_URL = {
   api: 'https://exchange-mall-api.jkweixin.net' + version,
-  // upload: 'https://exchange-mall-api.jkweixin.net' + version,
-  upload: 'https://zhidian-api.jkweixin.net/v1' + version // todo
+  upload: 'https://exchange-mall-api.jkweixin.net' + version,
 }
 
 const PROD_URL = {
