@@ -3,10 +3,10 @@
     <div class="bk"></div>
     <div class="logo-box">
       <img src="./pic-logo@2x.png" class="logo">
-      <h2 class="title">赞播管理平台</h2>
+      <h2 class="title">赞播兑换商城管理平台</h2>
     </div>
     <div class="login-box">
-      <p class="login-title">智慧改变销售</p>
+      <p class="login-title">让天下没有难开的店 </p>
       <div class="login-content">
         <div class="user input-box" :class="{'input-height': focusPhone}">
           <span class="input-icon"></span>
@@ -80,7 +80,7 @@
             storage.set('aiToken', data.access_token)
             storage.set('userName', data.admin_info.username)
             setTimeout(() => {
-              this.$router.push('/data-overview')
+              this.$router.push('/user-manager')
             }, 300)
           } else if (res.error) {
             this.$refs.toast.show(res.message)
@@ -268,7 +268,7 @@
 
   .submit-no
     color :$color-white
-    background :$color-4985FC
+    background :#FF533C
     display: flex
     height: 50px
     width: 468px
