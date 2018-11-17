@@ -171,7 +171,7 @@
     .admin-select-box
       min-width: 48px
       border-radius: 4px
-      border: 1px solid $color-text-D9
+      border: 0.5px solid $color-text-D9
       padding: 0 31px 0 15px
       line-height: 28px
       box-sizing: border-box

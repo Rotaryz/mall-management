@@ -6,10 +6,13 @@
       v-model="time"
       size="small"
       type="daterange"
+      class="{'animate-active':focus}"
       range-separator="~"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
       :picker-options="pickerOptions"
+      @focus="pickerFocus"
+      @blur="pickerBlur"
     >
     </el-date-picker>
 
@@ -59,7 +62,8 @@
         },
         showPop: true,
         showActive: false,
-        check: false
+        check: false,
+        focus: false
       }
     },
     created() {
@@ -87,6 +91,12 @@
       setValue(city) {
         this.city = city
         console.log(city)
+      },
+      pickerFocus() {
+        this.focus = true
+      },
+      pickerBlur() {
+        this.focus = false
       }
     },
     components: {
@@ -99,5 +109,19 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable"
+  @import '~common/stylus/mixin'
 
+  .animate-active
+    border: 0.5px solid transparent
+    transition: all 0.3s ease-out
+    color: $color-4985FC
+    &:after
+      border-color: $color-4985FC
+      transition: all 0.3s ease-out
+      width: 100%
+    &:before
+      border-color: $color-4985FC
+      transition: all 0.3s ease-out
+      height: 100%
 </style>

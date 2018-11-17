@@ -52,107 +52,6 @@ body, html
 .hand
   cursor: pointer
 
-//  导出excel的类名
-.excel
-  cursor: pointer
-  background: $color-white
-  color: $color-text-sub
-  width: 84px
-  line-height: 28px
-  text-align: center
-  display: block
-  font-size: $font-size-12
-  border-radius: 4px
-  transition: all 0.4s ease-out
-  border: 1px solid $color-text-D9
-  &:hover
-    transition: all 0.4s ease-out
-    font-size: 13px
-
-.animate-hover
-  position: relative
-  z-index: 10
-  transition: all 0.4s ease-out
-  &:after
-    content: ''
-    border-top: 1px solid transparent
-    border-bottom: 1px solid transparent
-    position: absolute
-    z-index: 5
-    height: 100%
-    width: 0
-    right: 0
-    top: -1px
-    transition: all 0.4s ease-out
-  &:before
-    content: ''
-    border-right: 1px solid transparent
-    border-left: 1px solid transparent
-    position: absolute
-    z-index: 5
-    height: 0
-    width: 100%
-    bottom: 0
-    left: -1px
-    transition: all 0.4s ease-out
-&:hover
-  border-color: transparent
-  &:after
-    border-color: $color-text-999
-    width: 100%
-    border-radius 4px
-  &:before
-    border-color: $color-text-999
-    height: 100%
-    border-radius 4px
-
-.animate
-  border: 0.5px solid $color-text-D9
-  position: relative
-  transition: all 0.3s ease-out
-  &:after
-    content: ''
-    border-top: 0.5px solid transparent
-    border-bottom: 0.5px solid transparent
-    position: absolute
-    z-index: 5
-    height: 100%
-    width: 0
-    right: 0
-    top: -0.5px
-    box-sizing: content-box
-    transition: all 0.3s ease-out
-    border-radius: 3px
-  &:before
-    content: ''
-    border-right: 0.5px solid transparent
-    border-left: 0.5px solid transparent
-    position: absolute
-    z-index: 5
-    height: 0
-    width: 100%
-    bottom: 0
-    left: 0
-    box-sizing: content-box
-    transition: all 0.3s ease-out
-    border-radius: 3px
-.animate-active
-  border: 0.5px solid transparent
-  transition: all 0.3s ease-out
-  color: $color-4985FC
-  &:after
-    border-color: $color-4985FC
-    transition: all 0.3s ease-out
-    width: 100%
-  &:before
-    border-color: $color-4985FC
-    transition: all 0.3s ease-out
-    height: 100%
-
-.btn-hover
-  transition: all 0.3s ease-out
-  &:hover
-    font-size: 13px
 @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
   .border-top-1px
     &:before
@@ -194,3 +93,99 @@ body, html
     &:before
       height: 300%
       transform: scale(.333) translateZ(0)
+
+
+.animate-hover
+  position: relative
+  z-index: 10
+  transition: all 0.4s ease-out
+  &:after
+    content: ''
+    border-top: 0.5px solid transparent
+    border-bottom: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 100%
+    width: 0
+    right: 0
+    top: -0.5px
+    transition: all 0.4s ease-out
+  &:before
+    content: ''
+    border-right: 0.5px solid transparent
+    border-left: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 0
+    width: 100%
+    bottom: 0
+    left: -0.5px
+    transition: all 0.4s ease-out
+&:hover
+  border-color: transparent
+  &:after
+    border-color: $color-text-999
+    width: 100%
+    border-radius 4px
+  &:before
+    border-color: $color-text-999
+    height: 100%
+    border-radius 4px
+
+.animate
+  position: relative
+  transition: all 0.3s ease-out
+  &:after
+    content: ''
+    border-top: 0.5px solid transparent
+    border-bottom: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 100%
+    width: 0
+    right: 0
+    top: -0.5px
+    box-sizing: content-box
+    transition: all 0.3s ease-out
+    border-radius: 3px
+  &:before
+    content: ''
+    border-right: 0.5px solid transparent
+    border-left: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 0
+    width: 100%
+    bottom: 0
+    left: 0
+    box-sizing: content-box
+    transition: all 0.3s ease-out
+    border-radius: 3px
+.animate-active
+  border: 0.5px solid transparent
+  transition: all 0.3s ease-out
+  color: $color-4985FC
+  &:after
+    border-color: $color-4985FC
+    transition: all 0.3s ease-out
+    width: 100%
+  &:before
+    border-color: $color-4985FC
+    transition: all 0.3s ease-out
+    height: 100%
+//  导出excel的类名
+.excel
+  cursor: pointer
+  background: $color-white
+  color: $color-text-sub
+  width: 84px
+  line-height: 28px
+  text-align: center
+  display: block
+  font-size: $font-size-12
+  border-radius: 4px
+  transition: all 0.4s ease-out
+  border: 0.5px solid $color-text-D9
+  &:hover
+    transition: all 0.4s ease-out
+    font-size: 13px
