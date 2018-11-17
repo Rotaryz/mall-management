@@ -1,7 +1,7 @@
 <template>
   <div class="base-panel" :style="styles">
     <slot name="content"></slot>
-    <footer>
+    <footer v-if="isShowPageDetails">
       <page-detail :pageDtail="pageDetails" @addPage="addPage"></page-detail>
     </footer>
   </div>
@@ -18,6 +18,10 @@
       styles: {
         type: String,
         default: '',
+      },
+      isShowPageDetails: {
+        type: Boolean,
+        default: true
       },
       pageDetails: {
         type: Object,
