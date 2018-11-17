@@ -27,7 +27,7 @@
       icon: require('./icon-user@2x.png'),
       iconSelected: require('./icon-user_select@2x.png'),
       childrenIndex: 0,
-      isSelected: true,
+      isSelected: false,
       showHeight: HEIGHT,
       children: [],
     },
@@ -107,7 +107,25 @@
         preTabIndex: 0,
       }
     },
+    created() {
+      this._initNavList()
+    },
     methods: {
+      _initNavList() {
+        let url = this.$route.fullPath
+        this.navList.forEach((item, index) => {
+          item.isSelected = false
+          if (item.url === url) {
+            item.isSelected = true
+          }
+          item.children.forEach(it => {
+            if (it.url === url) {
+              item.isSelected = true
+            }
+          })
+          this.preTabIndex = index
+        })
+      },
       checkTab(index) {
         let flag = this.$route.fullPath === this.navList[index].url
         if (this.preTabIndex === index && flag) {
@@ -136,6 +154,10 @@
         this.$router.push(this.navList[this.preTabIndex].children[idx].url)
       },
     },
+    watch: {
+      $route(to) {
+      }
+    }
   }
 </script>
 

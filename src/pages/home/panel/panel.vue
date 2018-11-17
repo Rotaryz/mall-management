@@ -30,7 +30,7 @@
       return {
         image: `http://musicugc.qianqian.com/ugcdiy/pic/15be740121443b5a0f83fbd8104aadf5.jpg`,
         showLogout: false,
-        showModal: false
+        showModal: false,
       }
     },
     methods: {
@@ -43,7 +43,7 @@
       },
       hideLogoutHandle() {
         this.showLogout = false
-      }
+      },
     },
   }
 </script>
@@ -61,7 +61,7 @@
     transition: opacity .2s ease-in-out
 
   .panel
-    position :relative
+    position: relative
     overflow: auto
     padding-left: 200px
     box-sizing: border-box
@@ -85,6 +85,7 @@
           min-height: $common-height
           align-items: center
           padding: 0 26.8px
+          cursor: pointer
           &:hover > em
             transform: rotate(180deg)
           &:hover
@@ -146,6 +147,6 @@
 
       .router-content
         flex: 1
-        overflow :auto
+        overflow: auto
         layout()
 </style>
