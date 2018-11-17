@@ -8,11 +8,11 @@
       <router-link tag="dt" :to="item.url" class="nav-item-wrapper">
         <img class="icon" :src="$route.path === item.url ? item.iconSelected: item.icon" alt="">
         <p class="text">{{item.title}}</p>
-        <div class="arrow-right"></div>
+        <div class="arrow-right" :style="$route.path === item.url? 'transform rotate(90deg)' : ''"></div>
       </router-link>
-      <!--<dd class="child-wrapper" :style="$route.path === item.url ? {height: item.showHeight * item.children.length +'px'} : ''" @click.stop>-->
-        <!--<router-link tag="p" class="text" :to="it.url" v-for="(it, idx) in item.children" :key="idx" :class="item.childrenIndex === idx ? 'active' : ''">{{it.title}}</router-link>-->
-      <!--</dd>-->
+      <dd class="child-wrapper" :style="$route.path === item.url ? {height: item.showHeight * item.children.length +'px'} : ''" @click.stop>
+        <p class="text" v-for="(it, idx) in item.children" :key="idx" :class="item.childrenIndex === idx ? 'active' : ''">{{it.title}}</p>
+      </dd>
     </dl>
   </div>
 </template>
@@ -201,6 +201,7 @@
         font-family: PingFangSC-Semibold
         letter-spacing: 6px
     .nav-wrapper
+      cursor :pointer
       .nav-item-wrapper
         layout(row, block, nowrap)
         align-items: center
@@ -230,10 +231,7 @@
           transition: height 0.3s
           border: none
           layout()
-          &.active
-            border-left: 5px solid $color-menu-tag
-            background: rgba(255, 255, 255, 0.1)
-            color: $color-menu-text-active
+          overflow :hidden
           .text
             width: 100%
             layout()
@@ -243,14 +241,12 @@
             &:hover
               background: rgba(255, 255, 255, 0.1)
 
-
       .router-link-active
         background: rgba(255, 255, 255, 0.1)
         border-left: 5px solid $color-menu-tag
         background: rgba(255, 255, 255, 0.1)
         & > .arrow-right
           icon-image('icon-pressed_select')
-          transform rotate(90deg)
         & > .text
           color: $color-menu-text-active
 
