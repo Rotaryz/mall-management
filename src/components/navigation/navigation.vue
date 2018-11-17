@@ -89,11 +89,11 @@
       children: [
         {
           title: '用户礼包',
-          url: '',
+          url: '/user-gifts',
         },
         {
           title: '商家礼包',
-          url: '',
+          url: '/business-gifts',
         },
       ],
       showHeight: HEIGHT,

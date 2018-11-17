@@ -17,7 +17,7 @@
       <div class="page-icon page-icon-two" @click="addPage" @mouseenter="notAllowed" :style="{'cursor': isHand.handRight}">
       </div>
       <div class="page-box" :class="{'input-height': pageDetail}">
-        <div class="border-page page-total input-height-item" @click.stop="showPageDetail">
+        <div class="border-page page-total input-height-item animate-hover" @click.stop="showPageDetail">
           {{page}}/{{pageDtail.total_page}}
           <span class="page-tap">
                 <i class="page-top" :class="{'page-bottom':pageDetail}"></i>
