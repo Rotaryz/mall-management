@@ -1,6 +1,8 @@
 <template>
   <div class="base-panel" :style="styles">
-    <slot name="content"></slot>
+    <section class="base-panel-content">
+      <slot name="content"></slot>
+    </section>
     <footer v-if="isShowPageDetails">
       <page-detail :pageDtail="pageDetails" @addPage="addPage"></page-detail>
     </footer>
@@ -53,11 +55,14 @@
     overflow: hidden
     border-radius: 6px
     flex: 1
+    layout()
     & > footer
       height: 121px
       layout(row)
       justify-content :center
       align-items :center
       padding : 0 30px 0 39px
+    .base-panel-content
+      flex: 1
 
 </style>

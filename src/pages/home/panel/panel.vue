@@ -25,7 +25,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import storage from 'storage-controller'
   export default {
     data() {
       return {
@@ -36,8 +35,7 @@
     },
     methods: {
       logoutHandle() {
-        storage.remove('token')
-        console.log(window.$storage)
+        window.$storage.remove('token')
         this.$router.replace('/login')
       },
       showLogoutHandle() {

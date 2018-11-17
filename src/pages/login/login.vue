@@ -71,6 +71,7 @@
           return false
         }
         this.$router.push('/user-manager')
+        window.$storage.set('token', 'asdhajskhdasdh')
         // let data = {username: this.user, password: this.password}
         // Global.login(data).then((res) => {
         //   if (!res.error) {
@@ -130,7 +131,7 @@
       overflow: hidden
       .login-title
         font-size: 32px
-        font-family: $fontFamilyLight
+        font-family: $font-family-light
         color: $color-white
         position: relative
         display: inline-block
@@ -157,7 +158,7 @@
       .input-box
         width: 100%
         height: 81px
-        font-size: $font-size-small
+        font-size: $font-size-10
         position: relative
         border-bottom: 1px solid #EFEFEF
         box-sizing: border-box
@@ -167,12 +168,12 @@
           text-indent: 65px
           height: 100%
           width: 100%
-          color: $color-text
-          font-size: $font-size-medium14
-          font-family: $fontFamilyLight
+          color: $color-text-main
+          font-size: $font-size-14
+          font-family: $font-family-light
           &::placeholder
             opacity: 1
-            color: $color-text-little
+            color: $color-text-D9
         .input-icon
           height: 20px
           width: @height
@@ -214,9 +215,9 @@
           width: 100%
           text-indent: 35px
           position: absolute
-          color: $color-text33
-          font-family: $fontFamilyLight
-          font-size: $font-size-medium14
+          color: $color-text-main
+          font-family: $font-family-light
+          font-size: $font-size-14
           z-index: 200
           border-radius: 3px
           &.fade-enter, &.fade-leave-to
@@ -259,7 +260,7 @@
           top: 0px
           margin-left: 2.853%
           line-height: 1
-          font-size: $font-size-small
+          font-size: $font-size-10
           color: #9B9B9B
 
   .submit-no
@@ -273,7 +274,7 @@
     z-index: 100
     align-items: center
     justify-content: center
-    font-size: $font-size-medium16
-    font-family: $fontFamilyLight
+    font-size: $font-size-16
+    font-family: $font-family-light
 
 </style>
