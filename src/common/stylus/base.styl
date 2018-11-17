@@ -162,15 +162,16 @@ body, html
     transition: all 0.3s ease-out
     border-radius: 3px
 .animate-active
-  border: 0.5px solid transparent
   transition: all 0.3s ease-out
-  color: $color-4985FC
+  color: $color-main
   &:after
-    border-color: $color-4985FC
+    border-top: 0.5px solid $color-text-999
+    border-bottom: 0.5px solid $color-text-999
     transition: all 0.3s ease-out
     width: 100%
   &:before
-    border-color: $color-4985FC
+    border-right: 0.5px solid $color-text-999
+    border-left: 0.5px solid $color-text-999
     transition: all 0.3s ease-out
     height: 100%
 //  导出excel的类名
@@ -187,5 +188,6 @@ body, html
   transition: all 0.4s ease-out
   border: 0.5px solid $color-text-D9
   &:hover
+    border-color: transparent
     transition: all 0.4s ease-out
     font-size: 13px

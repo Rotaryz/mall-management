@@ -50,7 +50,7 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import Loading from 'components/loading/loading'
-  import Bubble from 'components/bubble/confirm.vue'
+  import Bubble from 'components/bubble/data-picker.vue'
   import {getRect} from 'common/js/dom'
   import NoMore from 'components/no-more/no-more'
 

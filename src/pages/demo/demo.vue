@@ -2,19 +2,7 @@
   <div class="demo" @touchmove.prevent>
 
     <!--日期选择-->
-    <el-date-picker
-      v-model="time"
-      size="small"
-      type="daterange"
-      class="{'animate-active':focus}"
-      range-separator="~"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-      :picker-options="pickerOptions"
-      @focus="pickerFocus"
-      @blur="pickerBlur"
-    >
-    </el-date-picker>
+    <data-picker @change="dataChange"></data-picker>
 
     <!--导出按钮-->
     <a :href="excelUrl" class="excel animate-hover" @click="showConfirm" target="_blank">导出Excel</a>
@@ -43,6 +31,7 @@
   import Search from 'components/search/search'
   import Confirm from 'components/confirm/confirm'
   import AdminSelect from 'components/admin-select/admin-select'
+  import DataPicker from 'components/data-picker/data-picker'
 
   export default {
     name: 'DEMO',
@@ -92,18 +81,16 @@
         this.city = city
         console.log(city)
       },
-      pickerFocus() {
-        this.focus = true
-      },
-      pickerBlur() {
-        this.focus = false
+      dataChange(time) {
+        console.log(time)
       }
     },
     components: {
       PageDetail,
       Search,
       Confirm,
-      AdminSelect
+      AdminSelect,
+      DataPicker
     }
   }
 </script>
@@ -112,16 +99,4 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
 
-  .animate-active
-    border: 0.5px solid transparent
-    transition: all 0.3s ease-out
-    color: $color-4985FC
-    &:after
-      border-color: $color-4985FC
-      transition: all 0.3s ease-out
-      width: 100%
-    &:before
-      border-color: $color-4985FC
-      transition: all 0.3s ease-out
-      height: 100%
 </style>
