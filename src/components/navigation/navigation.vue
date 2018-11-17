@@ -5,13 +5,13 @@
       <p class="header-name hand">兑换商城</p>
     </header>
     <dl class="nav-wrapper" v-for="(item, index) in navList" :key="index">
-      <router-link tag="dt" :to="item.url" class="nav-item-wrapper" :class="item.children.length ? 'father-item' : ''">
+      <router-link tag="dt" :to="item.url | resetUrl($route.path)" class="nav-item-wrapper" :class="item.children.length ? 'father-item' : ''">
         <img class="icon" :src="$route.path === item.url ? item.iconSelected: item.icon" alt="">
         <p class="text">{{item.title}}</p>
-        <div class="arrow-right" :style="$route.path === item.url? 'transform rotate(90deg)' : ''"></div>
+        <div class="arrow-right"></div>
       </router-link>
-      <dd class="child-wrapper" :style="$route.path === item.url ? {height: item.showHeight * item.children.length +'px'} : ''" @click.stop>
-        <p class="text" v-for="(it, idx) in item.children" :key="idx" :class="item.childrenIndex === idx ? 'active' : ''">{{it.title}}</p>
+      <dd class="child-wrapper" :style="item.url | typeFn($route.path, item)">
+        <router-link tag="p" :to="it.url" class="text child" active-class="child-active" v-for="(it, idx) in item.children" :key="idx">{{it.title}}</router-link>
       </dd>
     </dl>
   </div>
@@ -47,11 +47,11 @@
       children: [
         {
           title: '折扣商品',
-          url: '/goods-manager?pageType=money',
+          url: '/goods-manager/goods-money',
         },
         {
           title: '播豆商品',
-          url: '/goods-manager?pageType=integrals',
+          url: '/goods-manager/goods-integrals',
         },
       ],
       showHeight: HEIGHT,
@@ -148,10 +148,26 @@
     //     this.$router.push(this.navList[this.preTabIndex].children[idx].url)
     //   },
     // },
-    // watch: {
-    //   $route(to) {
-    //   }
-    // }
+    filters: {
+      resetUrl(val, path) {
+        if (path.includes(val)) {
+          return path
+        } else {
+          return val
+        }
+      },
+      typeFn(val, path, item) {
+        if (path.includes(val)) {
+          return `height: ${item.showHeight * item.children.length}px`
+        } else {
+          return ''
+        }
+      },
+    },
+    watch: {
+      $route(to) {
+      },
+    },
   }
 </script>
 
@@ -172,8 +188,7 @@
     background: rgba(255, 255, 255, 0)
     box-sizing: border-box
     border-left: 5px solid transparent
-    transition : all .2s
-    margin :5px 0
+    transition: all .2s
 
   .navigation
     position: fixed
@@ -201,7 +216,7 @@
         font-family: PingFangSC-Semibold
         letter-spacing: 6px
     .nav-wrapper
-      cursor :pointer
+      cursor: pointer
       .nav-item-wrapper
         layout(row, block, nowrap)
         align-items: center
@@ -210,7 +225,7 @@
         overflow: hidden
         box-sizing: border-box
         border-left: 5px solid transparent
-        transition : all .2s
+        transition: all .2s
         &:hover
           background: rgba(255, 255, 255, 0.1)
         .icon
@@ -225,32 +240,38 @@
           margin-right: 30px
           transform rotate(0deg)
           transition: transform 0.2s
-
-        .child-wrapper
-          height: 0
-          transition: height 0.3s
-          border: none
+      .child-wrapper
+        height: 0
+        transition: height 0.3s
+        layout()
+        overflow: hidden
+        .child
+          width: 100%
           layout()
-          overflow :hidden
-          .text
-            width: 100%
-            layout()
-            align-items: center
-            justify-content: center
-            flex: 1
-            &:hover
-              background: rgba(255, 255, 255, 0.1)
-
-      .router-link-active.nav-item-wrapper
-        border-left: 5px solid $color-menu-tag
-        background: rgba(255, 255, 255, 0.1)
-        & > .arrow-right
-          icon-image('icon-pressed_select')
-        & > .text
-          color: $color-menu-text-active
-        &.father-item
+          align-items: center
+          justify-content: center
+          flex: 1
           border-left: 5px solid transparent
-          .arrow-right
-            transform: rotate(90deg)
+          margin: 5px 0
+          &:hover
+            background: rgba(255, 255, 255, 0.1)
+
+    .child-active
+      background: rgba(255, 255, 255, 0.1)
+      &.text
+        color: $color-menu-text-active
+        border-left: 5px solid $color-menu-tag !important
+
+    .router-link-active.nav-item-wrapper
+      border-left: 5px solid $color-menu-tag
+      background: rgba(255, 255, 255, 0.1)
+      & > .arrow-right
+        icon-image('icon-pressed_select')
+      & > .text
+        color: $color-menu-text-active
+      &.father-item
+        border-left: 5px solid transparent
+        .arrow-right
+          transform: rotate(90deg)
 
 </style>

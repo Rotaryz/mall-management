@@ -12,6 +12,7 @@ const OrderManager = () => import('pages/order-manager/order-manager')
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
+const GoodsList = () => import('pages/goods-list/goods-list')
 
 Vue.use(Router)
 
@@ -25,68 +26,85 @@ const route = new Router({
           path: 'user-manager',
           component: UserManager,
           meta: {
-            title: '用户管理'
-          }
+            title: '用户管理',
+          },
         },
         {
           path: 'merchant-manager',
           component: MerchantManager,
           meta: {
-            title: '商家管理'
-          }
+            title: '商家管理',
+          },
         },
         {
           path: 'goods-manager',
           component: GoodsManager,
           meta: {
-            title: '商品管理'
-          }
+            title: '商品管理',
+          },
+          redirect: 'goods-manager/goods-money',
+          children: [
+            {
+              path: 'goods-money',
+              component: GoodsList,
+              meta: {
+                title: '折扣商品',
+              },
+            },
+            {
+              path: 'goods-integrals',
+              component: GoodsList,
+              meta: {
+                title: '播豆商品',
+              },
+            },
+          ],
         },
         {
           path: 'goods-detail',
           component: GoodsDetail,
           meta: {
-            title: '新建商品'
-          }
+            title: '新建商品',
+          },
         },
         {
           path: 'order-manager',
           component: OrderManager,
           meta: {
-            title: '订单管理'
-          }
+            title: '订单管理',
+          },
         },
         {
           path: 'hello-world',
           component: HelloWorld,
           meta: {
-            title: 'one'
-          }
+            title: 'one',
+          },
         },
         {
           path: 'other-pages',
           component: OtherPages,
           meta: {
-            title: 'tab-two'
-          }
+            title: 'tab-two',
+          },
         },
         {
           path: 'demo',
           component: Demo,
           meta: {
-            title: 'demo'
-          }
-        }
-      ]
+            title: 'demo',
+          },
+        },
+      ],
     },
     {
       path: '/login',
       component: Login,
       meta: {
-        title: '登陆'
-      }
-    }
-  ]
+        title: '登陆',
+      },
+    },
+  ],
 })
 
 // todo
