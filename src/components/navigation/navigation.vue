@@ -5,13 +5,13 @@
       <p class="header-name hand">兑换商城</p>
     </header>
     <dl class="nav-wrapper" v-for="(item, index) in navList" :key="index">
-      <router-link tag="dt" :to="item.url" class="nav-item-wrapper" :style="item.children.length ? 'border:0': '' ">
+      <router-link tag="dt" :to="item.url" class="nav-item-wrapper" :class="item.children.length ? 'father-item' : ''">
         <img class="icon" :src="$route.path === item.url ? item.iconSelected: item.icon" alt="">
         <p class="text">{{item.title}}</p>
-        <div class="arrow-right" :style="$route.path === item.url && item.children.length ? 'transform:rotate(90deg)' : '' "></div>
+        <div class="arrow-right" :style="$route.path === item.url? 'transform rotate(90deg)' : ''"></div>
       </router-link>
       <dd class="child-wrapper" :style="$route.path === item.url ? {height: item.showHeight * item.children.length +'px'} : ''" @click.stop>
-        <router-link tag="p" :to="it.url" class="text" v-for="(it, idx) in item.children" :key="idx" :style="$route.fullPath !== item.url ? 'border:0; background: transparent': ''">{{it.title}}</router-link>
+        <p class="text" v-for="(it, idx) in item.children" :key="idx" :class="item.childrenIndex === idx ? 'active' : ''">{{it.title}}</p>
       </dd>
     </dl>
   </div>
@@ -225,28 +225,32 @@
           margin-right: 30px
           transform rotate(0deg)
           transition: transform 0.2s
-      .child-wrapper
-        height: 0
-        transition: height 0.3s
-        border: none
-        layout()
-        overflow :hidden
-        .text
-          width: 100%
-          layout()
-          align-items: center
-          justify-content: center
-          flex: 1
-          &:hover
-            background: rgba(255, 255, 255, 0.1)
 
-      .router-link-active
-        background: rgba(255, 255, 255, 0.1)
+        .child-wrapper
+          height: 0
+          transition: height 0.3s
+          border: none
+          layout()
+          overflow :hidden
+          .text
+            width: 100%
+            layout()
+            align-items: center
+            justify-content: center
+            flex: 1
+            &:hover
+              background: rgba(255, 255, 255, 0.1)
+
+      .router-link-active.nav-item-wrapper
         border-left: 5px solid $color-menu-tag
         background: rgba(255, 255, 255, 0.1)
         & > .arrow-right
           icon-image('icon-pressed_select')
         & > .text
           color: $color-menu-text-active
+        &.father-item
+          border-left: 5px solid transparent
+          .arrow-right
+            transform: rotate(90deg)
 
 </style>
