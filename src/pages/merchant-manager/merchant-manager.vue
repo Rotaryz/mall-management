@@ -175,7 +175,7 @@
         padding: 20px
         transition: all 0.3s
         &:hover
-          transform: rotate(180deg)
+          transform: rotate(-180deg)
     .cover-down
       height: 213px
       display: flex

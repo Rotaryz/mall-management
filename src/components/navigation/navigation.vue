@@ -5,7 +5,7 @@
       <p class="header-name hand">兑换商城</p>
     </header>
     <dl class="nav-wrapper" v-for="(item, index) in navList" :key="index">
-      <router-link tag="dt" :to="item.url" class="nav-item-wrapper">
+      <router-link tag="dt" :to="item.url" class="nav-item-wrapper" :class="item.children.length ? 'father-item' : ''">
         <img class="icon" :src="$route.path === item.url ? item.iconSelected: item.icon" alt="">
         <p class="text">{{item.title}}</p>
         <div class="arrow-right" :style="$route.path === item.url? 'transform rotate(90deg)' : ''"></div>
@@ -241,13 +241,14 @@
             &:hover
               background: rgba(255, 255, 255, 0.1)
 
-      .router-link-active
-        background: rgba(255, 255, 255, 0.1)
+      .router-link-active.nav-item-wrapper
         border-left: 5px solid $color-menu-tag
         background: rgba(255, 255, 255, 0.1)
         & > .arrow-right
           icon-image('icon-pressed_select')
         & > .text
           color: $color-menu-text-active
+        &.father-item
+          border-left: 5px solid transparent
 
 </style>
