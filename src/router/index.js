@@ -12,7 +12,6 @@ const OrderManager = () => import('pages/order-manager/order-manager')
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
-const GoodsList = () => import('pages/goods-list/goods-list')
 
 Vue.use(Router)
 
@@ -37,55 +36,45 @@ const route = new Router({
           },
         },
         {
-          path: 'goods-manager',
+          path: '/goods-manager/credits',
           component: GoodsManager,
           meta: {
-            title: '商品管理',
+            title: '播豆商品',
           },
-          redirect: 'goods-manager/goods-money',
-          children: [
-            {
-              path: 'goods-money',
-              component: GoodsList,
-              meta: {
-                title: '折扣商品',
-              },
-            },
-            {
-              path: 'goods-integrals',
-              component: GoodsList,
-              meta: {
-                title: '播豆商品',
-              },
-            },
-            {
-              path: 'goods-money/goods-detail',
-              component: GoodsDetail,
-              meta: {
-                title: '新建商品',
-              },
-            },
-            {
-              path: 'goods-integrals/goods-detail',
-              component: GoodsDetail,
-              meta: {
-                title: '新建商品',
-              },
-            },
-          ],
         },
         {
-          path: 'goods-detail',
+          path: '/goods-manager/money',
+          component: GoodsManager,
+          meta: {
+            title: '折扣商品',
+          },
+        },
+        {
+          path: '/goods-manager/credits/goods-detail',
           component: GoodsDetail,
           meta: {
             title: '新建商品',
           },
         },
         {
-          path: 'order-manager',
+          path: '/goods-manager/money/goods-detail',
+          component: GoodsDetail,
+          meta: {
+            title: '新建商品',
+          },
+        },
+        {
+          path: '/order-manager/user',
           component: OrderManager,
           meta: {
-            title: '订单管理',
+            title: '用户订单',
+          },
+        },
+        {
+          path: '/order-manager/merchant',
+          component: OrderManager,
+          meta: {
+            title: '商家订单',
           },
         },
         {
@@ -123,7 +112,7 @@ const route = new Router({
 
 // todo
 const DEFAULT_TITLE = '智店积分商城'
-const DEFAULT_ROUTE = '/hello-world'
+const DEFAULT_ROUTE = '/user-manager'
 const OAUTH_ROUTE = '/login' // 授权页面
 
 route.beforeEach(async (to, from, next) => {

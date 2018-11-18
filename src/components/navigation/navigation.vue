@@ -2,16 +2,18 @@
   <div class="navigation">
     <header>
       <img src="./pic-logo@2x.png" class="icon">
-      <p class="header-name hand">兑换商城</p>
+      <p>兑换商城</p>
     </header>
-    <dl class="nav-wrapper" v-for="(item, index) in navList" :key="index">
-      <router-link tag="dt" :to="item.url | resetUrl($route.path)" class="nav-item-wrapper" :class="item.children.length ? 'father-item' : ''">
-        <img class="icon" :src="$route.path === item.url ? item.iconSelected: item.icon" alt="">
-        <p class="text">{{item.title}}</p>
-        <div class="arrow-right"></div>
-      </router-link>
-      <dd class="child-wrapper" :style="item.url | typeFn($route.path, item)">
-        <router-link tag="p" :to="it.url" class="text child" active-class="child-active" v-for="(it, idx) in item.children" :key="idx">{{it.title}}</router-link>
+    <dl v-for="(item, index) in navList" :key="index">
+      <dt @click="rootNavHandle(item, index)" :class=" '' | isActive(item)">
+        <img :src="item.isLight ? item.iconSelected : item.icon" alt="">
+        <p>{{item.title}}</p>
+        <i :class="item.children.length ? 'rotate' : ''"></i>
+      </dt>
+      <dd :style="'' | childrenActive(item)">
+        <template v-for="(it, idx) in item.children">
+          <p :key="idx" :class=" '' | isActive(it)" @click="childNavHandle(it, idx, item)">{{it.title}}</p>
+        </template>
       </dd>
     </dl>
   </div>
@@ -19,7 +21,7 @@
 
 <script type="text/ecmascript-6">
   const HEIGHT = 60 + 10
-  const NAVLIST = [
+  const NAV_LIST = [
     {
       title: '用户管理',
       url: '/user-manager',
@@ -27,6 +29,8 @@
       iconSelected: require('./icon-user_select@2x.png'),
       childrenIndex: 0,
       showHeight: HEIGHT,
+      isRouter: true,
+      isLight: false,
       children: [],
     },
     {
@@ -35,7 +39,8 @@
       icon: require('./icon-shop@2x.png'),
       iconSelected: require('./icon-shop_select@2x.png'),
       childrenIndex: 0,
-      showHeight: HEIGHT,
+      isRouter: true,
+      isLight: false,
       children: [],
     },
     {
@@ -44,17 +49,22 @@
       icon: require('./icon-goods@2x.png'),
       iconSelected: require('./icon-goods_select@2x.png'),
       childrenIndex: 0,
+      isRouter: false,
+      isLight: false,
       children: [
         {
           title: '折扣商品',
-          url: '/goods-manager/goods-money',
+          url: '/goods-manager/money',
+          isRouter: true,
+          isLight: false,
         },
         {
           title: '播豆商品',
-          url: '/goods-manager/goods-integrals',
+          url: '/goods-manager/credits',
+          isRouter: true,
+          isLight: false,
         },
       ],
-      showHeight: HEIGHT,
     },
     {
       title: '订单管理',
@@ -65,107 +75,125 @@
       children: [
         {
           title: '用户订单',
-          url: '/order-manager?pageType=user',
+          url: '/order-manager/user',
+          isRouter: true,
+          isLight: false,
         },
         {
           title: '商家订单',
-          url: '/order-manager?pageType=merchant',
+          url: '/order-manager/merchant',
+          isRouter: true,
+          isLight: false,
         },
       ],
-      showHeight: HEIGHT,
     },
     {
       title: '大礼包',
       icon: require('./icon-gifts@2x.png'),
       iconSelected: require('./icon-gifts_select@2x.png'),
-      url: '/demo',
+      url: '',
       childrenIndex: 0,
+      isRouter: false,
+      isLight: false,
       children: [
         {
           title: '用户礼包',
           url: '',
+          isRouter: true,
+          isLight: false,
         },
         {
           title: '商家礼包',
           url: '',
+          isRouter: true,
+          isLight: false,
         },
       ],
-      showHeight: HEIGHT,
     },
   ]
   export default {
     name: '',
-    data() {
+    data () {
       return {
-        navList: NAVLIST,
+        navList: NAV_LIST,
         preTabIndex: 0,
       }
     },
-    // created() {
-    //   this._initNavList()
-    // },
-    // methods: {
-    //   _initNavList() {
-    //     let url = this.$route.fullPath
-    //     this.navList.forEach((item, index) => {
-    //       item.isSelected = false
-    //       if (item.url === url) {
-    //         item.isSelected = true
-    //       }
-    //       item.children.forEach(it => {
-    //         if (it.url === url) {
-    //           item.isSelected = true
-    //         }
-    //       })
-    //       this.preTabIndex = index
-    //     })
-    //   },
-    //   checkTab(index) {
-    //     let flag = this.$route.fullPath === this.navList[index].url
-    //     if (this.preTabIndex === index && flag) {
-    //       return
-    //     }
-    //     this.navList[this.preTabIndex].isSelected = false
-    //     this.preTabIndex = index
-    //     this.navList[index].isSelected = true
-    //     // 路由跳转
-    //     let url = ''
-    //     let currentNav = this.navList[index]
-    //     if (this.navList[index].children.length) {
-    //       let childrenIndex = currentNav.childrenIndex
-    //       url = currentNav.children[childrenIndex].url
-    //       this.$router.push(url)
-    //     } else {
-    //       url = currentNav.url
-    //       this.$router.push(url)
-    //     }
-    //   },
-    //   selectPage(idx) {
-    //     let flag = this.$route.fullPath === this.navList[this.preTabIndex].url
-    //     if (this.navList[this.preTabIndex].childrenIndex === idx && flag) return
-    //     this.navList[this.preTabIndex].childrenIndex = idx
-    //     // 路由跳转
-    //     this.$router.push(this.navList[this.preTabIndex].children[idx].url)
-    //   },
-    // },
-    filters: {
-      resetUrl(val, path) {
-        if (path.includes(val)) {
-          return path
-        } else {
-          return val
-        }
-      },
-      typeFn(val, path, item) {
-        if (path.includes(val)) {
-          return `height: ${item.showHeight * item.children.length}px`
-        } else {
-          return ''
-        }
-      },
+    created () {
+      this._initNavList()
     },
-    watch: {
-      $route(to) {
+    methods: {
+      rootNavHandle (item, index) {
+        this._resetNavStatus(this.navList)
+        if (item.isRouter) {
+          this.$router.push(item.url)
+        }
+        item.isLight = true
+        // 子路由
+        let children = item.children
+        let childrenIndex = item.childrenIndex
+        let currentChildren = children[childrenIndex]
+        if (children.length) {
+          currentChildren.isLight = true
+        }
+        if (currentChildren && currentChildren.isRouter) {
+          this.$router.push(currentChildren.url)
+        }
+      },
+      childNavHandle(it, idx, father) {
+        this._resetNavStatus(this.navList)
+        father.isLight = true
+        father.childrenIndex = idx
+        it.isLight = true
+        if (it.isRouter) {
+          this.$router.push(it.url)
+        }
+      },
+      _initNavList () {
+        let path = this.$route.fullPath
+        this._resetNavLight(this.navList, path)
+      },
+      _resetNavStatus (arr) {
+        arr.map(item => {
+          item.isLight = false
+          item.children.map(it => {
+            it.isLight = false
+          })
+        })
+        if (arr.children && arr.children.length) {
+          this._resetNavStatus(arr.children)
+        }
+      },
+      _resetNavLight(arr, path) {
+        let index = arr.findIndex(item => path.includes(item.url))
+        let fullIdx = arr.findIndex(item => path === item.url)
+        let current = {}
+        if (fullIdx > -1 || index > -1) {
+          current = fullIdx > -1 ? arr[fullIdx] : arr[Math.max(0, index)]
+        }
+        current.isLight = true
+        if (index !== -1 && current.children && current.children.length) {
+          return this._resetNavLight(current.children, path)
+        }
+      }
+    },
+    filters: {
+      childrenActive(val, item) {
+        let styles = val
+        if (item.children.length && item.isLight) {
+          styles = `height:${item.children.length * HEIGHT}px`
+        }
+        return styles
+      },
+      isActive (val, item) {
+        let cname = val
+        if (item.isLight) {
+          cname = 'active'
+        }
+        if (item.isLight && item.children && item.children.length) {
+          cname += ' no-border'
+        }
+        return cname
       },
     },
   }
@@ -176,19 +204,10 @@
   $color-menu-tag = #FF533C
   $color-menu-text = #6E748B
   $color-menu-text-active = #fff
+  $color-menu-bg-active = rgba(255, 255, 255, 0.1)
+  $color-menu-bg = rgba(255, 255, 255, 0)
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
-
-  .text
-    color: $color-menu-text
-    font-family: PingFangSC-Regular
-    font-size: 16px
-    flex: 1
-    overflow: hidden
-    background: rgba(255, 255, 255, 0)
-    box-sizing: border-box
-    border-left: 5px solid transparent
-    transition: all .2s
 
   .navigation
     position: fixed
@@ -200,6 +219,7 @@
     min-height: 100vh
     z-index: 1000
     overflow-y: auto
+    user-select: none
     header
       layout(row)
       height: 80px
@@ -215,24 +235,46 @@
         color: #fff
         font-family: PingFangSC-Semibold
         letter-spacing: 6px
-    .nav-wrapper
+    dl
+      font-family: PingFangSC-Regular
+      color: $color-menu-text
+      font-size: 16px
       cursor: pointer
-      .nav-item-wrapper
+      dt
         layout(row, block, nowrap)
         align-items: center
         width: 100%
         height: $tab-height
         overflow: hidden
+        background: $color-menu-bg
         box-sizing: border-box
         border-left: 5px solid transparent
         transition: all .2s
         &:hover
-          background: rgba(255, 255, 255, 0.1)
-        .icon
+          background: $color-menu-bg-active
+        &.active
+          border-left: 5px solid $color-menu-tag
+          background: $color-menu-bg-active
+          &.no-border
+            border-color: transparent
+          & > p
+            color: $color-white
+          & > i
+            icon-image('icon-pressed_select')
+            &.rotate
+              transform: rotate(90deg)
+        p
+          flex: 1
+          overflow: hidden
+          background: rgba(255, 255, 255, 0)
+          box-sizing: border-box
+          border-left: 5px solid transparent
+          transition: all .2s
+        img
           height: 19px
           width: @height
           margin: 0 10px 0 30px
-        .arrow-right
+        i
           height: 10px
           width: 10px
           icon-image('icon-pressed')
@@ -240,38 +282,26 @@
           margin-right: 30px
           transform rotate(0deg)
           transition: transform 0.2s
-      .child-wrapper
+      dd
         height: 0
         transition: height 0.3s
         layout()
         overflow: hidden
-        .child
+        p
           width: 100%
           layout()
+          background: $color-menu-bg
           align-items: center
           justify-content: center
           flex: 1
+          box-sizing :border-box
           border-left: 5px solid transparent
           margin: 5px 0
+          transition: all .2s
           &:hover
-            background: rgba(255, 255, 255, 0.1)
-
-    .child-active
-      background: rgba(255, 255, 255, 0.1)
-      &.text
-        color: $color-menu-text-active
-        border-left: 5px solid $color-menu-tag !important
-
-    .router-link-active.nav-item-wrapper
-      border-left: 5px solid $color-menu-tag
-      background: rgba(255, 255, 255, 0.1)
-      & > .arrow-right
-        icon-image('icon-pressed_select')
-      & > .text
-        color: $color-menu-text-active
-      &.father-item
-        border-left: 5px solid transparent
-        .arrow-right
-          transform: rotate(90deg)
-
+            background: $color-menu-bg-active
+          &.active
+            border-left: 5px solid $color-menu-tag
+            background: $color-menu-bg-active
+            color: $color-white
 </style>
