@@ -5,14 +5,14 @@
       <p>兑换商城</p>
     </header>
     <dl v-for="(item, index) in navList" :key="index">
-      <dt @click="rootNavHandle(item, index)" :class=" '' | isActive(item)">
+      <dt @click="navHandle(item, index)" :class=" '' | isActive(item)">
         <img :src="item.isLight ? item.iconSelected : item.icon" alt="">
         <p>{{item.title}}</p>
         <i :class="item.children.length ? 'rotate' : ''"></i>
       </dt>
       <dd :style="'' | childrenActive(item)">
         <template v-for="(it, idx) in item.children">
-          <p :key="idx" :class=" '' | isActive(it)" @click="childNavHandle(it, idx, item)">{{it.title}}</p>
+          <p :key="idx" :class=" '' | isActive(it)" @click="navHandle(it, idx, item)">{{it.title}}</p>
         </template>
       </dd>
     </dl>
@@ -123,35 +123,31 @@
       this._initNavList()
     },
     methods: {
-      rootNavHandle (item, index) {
+      navHandle (item, index, father) {
+        // 重置路由器
         this._resetNavStatus(this.navList)
+        // 设置父级
+        if (father) {
+          father.isLight = true
+          father.childrenIndex = index
+        }
+        // 设置自身
         if (item.isRouter) {
           this.$router.push(item.url)
         }
         item.isLight = true
-        // 子路由
-        let children = item.children
-        let childrenIndex = item.childrenIndex
-        let currentChildren = children[childrenIndex]
-        if (children.length) {
-          currentChildren.isLight = true
+        // 设置子路由
+        if (item.children) {
+          let children = item.children
+          let childrenIndex = item.childrenIndex
+          let currentChildren = children[childrenIndex]
+          if (children.length) {
+            currentChildren.isLight = true
+          }
+          if (currentChildren && currentChildren.isRouter) {
+            this.$router.push(currentChildren.url)
+          }
         }
-        if (currentChildren && currentChildren.isRouter) {
-          this.$router.push(currentChildren.url)
-        }
-      },
-      childNavHandle(it, idx, father) {
-        this._resetNavStatus(this.navList)
-        father.isLight = true
-        father.childrenIndex = idx
-        it.isLight = true
-        if (it.isRouter) {
-          this.$router.push(it.url)
-        }
-      },
-      _initNavList () {
-        let path = this.$route.fullPath
-        this._resetNavLight(this.navList, path)
       },
       _resetNavStatus (arr) {
         arr.map(item => {
@@ -163,6 +159,10 @@
         if (arr.children && arr.children.length) {
           this._resetNavStatus(arr.children)
         }
+      },
+      _initNavList () {
+        let path = this.$route.fullPath
+        this._resetNavLight(this.navList, path)
       },
       _resetNavLight(arr, path) {
         let index = arr.findIndex(item => path.includes(item.url))
