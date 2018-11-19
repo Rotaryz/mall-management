@@ -32,7 +32,7 @@
     bottom: 0
     right: 0
     left: $menu-width
-    z-index: 888
+    z-index: 1500
     layout()
     justify-content :center
     align-items :center

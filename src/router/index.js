@@ -29,71 +29,75 @@ const route = new Router({
           path: 'user-manager',
           component: UserManager,
           meta: {
-            title: '用户管理',
-          },
+            title: '用户管理'
+          }
         },
         {
           path: 'merchant-manager',
           component: MerchantManager,
           meta: {
-            title: '商家管理',
-          },
+            title: '商家管理'
+          }
         },
         {
           path: '/goods-manager/credits',
           component: GoodsManager,
           meta: {
-            title: '播豆商品',
+            title: '播豆商品'
           },
+          children: [
+            {
+              path: 'goods-detail',
+              component: GoodsDetail,
+              meta: {
+                title: '新建商品'
+              }
+            }
+          ]
         },
         {
           path: '/goods-manager/money',
           component: GoodsManager,
           meta: {
-            title: '折扣商品',
+            title: '折扣商品'
           },
-        },
-        {
-          path: '/goods-manager/credits/goods-detail',
-          component: GoodsDetail,
-          meta: {
-            title: '新建商品',
-          },
-        },
-        {
-          path: '/goods-manager/money/goods-detail',
-          component: GoodsDetail,
-          meta: {
-            title: '新建商品',
-          },
+          children: [
+            {
+              path: 'goods-detail',
+              component: GoodsDetail,
+              meta: {
+                title: '新建商品'
+              }
+            }
+          ]
         },
         {
           path: '/order-manager/user',
           component: OrderManager,
           meta: {
-            title: '用户订单',
-          },
+            title: '用户订单'
+          }
         },
         {
           path: '/order-manager/merchant',
           component: OrderManager,
           meta: {
-            title: '商家订单',
-          },
+            title: '商家订单'
+          }
         },
         {
           path: 'hello-world',
           component: HelloWorld,
           meta: {
-            title: 'one',
-          },
+            title: 'one'
+          }
         },
         {
           path: 'other-pages',
           component: OtherPages,
           meta: {
-            title: 'tab-two',
-          },
+            title: 'tab-two'
+          }
         },
         {
           path: '/gifts/user-gifts',
@@ -127,19 +131,19 @@ const route = new Router({
           path: 'demo',
           component: Demo,
           meta: {
-            title: 'demo',
-          },
-        },
-      ],
+            title: 'demo'
+          }
+        }
+      ]
     },
     {
       path: '/login',
       component: Login,
       meta: {
-        title: '登陆',
-      },
-    },
-  ],
+        title: '登陆'
+      }
+    }
+  ]
 })
 
 // todo

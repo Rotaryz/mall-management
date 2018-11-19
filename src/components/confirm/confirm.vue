@@ -16,7 +16,7 @@
 
   export default {
     components: {
-      BaseModal,
+      BaseModal
     },
     data() {
       return {
@@ -24,7 +24,7 @@
         text: '',
         show: false,
         timeout: true,
-        showActive: false,
+        showActive: false
       }
     },
     destroyed() {
@@ -56,8 +56,13 @@
         }, 100)
         this.showActive = false
         this.$emit('cancel')
-      },
+      }
     },
+    watch: {
+      $route() {
+        this.show = false
+      }
+    }
   }
 </script>
 
@@ -76,6 +81,7 @@
       text-align: center
       display: flex
       justify-content: center
+      user-select :none
       .btn
         width: 96px
         height: 40px
