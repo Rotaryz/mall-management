@@ -139,6 +139,7 @@
     overflow :hidden
     layout(row,block,nowrap)
     align-items :center
+
   .goods-manager
     position :relative
     .goods-manager-wrapper

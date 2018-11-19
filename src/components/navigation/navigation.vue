@@ -217,7 +217,7 @@
     box-shadow: 3px 0 4px 0 rgba(0, 8, 39, 0.30)
     width: $menu-width
     min-height: 100vh
-    z-index: 1000
+    z-index: 2000
     overflow-y: auto
     user-select: none
     header
