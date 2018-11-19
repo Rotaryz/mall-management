@@ -39,7 +39,7 @@
       change(time) {
         this.$emit('change', time)
       }
-    },
+    }
   }
 </script>
 

@@ -49,7 +49,7 @@
     components: {
       BasePanel,
       Search
-    },
+    }
   }
 </script>
 

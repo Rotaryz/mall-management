@@ -59,10 +59,10 @@
           return {
             total: 30, // 总数量
             per_page: 10, // 一页条数
-            total_page: 5, // 总页数
+            total_page: 5 // 总页数
           }
-        },
-      },
+        }
+      }
     },
     data() {
       return {
@@ -74,7 +74,7 @@
         backClipped: true,
         preClipped: false,
         showFirst: false,
-        showEnd: true,
+        showEnd: true
       }
     },
     computed: {
@@ -133,7 +133,7 @@
           }
         }
         return ret
-      },
+      }
     },
 
     created() {
@@ -208,8 +208,8 @@
       beginPage(page = 1) {
         this.pageInput = ''
         this.page = page
-      },
-    },
+      }
+    }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">

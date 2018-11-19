@@ -31,7 +31,7 @@
       showHeight: HEIGHT,
       isRouter: true,
       isLight: false,
-      children: [],
+      children: []
     },
     {
       title: '商家管理',
@@ -41,7 +41,7 @@
       childrenIndex: 0,
       isRouter: true,
       isLight: false,
-      children: [],
+      children: []
     },
     {
       title: '商品管理',
@@ -56,15 +56,15 @@
           title: '折扣商品',
           url: '/goods-manager/money',
           isRouter: true,
-          isLight: false,
+          isLight: false
         },
         {
           title: '播豆商品',
           url: '/goods-manager/credits',
           isRouter: true,
-          isLight: false,
-        },
-      ],
+          isLight: false
+        }
+      ]
     },
     {
       title: '订单管理',
@@ -77,15 +77,15 @@
           title: '用户订单',
           url: '/order-manager/user',
           isRouter: true,
-          isLight: false,
+          isLight: false
         },
         {
           title: '商家订单',
           url: '/order-manager/merchant',
           isRouter: true,
-          isLight: false,
-        },
-      ],
+          isLight: false
+        }
+      ]
     },
     {
       title: '大礼包',
@@ -100,23 +100,23 @@
           title: '用户礼包',
           url: '',
           isRouter: true,
-          isLight: false,
+          isLight: false
         },
         {
           title: '商家礼包',
           url: '',
           isRouter: true,
-          isLight: false,
-        },
-      ],
-    },
+          isLight: false
+        }
+      ]
+    }
   ]
   export default {
     name: '',
     data () {
       return {
         navList: NAV_LIST,
-        preTabIndex: 0,
+        preTabIndex: 0
       }
     },
     created () {
@@ -194,8 +194,8 @@
           cname += ' no-border'
         }
         return cname
-      },
-    },
+      }
+    }
   }
 </script>
 

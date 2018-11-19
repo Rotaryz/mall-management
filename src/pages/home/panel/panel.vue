@@ -30,7 +30,7 @@
       return {
         image: `http://musicugc.qianqian.com/ugcdiy/pic/15be740121443b5a0f83fbd8104aadf5.jpg`,
         showLogout: false,
-        showModal: false,
+        showModal: false
       }
     },
     methods: {
@@ -43,8 +43,8 @@
       },
       hideLogoutHandle() {
         this.showLogout = false
-      },
-    },
+      }
+    }
   }
 </script>
 
@@ -79,6 +79,7 @@
         height: $common-height
         background: #fff
         border-bottom-1px(#eee)
+        z-index :1000
         .userInfo-wrapper
           position: relative
           layout(row)
