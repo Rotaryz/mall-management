@@ -9,7 +9,11 @@
         <form>
           <section>
             <p class="left key-point">商品标题</p>
-            <input class="middle title-input animate-hover" type="text" maxlength="40" placeholder="请输入">
+            <div class="middle">
+              <div class="before"></div>
+              <input type="text" maxlength="40" placeholder="请输入">
+              <div class="after"></div>
+            </div>
             <p class="right">最长限40字</p>
           </section>
         </form>
@@ -55,8 +59,8 @@
       position :relative
     &:before
       content : '*'
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
+      font-family: PingFangSC-Regular
+      font-size: 14px
       color: $color-main
       position :absolute
       top:1px
@@ -70,11 +74,11 @@
     .detail-wrapper
       padding:30px 0 40px
       header
-        font-family: PingFangSC-Medium;
-        font-size: 16px;
-        color: #333333;
-        letter-spacing: 0;
-        line-height: 16px;
+        font-family: PingFangSC-Medium
+        font-size: 16px
+        color: #333333
+        letter-spacing: 0
+        line-height: 16px
         layout(row)
         align-items :center
         i
@@ -88,22 +92,17 @@
           margin-top :30px
           layout(row)
           align-items :center
-          font-family: PingFangSC-Regular;
+          font-family: PingFangSC-Regular
           font-size :14px
           .left
-            color: #2A2A2A;
+            color: #2A2A2A
             width :96px
           .middle
-            background: #FFFFFF;
-            border: 1px solid #D9D9D9;
-            border-radius: 4px;
-            &.title-input
-              width :450px
-              height :44px
-              padding :0 10px
-              color: $color-text-main
+            input-animate(450,44)
+            & > input
+              text-indent :10px
           .right
-            color: #ACACAC;
+            color: #ACACAC
             margin-left :10px
 
 </style>

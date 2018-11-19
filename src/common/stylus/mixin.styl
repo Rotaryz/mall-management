@@ -164,3 +164,88 @@ common-scroll-bar()
   &::-webkit-scrollbar-track
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .15)
     border-radius: 10px
+
+border-animate($color = #4985fc, $radius = 2px, $font-color = #333)
+  position: relative
+  &:after
+    content: ''
+    border-top: 0.5px solid transparent
+    border-bottom: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 100%
+    width: 0
+    right: 0
+    top: -0.5px
+    border-radius $radius
+    transition: all 0.3s ease-out
+  &:before
+    content: ''
+    border-right: 0.5px solid transparent
+    border-left: 0.5px solid transparent
+    position: absolute
+    z-index: 5
+    height: 0
+    width: 100%
+    bottom: 0
+    left: 0
+    border-radius $radius
+    transition: all 0.3s ease-out
+  &:hover
+    color: $font-color
+    transition: all 0.3s ease-out
+    &:after
+      border-color: $color
+      transition: all 0.3s ease-out
+      width: 100%
+    &:before
+      border-color: $color
+      transition: all 0.3s ease-out
+      height: 100%
+
+// 宽度= 原宽度 + 1; 高度= 原高度 + 1
+input-animate($w, $h,$color = $color-text-999, $radius = 2px,$l = -1px, $t = -1px, $b = 0, $font-color = $color-text-main)
+  $relative-width = 2
+  position: relative
+  box-sizing: content-box
+  input, textarea
+    border: 1px solid $color-sub-line
+    position: relative
+    z-index: 10
+    border-radius :$radius
+    width :($w)px
+    height :($h)px
+  .after
+    border-top: 1px solid transparent
+    border-bottom: 1px solid transparent
+    position: absolute
+    z-index: 5
+    height: ($h + $relative-width)px
+    width: 0
+    right: 0
+    top: $t
+    border-radius $radius
+    transition: all 0.4s ease-out
+  .before
+    border-right: 1px solid transparent
+    border-left: 1px solid transparent
+    position: absolute
+    z-index: 5
+    height: 0
+    width: ($w + $relative-width)px
+    bottom: $b
+    left: $l
+    border-radius $radius
+    transition: all 0.4s ease-out
+  &:hover
+    input, textarea
+      border: 1px solid transparent
+      transition: all 0.4s ease-out
+    .after
+      border-color: $color
+      transition: all 0.4s ease-out
+      width: ($w + $relative-width)px
+    .before
+      border-color: $color
+      transition: all 0.4s ease-out
+      height: ($h + $relative-width)px
