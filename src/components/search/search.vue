@@ -53,8 +53,10 @@
       transition: all 0.4s ease-out
       .input-box
         position: relative
-        z-index: 2
-        border: 0.5px solid $color-text-D9
+        z-index: 10
+        border-width: 1px
+        border-style: solid
+        border-color: $color-text-D9
         border-right: 0
         width: 224px
         border-radius: 4px 0 0 4px
@@ -71,10 +73,10 @@
         border-bottom: 0.5px solid transparent
         position: absolute
         z-index: 5
-        height: 27px
+        height: 29px
         width: 0
         right: 0
-        top: 0
+        top: -1px
         border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       .before
@@ -82,24 +84,24 @@
         position: absolute
         z-index: 5
         height: 0
-        width: 224.5px
+        width: 225.5px
         bottom: 0
-        left: 0
+        left: -1px
         border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       &:hover
         .input-box
           border: 0.5px solid transparent
-          border-right: 0
-          transition: all 0.4s ease-out
         .after
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          width: 224.5px
+          width: 225.5px
         .before
           border-color: $color-text-999
           transition: all 0.4s ease-out
           height: 29px
+
+
 
     .input-box::-webkit-input-placeholder { /* WebKit browsers */
       color: $color-ccc
@@ -120,9 +122,9 @@
     .btn-box
       background: $color-main
       width: 48px
-      height: 28px
+      height: 29px
       text-align: center
-      line-height: 28px
+      line-height: 29px
       border-radius: 0 4px 4px 0
       box-sizing: border-box
       font-family: $font-family-regular
