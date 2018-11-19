@@ -31,9 +31,9 @@
       this.timeout && clearTimeout(this.timeout)
     },
     methods: {
-      showConfirm(title, text) {
-        this.title = title
+      showConfirm(text, title) {
         this.text = text
+        this.title = title
         this.show = true
         this.showActive = true
       },

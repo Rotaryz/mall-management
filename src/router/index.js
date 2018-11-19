@@ -11,6 +11,8 @@ const GoodsManager = () => import('pages/goods-manager/goods-manager')
 const OrderManager = () => import('pages/order-manager/order-manager')
 const UserManager = () => import('pages/user-manager/user-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
+const UserGifts = () => import('pages/user-gifts/user-gifts')
+const BusinessGifts = () => import('pages/business-gifts/business-gifts')
 
 Vue.use(Router)
 
@@ -60,6 +62,20 @@ const route = new Router({
           component: OtherPages,
           meta: {
             title: 'tab-two'
+          }
+        },
+        {
+          path: 'user-gifts',
+          component: UserGifts,
+          meta: {
+            title: '用户大礼包'
+          }
+        },
+        {
+          path: 'business-gifts',
+          component: BusinessGifts,
+          meta: {
+            title: '商家大礼包'
           }
         },
         {

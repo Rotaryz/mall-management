@@ -69,7 +69,7 @@
       },
       showConfirm(e) {
         e.preventDefault()
-        this.$refs.confirm.showConfirm('上架', '你确定？')
+        this.$refs.confirm.showConfirm('你确定？')
       },
       confirm() {
         console.log('confirm')
