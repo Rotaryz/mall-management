@@ -14,6 +14,8 @@ const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 const UserGifts = () => import('pages/user-gifts/user-gifts')
 const BusinessGifts = () => import('pages/business-gifts/business-gifts')
+const NewUserGifts = () => import('pages/new-user-gifts/new-user-gifts')
+const NewBusinessGifts = () => import('pages/new-business-gifts/new-business-gifts')
 
 Vue.use(Router)
 
@@ -94,17 +96,31 @@ const route = new Router({
           },
         },
         {
-          path: 'user-gifts',
+          path: '/gifts/user-gifts',
           component: UserGifts,
           meta: {
             title: '用户大礼包'
           }
         },
         {
-          path: 'business-gifts',
+          path: '/gifts/business-gifts',
           component: BusinessGifts,
           meta: {
             title: '商家大礼包'
+          }
+        },
+        {
+          path: '/gifts/user-gifts/new-user-gifts',
+          component: NewUserGifts,
+          meta: {
+            title: '用户大礼包'
+          }
+        },
+        {
+          path: '/gifts/user-gifts/new-business-gifts',
+          component: NewBusinessGifts,
+          meta: {
+            title: '用户大礼包'
           }
         },
         {

@@ -1,7 +1,7 @@
 <template>
-  <base-panel :pageDetails="pageDetails" @navToPage="navToPage" v-if="!createNew">
+  <base-panel :pageDetails="pageDetails" @navToPage="navToPage">
     <div slot="content" class="user-gifts">
-      <div class="header-btn">新建大礼包</div>
+      <div class="header-btn hand" @click="createNew">新建大礼包</div>
       <div class="content-list">
         <div class="list-header border-bottom-1px">
           <div class="header-key" :class="item.class" v-for="(item, index) in data">
@@ -22,48 +22,15 @@
               <span class="before" v-if="val.show === 'status'" :class="{'green': index%2 === 0}">{{index%2 === 0 ? '已开启' : '已关闭'}}</span>
 
               <div :class="val.class" v-if="val.show === 'last'">
-                <span class="handle-item" @click="showPop('open', item)">修改</span>
-                <span class="handle-item" @click="showPop('close', item)">关闭</span>
-                <span class="handle-item" :class="{'grey': grey}" @click="showPop('delete', item)">删除</span>
+                <span class="handle-item hand" @click="showPop('open', item)">修改</span>
+                <span class="handle-item hand" @click="showPop('close', item)">关闭</span>
+                <span class="handle-item hand" :class="{'grey': grey}" @click="showPop('delete', item)">删除</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <confirm ref="confirm" @confirm="confirm" @cancel="cancel"></confirm>
-    </div>
-  </base-panel>
-  <base-panel v-else :isShowPageDetails="false">
-    <div slot="content" class="create-new">
-      <h3 class="title">新建大礼包</h3>
-      <div class="msg-content">
-        <div class="item">
-          <span class="label">标题</span>
-          <input class="title-text" v-model="msg.titleText" type="text">
-          <em class="tip">最长限40字</em>
-        </div>
-        <div class="item">
-          <span class="label">库存</span>
-          <input class="title-text" v-model="msg.titleText" type="text">
-          <em class="tip">最长限40字</em>
-        </div>
-        <div class="item">
-          <span class="label">价格</span>
-          <input class="title-text" v-model="msg.titleText" type="text">
-          <em class="tip">最长限40字</em>
-        </div>
-        <div class="item">
-          <span class="label">播豆</span>
-          <input class="title-text" v-model="msg.titleText" type="text">
-          <em class="tip">最长限40字</em>
-        </div>
-        <div class="item">
-          <span class="label">佣金</span>
-          <input class="title-text" v-model="msg.titleText" type="text">
-          <em class="tip">最长限40字</em>
-        </div>
-
-      </div>
     </div>
   </base-panel>
 </template>
@@ -93,15 +60,11 @@
           total: 100, // 总数量
           per_page: 10, // 一页条数
           total_page: 10, // 总页数
-        },
-        createNew: false,
-        msg: {
-          titleText: ''
         }
       }
     },
     methods: {
-      showPop(type) {
+      showPop(type) { // 确认弹窗
         this.popType = type
         switch (type) {
           case 'open':
@@ -122,8 +85,11 @@
       cancel() {
         console.log('cancel')
       },
-      navToPage(page) {
+      navToPage(page) { // 翻页
         console.log(page)
+      },
+      createNew() { // 新建大礼包
+        this.$router.push({path: '/gifts/user-gifts/new-user-gifts'})
       }
     },
     watch: {
@@ -214,6 +180,9 @@
               overflow: hidden
               -webkit-line-clamp: 2
               -webkit-box-orient: vertical
+
+          .overflow
+            no-wrap()
           .flex1
             flex: 1.8
           .flex2
@@ -237,7 +206,6 @@
             .handle-item
               padding: 0 7px
               border-left: 0.5px solid #d3d3d3
-              cursor: pointer
               &:first-child
                 border-left: 0
                 padding-left: 0
