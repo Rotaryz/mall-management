@@ -59,7 +59,7 @@
         pageDetails: {
           total: 100, // 总数量
           per_page: 10, // 一页条数
-          total_page: 10, // 总页数
+          total_page: 10 // 总页数
         }
       }
     },
@@ -94,7 +94,7 @@
     watch: {
       $route(to, from) {
         this.pageType = to.query.pageType
-      },
+      }
     },
     components: {
       BasePanel,

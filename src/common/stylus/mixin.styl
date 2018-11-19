@@ -165,7 +165,7 @@ common-scroll-bar()
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .15)
     border-radius: 10px
 
-border-animate($color = #4985fc, $radius = 2px, $font-color = #333)
+border-animate($color = $color-text-999, $radius = 4px, $font-color = #333)
   position: relative
   &:after
     content: ''
@@ -204,7 +204,7 @@ border-animate($color = #4985fc, $radius = 2px, $font-color = #333)
       height: 100%
 
 // 宽度= 原宽度 + 1; 高度= 原高度 + 1
-input-animate($w, $h,$color = $color-text-999, $radius = 2px,$l = -1px, $t = -1px, $b = 0, $font-color = $color-text-main)
+input-animate($w, $h,$radius = 4px,$color = $color-text-999,$l = -1px, $t = -1px, $b = 0, $font-color = $color-text-main)
   $relative-width = 2
   position: relative
   box-sizing: content-box
@@ -213,14 +213,14 @@ input-animate($w, $h,$color = $color-text-999, $radius = 2px,$l = -1px, $t = -1p
     position: relative
     z-index: 10
     border-radius :$radius
-    width :($w)px
-    height :($h)px
+    width :($w - $relative-width)px
+    height :($h - $relative-width)px
   .after
     border-top: 1px solid transparent
     border-bottom: 1px solid transparent
     position: absolute
     z-index: 5
-    height: ($h + $relative-width)px
+    height: ($h)px
     width: 0
     right: 0
     top: $t
@@ -232,7 +232,7 @@ input-animate($w, $h,$color = $color-text-999, $radius = 2px,$l = -1px, $t = -1p
     position: absolute
     z-index: 5
     height: 0
-    width: ($w + $relative-width)px
+    width: ($w)px
     bottom: $b
     left: $l
     border-radius $radius
@@ -244,8 +244,8 @@ input-animate($w, $h,$color = $color-text-999, $radius = 2px,$l = -1px, $t = -1p
     .after
       border-color: $color
       transition: all 0.4s ease-out
-      width: ($w + $relative-width)px
+      width: ($w)px
     .before
       border-color: $color
       transition: all 0.4s ease-out
-      height: ($h + $relative-width)px
+      height: ($h)px
