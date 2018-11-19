@@ -91,20 +91,20 @@
       title: '大礼包',
       icon: require('./icon-gifts@2x.png'),
       iconSelected: require('./icon-gifts_select@2x.png'),
-      url: '',
+      url: '/gifts',
       childrenIndex: 0,
       isRouter: false,
       isLight: false,
       children: [
         {
           title: '用户礼包',
-          url: '',
+          url: '/gifts/user-gifts',
           isRouter: true,
           isLight: false
         },
         {
           title: '商家礼包',
-          url: '',
+          url: '/gifts/business-gifts',
           isRouter: true,
           isLight: false
         }

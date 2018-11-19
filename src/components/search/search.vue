@@ -60,46 +60,49 @@
         border-right: 0
         width: 224px
         border-radius: 4px 0 0 4px
-        height: 27px
+        height: 29px
         font-size: $font-size-12
         font-family: $font-family-regular
         color: $color-text-main
         outline: none
+        box-sizing: border-box
         text-indent: 8px
         line-height: 28px
-        transition: all 0.4s ease-out
+        transition: all 0.4s
+        background-color: $color-white
+        background-clip: content-box
       .after
-        border-top: 0.5px solid transparent
-        border-bottom: 0.5px solid transparent
+        border-top: 1px solid transparent
+        border-bottom: 1px solid transparent
         position: absolute
         z-index: 5
-        height: 29px
+        height: 27px
         width: 0
         right: 0
-        top: -1px
+        top: 0
         border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       .before
-        border-left: 0.5px solid transparent
+        border-left: 1px solid transparent
         position: absolute
         z-index: 5
         height: 0
-        width: 225.5px
+        width: 224px
         bottom: 0
-        left: -1px
+        left: 0
         border-radius 4px 0 0 4px
         transition: all 0.4s ease-out
       &:hover
         .input-box
-          border: 0.5px solid transparent
+          border-color: transparent
         .after
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          width: 225.5px
+          width: 224px
         .before
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          height: 29px
+          height: 27px
 
 
 
