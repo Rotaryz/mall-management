@@ -3,7 +3,7 @@
     <div slot="content" class="user-gifts">
       <div class="header-btn hand" @click="createNew">新建大礼包</div>
       <div class="content-list">
-        <div class="list-header border-bottom-1px">
+        <div class="list-header">
           <div class="header-key" :class="item.class" v-for="(item, index) in data">
             <span class="contxt">{{item.title}}</span>
           </div>
@@ -59,7 +59,7 @@
         pageDetails: {
           total: 100, // 总数量
           per_page: 10, // 一页条数
-          total_page: 10, // 总页数
+          total_page: 10 // 总页数
         }
       }
     },
@@ -92,9 +92,6 @@
       }
     },
     watch: {
-      $route(to, from) {
-        this.pageType = to.query.pageType
-      },
     },
     components: {
       BasePanel,
@@ -132,13 +129,13 @@
         background: $color-FAFAFA
         height: 50px
         line-height: 50px
-        font-family: $font-family-regular
+        font-family: $font-family-medium
         display: flex
         text-align: left
         justify-content: space-between
         padding-left: 2vw
-        border-bottom-1px(#E1E4E5)
-        color: $color-text-sub
+        border-bottom: 1px solid $color-E1E4E5
+        color: $color-text-main
         .header-key
           flex: 1
           overflow: hidden
@@ -173,6 +170,7 @@
               height: 40px
               margin-right: 10px
             .title
+              word-break: break-all
               white-space: pre-wrap
               display: -webkit-box
               overflow: hidden

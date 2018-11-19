@@ -5,7 +5,7 @@
       <div class="msg-content">
         <div class="item">
           <span class="label">标题</span>
-          <input v-model="msg.titleText" placeholder="请输入标题"  class="title-text animate-hover" type="text">
+          <input v-model="msg.titleText" class="title-text animate-hover" type="text">
           <em class="tip">最长限40字</em>
         </div>
         <div class="item">
@@ -30,24 +30,24 @@
         </div>
         <div class="item">
           <span class="label">库存</span>
-          <input class="title-text short" v-model="msg.titleText" type="text" placeholder="请输入库存">
+          <input class="title-text short" v-model="msg.titleText" type="text">
           <span class="unit">个</span>
           <em class="tip">大礼包已售罄隐藏购买入口</em>
         </div>
         <div class="item">
           <span class="label">价格</span>
-          <input class="title-text short" v-model="msg.titleText" type="text" placeholder="请输入价格">
+          <input class="title-text short" v-model="msg.titleText" type="text">
           <span class="unit">元</span>
         </div>
         <div class="item">
           <span class="label">播豆</span>
-          <input class="title-text short" v-model="msg.titleText" type="text" placeholder="请输入播豆">
+          <input class="title-text short" v-model="msg.titleText" type="text">
           <span class="unit">个</span>
           <em class="tip">0表示不赠送播豆</em>
         </div>
         <div class="item">
           <span class="label">佣金</span>
-          <input class="title-text short" v-model="msg.titleText" type="text" placeholder="请输入佣金">
+          <input class="title-text short" v-model="msg.titleText" type="text">
           <span class="unit">%</span>
           <em class="tip">根据用户购买的价格结算佣金</em>
         </div>
@@ -55,34 +55,44 @@
         <div class="gifts-handle">
           <div class="top">
             <span class="label">赠品</span>
-            <span class="add-goods">添加</span>
+            <span class="add-goods" @click="addGoods">添加</span>
           </div>
           <div class="goods">
-            <div class="list-header border-bottom-1px">
+            <div class="list-header">
               <div class="header-key" :class="item.class" v-for="(item, index) in data">
                 <span class="contxt">{{item.title}}</span>
               </div>
             </div>
           </div>
           <div class="list-content">
-            <div class="list-item" v-for="(item, index) in data">
-              <div :class="val.class" v-for="(val, i) in data" >
-                <div :class="val.class" v-if="val.show === 'first'">
-                  <img class="head" src="./goods.jpg" alt="">
-                  <span class="title">随便写点字</span>
-                </div>
-
+            <div class="list-item" v-for="(item, index) in arr">
+              <div class="item flex1">
+                <img class="head" src="./goods.jpg" alt="">
+                <span class="name">随便写点字</span>
               </div>
+              <span class="item">100</span>
+              <div class="counter item">
+                <span class="sub text" @click="subCount(index)">-</span>
+                <input type="number" readonly class="number text" v-model="item.count">
+                <span class="add text" @click="addCount(index)">+</span>
+              </div>
+              <span class="item main">删除</span>
             </div>
           </div>
         </div>
+        <div class="btn-group">
+          <span @click="cancel" class="btn cancel">取消</span>
+          <span @click="confirm" class="btn confirm">确定</span>
+        </div>
       </div>
+      <select-goods ref="goodsList" @selectGoods="selectGoods" ></select-goods>
     </div>
   </base-panel>
 </template>
 
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
+  import SelectGoods from 'components/select-goods/select-goods'
 
   export default {
     name: 'business-gifts',
@@ -92,19 +102,57 @@
           titleText: ''
         },
         data: [
-          {title: '商品名称', class: 'flex1', type: 'first'},
-          {title: '价格', class: ''},
-          {title: '数量', class: ''},
-          {title: '操作', class: ''}
+          {title: '商品名称', class: 'item flex1', show: 'name'},
+          {title: '价格', class: 'item', text: '100'},
+          {title: '数量', class: 'item', show: 'counter', value: '1'},
+          {title: '操作', class: 'item main', text: '删除'}
+        ],
+        arr: [
+          {count: 1},
+          {count: 1},
+          {count: 1},
+          {count: 1},
+          {count: 1}
         ]
       }
     },
     methods: {
+      confirm() {
+        console.log('confirm')
+      },
+      cancel() {
+        this.$router.back()
+      },
+      selectGoods(goodsArr) {
+        let arrTemp = goodsArr
+        this.arr.map((item, index) => {
+          goodsArr.map((val, i) => {
+            if ((item && item.id) === (val && val.id)) {
+              arrTemp.splice(i, 1)
+              item.count += val.count
+            }
+          })
+        })
+        this.arr = [this.arr, ...arrTemp]
+        console.log(this.arr)
+      },
+      addGoods() {
+        this.$refs.goodsList.showGoodsList()
+      },
+      subCount(index) {
+        if (this.arr[index].count > 0) {
+          this.arr[index].count--
+        }
+      },
+      addCount(index) {
+        this.arr[index].count++
+      }
     },
     watch: {
     },
     components: {
-      BasePanel
+      BasePanel,
+      SelectGoods
     }
   }
 </script>
@@ -204,6 +252,7 @@
       .line
         padding: 15px 0
         border-bottom: 1px solid $color-E1E4E5
+
       .gifts-handle
         padding: 15px 0
         .top
@@ -224,18 +273,19 @@
             border: 1px solid $color-main
             border-radius: 4px
         .goods
+          padding-top: 15px
           .list-header
             flex: 1
             background: $color-FAFAFA
             height: 50px
             line-height: 50px
-            font-family: $font-family-regular
+            font-family: $font-family-medium
             display: flex
             text-align: left
             justify-content: space-between
             padding-left: 2vw
-            border-bottom-1px(#E1E4E5)
-            color: $color-text-sub
+            border-bottom-1px($color-E1E4E5)
+            color: $color-text-main
             .header-key
               flex: 1
               overflow: hidden
@@ -247,6 +297,7 @@
           .list-item
             height: 60px
             flex: 1
+            color: $color-text-sub
             display: flex
             align-items: center
             justify-content: space-between
@@ -263,45 +314,65 @@
               position: relative
               padding-right: 10px
               .head
-                width: 54px
+                width: 40px
                 height: 40px
                 margin-right: 10px
-              .title
+                border: 1px solid $color-ccc
+                border-radius: 2px
+              .name
+                width: 260px
+                word-break: break-all
                 white-space: pre-wrap
                 display: -webkit-box
                 overflow: hidden
                 -webkit-line-clamp: 2
                 -webkit-box-orient: vertical
+            .counter
+              display: flex
+              align-items: center
+              .text
+                color: $color-text-sub
+                font-size: 12px
+                height: 22px
+                line-height: 19px
+                text-align: center
+                display: block
+                font-family: $font-family-medium
+                border: 1px solid $color-text-D9
+                box-sizing: border-box
+                border-radius: 1px
+                margin-right: 5px
+                user-select: none
+              .sub
+                width: 22px
+              .number
+                width: 50px
+                color: $color-text-sub
+              .add
+                width: 22px
+                color: $color-white
+                background: $color-text-sub
 
-            .overflow
-              no-wrap()
+            .main
+              color: $color-main
             .flex1
               flex: 1.8
-            .flex2
-              flex: 1.5
-            .before
-              text-indent: 14px
-              display: block
-            .before:before
-              col-center()
-              left: 0
-              content: ''
-              width: 6px
-              height: 6px
-              border-radius: 10px
-              background: #F6262D
-            .green:before
-              background: #26BD26
-            .list-handle
-              color: $color-main
-              white-space: nowrap
-              .handle-item
-                padding: 0 7px
-                border-left: 0.5px solid #d3d3d3
-                &:first-child
-                  border-left: 0
-                  padding-left: 0
-              .grey
-                color: $color-text-2A
+      .btn-group
+        text-align: center
+        display: flex
+        user-select: none
+        margin-top: 45px
+        padding-left: 100px
+        .btn
+          width: 96px
+          height: 40px
+          line-height: 40px
+          border-radius: 3px
+          color: $color-text-main
+          border: 1px solid $color-text-D9
+        .confirm
+          color: $color-white
+          margin-left: 20px
+          background: $color-main
 
 </style>
