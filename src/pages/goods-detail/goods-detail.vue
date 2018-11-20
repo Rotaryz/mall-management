@@ -17,6 +17,19 @@
             <p class="right">最长限40字</p>
           </section>
           <section>
+            <p class="left key-point">商品图片</p>
+            <div class="middle pictures">
+              <nav>
+                <label v-for="(item, index) in '123456789012345'" :key="index">
+                  <i></i>
+                  <span>选择图片</span>
+                  <input type="file" accept="image/*" multiple>
+                </label>
+              </nav>
+              <p>上传图片的最佳尺寸：1:1，其他尺寸会影响页效果，格式png，jpeg，jpg，大小不超过2M，商品图片一共可以上传5张，默认第一张为主图封面</p>
+            </div>
+          </section>
+          <section>
             <p class="left key-point">商品库存</p>
             <div class="middle common">
               <div class="before"></div>
@@ -196,11 +209,58 @@
           .middle.title
             input-animate(450,44)
             & > input
-              text-indent :10px
+              text-indent :15px
           .middle.common
             input-animate(148,44)
             & > input
-              text-align :center
+              text-indent :15px
+          .middle.pictures
+            flex: 1
+            layout()
+            & > p
+              font-family: PingFangSC-Regular;
+              font-size: 14px;
+              color: #ACACAC;
+              line-height: 14px;
+            & > nav
+              layout(row)
+              label
+                display :block
+                position:relative
+                width :90px
+                height :90px
+                background: #FFFFFF;
+                border: 1px dashed #D9D9D9;
+                border-radius: 2px;
+                margin-bottom :14px
+                margin-right :14px
+                layout()
+                justify-content :center
+                align-items :center
+                cursor :pointer
+                i
+                  width :30px
+                  height :@width
+                  position :relative
+                  &:before
+                    content: ''
+                    width :100%
+                    height :2px
+                    background :#ddd
+                    col-center()
+                  &:after
+                    content: ''
+                    width :2px
+                    height :100%
+                    background :#ddd
+                    row-center()
+                span
+                  margin-top :10px
+                  font-size: 12px;
+                  color: #ACACAC;
+                input
+                  fill-box(absolute)
+                  display :none
           .right
             color: #ACACAC
             margin-left :10px
