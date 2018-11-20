@@ -54,7 +54,7 @@
     {name: '', title: '详细地址', className: 'flex2'},
     {name: '', title: '大礼包', className: 'flex1', showType: 'dot'},
     {name: '', title: '开店时间', className: 'flex1'},
-    {name: '', title: '操作', className: 'flex1'},
+    {name: '', title: '操作', className: 'flex1'}
   ]
   export default {
     name: 'merchantManager',
@@ -77,7 +77,7 @@
       BasePanel,
       BaseModal,
       Search
-    },
+    }
   }
 </script>
 
