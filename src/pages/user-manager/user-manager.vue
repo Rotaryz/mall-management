@@ -8,10 +8,10 @@
         </div>
         <div class="list-content">
           <div class="list-head">
-            <div class="list-head-item" v-for="(item, index) in listArr" :key="index" :class="item.type">{{item.title}}</div>
+            <div class="list-head-item" v-for="(item, index) in listArr" :key="index" :class="item.className">{{item.title}}</div>
           </div>
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
-            <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.type">
+            <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className">
               <span class="dot-box green-dot" v-if="index1 == 6"></span>
               <span class="dot-box red-dot" v-if="index1 == 6"></span>
               <span v-if="index1 != 0">{{item1.title}}</span>
@@ -29,14 +29,14 @@
   import Search from 'components/search/search'
 
   const LIST = [
-    {name: '', title: '用户头像', type: 'flex1'},
-    {name: '', title: '用户昵称', type: 'flex1'},
-    {name: '', title: '性别', type: 'flex1'},
-    {name: '', title: '地区', type: 'flex1'},
-    {name: '', title: '手机号', type: 'flex1'},
-    {name: '', title: '播豆', type: 'flex1'},
-    {name: '', title: '大礼包', type: 'flex1'},
-    {name: '', title: '注册时间', type: 'flex1'}
+    {name: '', title: '用户头像', className: 'flex1'},
+    {name: '', title: '用户昵称', className: 'flex1'},
+    {name: '', title: '性别', className: 'flex1'},
+    {name: '', title: '地区', className: 'flex1'},
+    {name: '', title: '手机号', className: 'flex1'},
+    {name: '', title: '播豆', className: 'flex1'},
+    {name: '', title: '大礼包', className: 'flex1'},
+    {name: '', title: '注册时间', className: 'flex1'}
   ]
   export default {
     name: 'merchantManager',
