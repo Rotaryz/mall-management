@@ -22,7 +22,8 @@
               <span class="before" v-if="val.show === 'status'" :class="{'green': index%2 === 0}">{{index%2 === 0 ? '已开启' : '已关闭'}}</span>
 
               <div :class="val.class" v-if="val.show === 'last'">
-                <span class="handle-item hand" @click="showPop('open', item)">修改</span>
+                <span class="handle-item hand" @click="goEdit(item)">修改</span>
+                <span class="handle-item hand" v-if="false" @click="showPop('open', item)">开启</span>
                 <span class="handle-item hand" @click="showPop('close', item)">关闭</span>
                 <span class="handle-item hand" :class="{'grey': grey}" @click="showPop('delete', item)">删除</span>
               </div>
@@ -30,7 +31,7 @@
           </div>
         </div>
       </div>
-      <confirm ref="confirm" @confirm="confirm" @cancel="cancel"></confirm>
+      <confirm ref="confirm" @confirm="confirm"></confirm>
     </div>
   </base-panel>
 </template>
@@ -60,30 +61,45 @@
           total: 100, // 总数量
           per_page: 10, // 一页条数
           total_page: 10 // 总页数
-        }
+        },
+        hasOther: true,
+        handleItem: ''
       }
     },
     methods: {
-      showPop(type) { // 确认弹窗
-        this.popType = type
+      showPop(type, item) { // 确认弹窗
+        this.handleItem = item
         switch (type) {
           case 'open':
-            console.log(this.$refs.confirm)
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            if (this.hasOther) {
+              this.popType = 'open1'
+              this.$refs.confirm.showConfirm('已有开启的大礼包，请关闭')
+            } else {
+              this.popType = 'open2'
+              this.$refs.confirm.showConfirm('确定要开启大礼包吗？')
+            }
             break
           case 'close':
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            this.popType = 'close'
+            this.$refs.confirm.showConfirm('确定要关闭大礼包吗？')
             break
           case 'delete':
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            this.popType = 'delete'
+            this.$refs.confirm.showConfirm('确定要删除大礼包吗？')
             break
         }
       },
       confirm() {
-        console.log('close')
+        if (this.popType === 'open2') {
+          console.log('open2')
+        } else if (this.popType === 'close') {
+          console.log('close')
+        } else if (this.popType === 'delete') {
+          console.log('delete')
+        }
       },
-      cancel() {
-        console.log('cancel')
+      goEdit(item) {
+        this.$router.replace({path: '/gifts/user-gifts/new-user-gifts', query: {id: item.id}})
       },
       navToPage(page) { // 翻页
         console.log(page)

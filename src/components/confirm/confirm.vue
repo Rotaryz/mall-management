@@ -4,8 +4,8 @@
       <!--<div class="title">{{title}}</div>-->
       <div class="text">{{text}}</div>
       <div class="btn-group">
-        <span @click="confirm" class="btn confirm">确定</span>
         <span @click="cancel" class="btn cancel">取消</span>
+        <span @click="confirm" class="btn confirm">确定</span>
       </div>
     </div>
   </base-modal>
@@ -88,9 +88,9 @@
         line-height: 40px
         border-radius: 3px
         border: 1px solid $color-text-D9
-      .confirm
-        border-right: 1px solid $color-line
       .cancel
+        border-right: 1px solid $color-line
+      .confirm
         border-right: 1px solid $color-main
         background: $color-main
         color: $color-white
