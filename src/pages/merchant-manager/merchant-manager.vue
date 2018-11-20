@@ -8,14 +8,14 @@
         </div>
         <div class="list-content">
           <div class="list-head">
-            <div class="list-head-item" v-for="(item, index) in listArr" :key="index" :class="item.type">{{item.title}}</div>
+            <div class="list-head-item" v-for="(item, index) in listArr" :key="index" :class="item.className">{{item.title}}</div>
           </div>
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
-            <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.type" v-if="index1 != (listArr.length - 1)">
-              <span class="dot-box green-dot" v-if="index1 == 6"></span>
-              <span class="dot-box red-dot" v-if="index1 == 6"></span>
-              <span v-if="index1 != 0">{{item1.title}}</span>
-              <img src="./logo.jpg" class="avatar" v-if="index1 == 0">
+            <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className" v-if="index1 != (listArr.length - 1)">
+              <span class="dot-box green-dot" v-if="item1.showType === 'dot'"></span>
+              <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
+              <span v-if="item1.showType !== 'img'">{{item1.title}}</span>
+              <img src="./logo.jpg" class="avatar" v-if="item1.showType === 'img'">
             </div>
             <div class="list-item-row red-item flex1 hand" @click="showModal">查看店铺</div>
           </div>
@@ -46,15 +46,15 @@
   import Search from 'components/search/search'
 
   const LIST = [
-    {name: '', title: '门店LOGO', type: 'flex1'},
-    {name: '', title: '门店名称', type: 'flex1'},
-    {name: '', title: '店长', type: 'flex1'},
-    {name: '', title: '手机号', type: 'flex1'},
-    {name: '', title: '地区', type: 'flex1'},
-    {name: '', title: '详细地址', type: 'flex2'},
-    {name: '', title: '大礼包', type: 'flex1'},
-    {name: '', title: '开店时间', type: 'flex1'},
-    {name: '', title: '操作', type: 'flex1'}
+    {name: 'logo', title: '门店LOGO', className: 'flex1', showType: 'img'},
+    {name: '', title: '门店名称', className: 'flex1'},
+    {name: '', title: '店长', className: 'flex1'},
+    {name: '', title: '手机号', className: 'flex1'},
+    {name: '', title: '地区', className: 'flex1'},
+    {name: '', title: '详细地址', className: 'flex2'},
+    {name: '', title: '大礼包', className: 'flex1', showType: 'dot'},
+    {name: '', title: '开店时间', className: 'flex1'},
+    {name: '', title: '操作', className: 'flex1'}
   ]
   export default {
     name: 'merchantManager',
