@@ -7,7 +7,7 @@
           <section>
             <search></search>
           </section>
-          <router-link :to="navUrl" class="btn">
+          <router-link to="goods-detail" class="btn" append>
             <div>
               <img class="g" src="./icon-add@2x.png" alt="">
               <p>新建商品</p>
@@ -70,18 +70,6 @@
     {text: '2018-03-15', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
     {text: '操作', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
   ]
-  const LIST_CREDITS = [
-    {text: '1', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
-    {text: '9999.99', type: '', title: '价格', wrapperStyle: 'flex: 1.1', subclass: ''},
-    {text: '9折', type: '', title: '商家折扣', wrapperStyle: 'flex: 1', subclass: ''},
-    {text: '1折', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
-    {text: '9999999', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '999999', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '999999', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '已上架', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
-    {text: '2018-03-15', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
-    {text: '操作', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
-  ]
   export default {
     name: 'GoodsManager',
     components: {
@@ -94,9 +82,6 @@
         listArr: LIST,
         manageList: new Array(10).fill(1)
       }
-    },
-    beforeRouteUpdate() {
-      console.log(2123)
     },
     created() {
     },
@@ -133,23 +118,6 @@
           styles += ` cursor: pointer`
         }
         return styles
-      }
-    },
-    watch: {
-      isMoneyPage() {
-        if (this.isMoneyPage) {
-          this.listArr = LIST
-        } else {
-          this.listArr = LIST_CREDITS
-        }
-      }
-    },
-    computed: {
-      isMoneyPage() {
-        return this.$route.path.includes('money')
-      },
-      navUrl() {
-        return this.$route.path + '/goods-detail'
       }
     }
   }
