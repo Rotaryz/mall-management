@@ -17,7 +17,7 @@
       <div class="list-content">
         <div class="list-item" v-for="(item, index) in arr">
           <div class="item">
-            <span class="checkbox" :class="{'checked':arr[index].checked}" @click="goodsCheck(item, index)"></span>
+            <span class="checkbox hand" :class="{'checked':arr[index].checked}" @click="goodsCheck(index)"></span>
           </div>
           <div class="item flex1">
             <img class="head" src="./goods.jpg" alt="">
@@ -25,15 +25,15 @@
           </div>
           <span class="item">168.8</span>
           <div class="counter item">
-            <span class="sub text" @click="subCount(index)">-</span>
+            <span class="sub text hand" @click="subCount(index)">-</span>
             <input type="number" readonly class="number text" v-model="item.count">
-            <span class="add  text" @click="addCount(index)">+</span>
+            <span class="add  text hand" @click="addCount(index)">+</span>
           </div>
         </div>
       </div>
       <div class="btn-group">
-        <span @click="confirm" class="btn confirm">确定</span>
-        <span @click="cancel" class="btn cancel">取消</span>
+        <span @click="cancel" class="btn cancel hand">取消</span>
+        <span @click="confirm" class="btn confirm hand">确定</span>
       </div>
     </div>
   </base-modal>
@@ -54,12 +54,12 @@
         headerList: ['勾选', '商品名称', '商品价格', '商品数量'],
         goodsCount: '1',
         arr: [
-          {checked: false, count: 1},
-          {checked: false, count: 1},
-          {checked: false, count: 1},
-          {checked: false, count: 1},
-          {checked: false, count: 1},
-          {checked: false, count: 1}
+          {checked: false, count: 1, name: 'a'},
+          {checked: false, count: 1, name: 'b'},
+          {checked: false, count: 1, name: 'c'},
+          {checked: false, count: 1, name: 'd'},
+          {checked: false, count: 1, name: 'e'},
+          {checked: false, count: 1, name: 'f'}
         ],
         selectArr: []
       }
@@ -78,17 +78,8 @@
           console.log('search')
         }, 1000)
       },
-      goodsCheck(item, index) {
+      goodsCheck(index) {
         this.arr[index].checked = !this.arr[index].checked
-        if (this.arr[index].checked) {
-          this.selectArr.push(item)
-        } else {
-          this.selectArr.map((val, i) => {
-            if ((val && val.id) === val.id) {
-              this.selectArr.splice(i, 1)
-            }
-          })
-        }
       },
       subCount(index) {
         if (this.arr[index].count > 0) {
@@ -99,6 +90,9 @@
         this.arr[index].count++
       },
       confirm() {
+        this.selectArr = this.arr.filter(item => {
+          return item.checked === true
+        })
         if (this.timeout) {
           setTimeout(() => {
             this.show = false
@@ -248,8 +242,9 @@
             box-sizing: border-box
             border-radius: 1px
             margin-right: 5px
+            user-select: none
           .sub
-            font-size: 16px
+            font-size: 17px
             width: 22px
           .number
             width: 50px
@@ -275,9 +270,9 @@
         line-height: 40px
         border-radius: 3px
         border: 1px solid $color-text-D9
-      .confirm
-        border-right: 1px solid $color-line
       .cancel
+        border-right: 1px solid $color-line
+      .confirm
         border-right: 1px solid $color-main
         background: $color-main
         color: $color-white
