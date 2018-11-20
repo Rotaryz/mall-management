@@ -27,6 +27,7 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import Search from 'components/search/search'
+  import { Customer } from 'api'
 
   const LIST = [
     {name: '', title: '用户头像', className: 'flex1'},
@@ -43,7 +44,28 @@
     data() {
       return {
         listArr: LIST,
-        manageList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        manageList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        page: 1,
+        mobile: '',
+        startAt: '',
+        endAt: ''
+      }
+    },
+    created() {
+      this.getList()
+    },
+    methods: {
+      getList() {
+        let data = {
+          page: this.page,
+          mobile: this.mobile,
+          start_at: this.startAt,
+          end_at: this.endAt
+        }
+        Customer.getCustomerList(data).then(res => {
+          this.$loading.hide()
+          console.log(res)
+        })
       }
     },
     components: {
