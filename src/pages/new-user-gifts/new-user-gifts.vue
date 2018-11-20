@@ -1,7 +1,7 @@
 <template>
   <base-panel :isShowPageDetails="false">
     <div slot="content" class="create-new">
-      <h3 class="title">新建大礼包</h3>
+      <div class="title">新建大礼包</div>
       <div class="msg-content">
         <div class="item">
           <span class="label">标题</span>
@@ -335,6 +335,7 @@
       font-size: $font-size-16
       font-family: $font-family-medium
       padding-left: 20px
+      color: $color-text-main
       position: relative
       &:before
         content: ''
@@ -344,6 +345,7 @@
         position: absolute
         left: 0
         col-center()
+        border-radius: 0
     .msg-content
       padding: 0 30px
       padding-top: 10px

@@ -60,16 +60,16 @@
           </div>
           <span class="unit">元</span>
         </div>
-        <div class="item">
-          <span class="label">佣金</span>
-          <div class="hover-short-input">
-            <span class="before"></span>
-            <span class="after"></span>
-            <input class="title-text short" v-model="msg.commission_rate" type="text">
-          </div>
-          <span class="unit">%</span>
-          <em class="tip">根据用户购买的价格结算佣金</em>
-        </div>
+        <!--<div class="item">-->
+          <!--<span class="label">佣金</span>-->
+          <!--<div class="hover-short-input">-->
+            <!--<span class="before"></span>-->
+            <!--<span class="after"></span>-->
+            <!--<input class="title-text short" v-model="msg.commission_rate" type="text">-->
+          <!--</div>-->
+          <!--<span class="unit">%</span>-->
+          <!--<em class="tip">根据用户购买的价格结算佣金</em>-->
+        <!--</div>-->
         <div class="line"></div>
         <div class="gifts-handle">
           <div class="top">
@@ -128,7 +128,7 @@
           giftpack_images: [],
           giftpack_stock: '',
           price: '',
-          commission_rate: '',
+          // commission_rate: '',
           giftpack_goods_skus: [],
           image_id: '' // 封面图id
         },
@@ -251,7 +251,7 @@
           {value: this.detailReg, txt: '请选择大礼包详情图'},
           {value: this.stockReg, txt: '请输入合法的库存数量'},
           {value: this.priceReg, txt: '请输入合法的价格'},
-          {value: this.rateReg, txt: '请输入正整数提成比例'},
+          // {value: this.rateReg, txt: '请输入正整数提成比例'},
           {value: this.goodsListReg, txt: '请添加赠品'}
         ]
         let res = this._testPropety(arr)
@@ -291,9 +291,9 @@
       priceReg() {
         return this.msg.price && MONEYREG.test(this.msg.price)
       },
-      rateReg() {
-        return this.msg.commission_rate && RATE.test(this.msg.commission_rate)
-      },
+      // rateReg() {
+      //   return this.msg.commission_rate && RATE.test(this.msg.commission_rate)
+      // },
       goodsListReg() {
         return this.msg.giftpack_goods_skus.length > 0
       }
@@ -320,6 +320,7 @@
       font-size: $font-size-16
       font-family: $font-family-medium
       padding-left: 20px
+      color: $color-text-main
       position: relative
       &:before
         content: ''
@@ -329,6 +330,7 @@
         position: absolute
         left: 0
         col-center()
+        border-radius: 0
     .msg-content
       padding: 0 30px
       padding-top: 10px
