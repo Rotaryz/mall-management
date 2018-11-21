@@ -93,13 +93,6 @@ const route = new Router({
         },
         {
           path: 'order-manager/merchant/order-detail',
-          component: OrderManagerUser,
-          meta: {
-            title: '用户订单'
-          }
-        },
-        {
-          path: 'order-manager/user/order-detail',
           component: OrderManagerDetail,
           meta: {
             title: '商家订单详情'
