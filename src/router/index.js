@@ -7,10 +7,12 @@ const OtherPages = () => import('pages/other-pages/other-pages')
 const Demo = () => import('pages/demo/demo')
 const Login = () => import('pages/login/login')
 const Home = () => import('pages/home/home')
-const OrderManager = () => import('pages/order-manager/order-manager')
+const OrderManagerMerchant = () => import('pages/order-manager-merchant/order-manager-merchant')
+const OrderManagerUser = () => import('pages/order-manager-user/order-manager-user')
+const OrderManagerDetail = () => import('pages/order-manager-detail/order-manager-detail')
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
-const GoodsManagerMoeny = () => import('pages/goods-manager-money/goods-manager-money')
+const GoodsManagerMoney = () => import('pages/goods-manager-money/goods-manager-money')
 const GoodsManagerCredits = () => import('pages/goods-manager-credits/goods-manager-credits')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 const UserGifts = () => import('pages/user-gifts/user-gifts')
@@ -41,45 +43,66 @@ const route = new Router({
           }
         },
         {
-          path: '/goods-manager/credits',
+          path: 'goods-manager/credits',
           component: GoodsManagerCredits,
           meta: {
             title: '播豆商品'
           }
         },
         {
-          path: '/goods-manager/credits/goods-detail',
+          path: 'goods-manager/credits/goods-detail',
           component: GoodsDetail,
           meta: {
             title: '新建商品'
           }
         },
         {
-          path: '/goods-manager/money',
-          component: GoodsManagerMoeny,
+          path: 'goods-manager/money',
+          component: GoodsManagerMoney,
           meta: {
             title: '折扣商品'
           }
         },
         {
-          path: '/goods-manager/money/goods-detail',
+          path: 'goods-manager/money/goods-detail',
           component: GoodsDetail,
           meta: {
             title: '播豆商品'
           }
         },
         {
-          path: '/order-manager/user',
-          component: OrderManager,
+          path: 'order-manager/user',
+          component: OrderManagerUser,
           meta: {
             title: '用户订单'
           }
         },
         {
-          path: '/order-manager/merchant',
-          component: OrderManager,
+          path: 'order-manager/user/order-detail',
+          component: OrderManagerDetail,
+          meta: {
+            title: '用户订单详情'
+          }
+        },
+        {
+          path: 'order-manager/merchant',
+          component: OrderManagerMerchant,
           meta: {
             title: '商家订单'
+          }
+        },
+        {
+          path: 'order-manager/merchant/order-detail',
+          component: OrderManagerUser,
+          meta: {
+            title: '用户订单'
+          }
+        },
+        {
+          path: 'order-manager/user/order-detail',
+          component: OrderManagerDetail,
+          meta: {
+            title: '商家订单详情'
           }
         },
         {
