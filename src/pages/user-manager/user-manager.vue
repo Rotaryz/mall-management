@@ -88,6 +88,7 @@
       font-family: $font-family-regular
       font-size: $font-size-14
       color: $color-text-main
+      margin-right :10px
   .list-content
     padding: 0 30px
     .list-head

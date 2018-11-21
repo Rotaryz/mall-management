@@ -1,23 +1,30 @@
 <template>
-  <el-date-picker
-    v-model="time"
-    size="small"
-    type="daterange"
-    class="border"
-    :class="{'animate-border':focus}"
-    range-separator="~"
-    start-placeholder="开始日期"
-    end-placeholder="结束日期"
-    :picker-options="pickerOptions"
-    @focus="pickerFocus"
-    @blur="pickerBlur"
-    @change="change"
-  >
-  </el-date-picker>
+    <el-date-picker
+      v-model="time"
+      :size="size"
+      type="daterange"
+      class="border-el-date-picker"
+      :class="{'animate-border':focus}"
+      style="width: 236px"
+      range-separator="~"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      :picker-options="pickerOptions"
+      @focus="pickerFocus"
+      @blur="pickerBlur"
+      @change="change"
+    >
+    </el-date-picker>
 </template>
 
 <script type="text/ecmascript-6">
   export default {
+    props: {
+      size: {
+        type: String,
+        default: 'mini'
+      }
+    },
     data() {
       return {
         pickerOptions: {
@@ -43,18 +50,20 @@
   }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
   @import '~common/stylus/variable'
   @import '~common/stylus/mixin'
 
-  .border
+  .border-el-date-picker
     position: relative
+    .el-input__icon.el-range__close-icon
+      z-index :2
     &:after
       content: ''
       border-top: 0.5px solid transparent
       border-bottom: 0.5px solid transparent
       position: absolute
-      z-index: 5
+      z-index: 0
       height: 100%
       width: 0
       right: 0
@@ -67,7 +76,7 @@
       border-right: 1px solid transparent
       border-left: 1px solid transparent
       position: absolute
-      z-index: 5
+      z-index: 0
       height: 0
       width: 100%
       bottom: 0
