@@ -102,7 +102,7 @@
         .before
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          height: 27px
+          height: 29px
 
 
 
