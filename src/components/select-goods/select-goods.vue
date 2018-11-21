@@ -42,6 +42,7 @@
 <script type="text/ecmascript-6">
   import BaseModal from 'components/base-modal/base-modal'
 
+  const COUNTREG = /^[1-9]\d*$/
   export default {
     components: {
       BaseModal
@@ -90,26 +91,36 @@
         this.arr[index].count++
       },
       confirm() {
+        if (!this.timeout) return
         this.selectArr = this.arr.filter(item => {
           return item.checked === true
         })
-        if (this.timeout) {
-          setTimeout(() => {
-            this.show = false
-          }, 100)
-          this.showActive = false
-          this.timeout = false // 防止重复点击
-          this.$emit('selectGoods', this.selectArr)
-          setTimeout(() => {
-            this.timeout = true
-          }, 500)
+        if (!this._testCount(this.selectArr)) {
+          this.$toast.show('商品数量必须为整数，请从新选择数量')
+          return
         }
+        setTimeout(() => {
+          this.show = false
+        }, 100)
+        this.showActive = false
+        this.timeout = false // 防止重复点击
+        this.$emit('selectGoods', this.selectArr)
+        setTimeout(() => {
+          this.timeout = true
+        }, 500)
       },
       cancel() {
         setTimeout(() => {
           this.show = false
         }, 100)
         this.showActive = false
+      },
+      _testCount(arr) {
+        let allRight = arr.every((item, index) => {
+          return COUNTREG.test(item.count)
+        })
+
+        return allRight
       }
     },
     watch: {
@@ -158,7 +169,7 @@
       .title
         font-size: 16px
       .search
-        input-animate(224, 34, $color-text-999, 4px)
+        input-animate(224, 34)
         .input
           text-indent: 5px
     .list-header

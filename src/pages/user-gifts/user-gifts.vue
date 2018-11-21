@@ -131,11 +131,15 @@
       width: 90px
       height: 28px
       font-size: $font-size-12
+      font-family: $font-family-regular
       border-radius: 4px
       background: $color-main
       color: $color-white
       text-align: center
       line-height: 28px
+      transition: all 0.3s
+      &:hover
+        font-size: 13px
     .content-list
       flex: 1
       font-size: 14px

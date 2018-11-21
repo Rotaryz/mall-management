@@ -117,7 +117,6 @@
 
   const MONEYREG = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
   const COUNTREG = /^[1-9]\d*$/
-  const RATE = /^[0-9]\d*$/
   export default {
     name: 'new-user-gifts',
     data() {
@@ -209,7 +208,7 @@
           goodsArr.map((val, i) => {
             if ((item && item.name) === (val && val.name)) {
               arrTemp.splice(i, 1)
-              item.count += val.count
+              item.count = val.count
             }
           })
           return item
@@ -255,6 +254,11 @@
           {value: this.goodsListReg, txt: '请添加赠品'}
         ]
         let res = this._testPropety(arr)
+        let allRight = this._testCount(this.arr)
+        if (!allRight) {
+          this.$toast.show('商品数量必须为整数，请从新选择数量')
+          return
+        }
         if (res) {
           this.$toast.show('保存成功')
         }
@@ -273,6 +277,13 @@
             return true
           }
         }
+      },
+      _testCount(arr) {
+        let allRight = arr.every((item, index) => {
+          return COUNTREG.test(item.count)
+        })
+
+        return allRight
       }
     },
     computed: {
@@ -349,9 +360,9 @@
             content: '*'
             color: $color-main
         .hover-input
-          input-animate(450, 44, $color-text-999, 4px)
+          input-animate(450, 44)
         .hover-short-input
-          input-animate(146, 44, $color-text-999, 4px)
+          input-animate(146, 44)
         .top
           margin-top: -70px
         .unit
