@@ -147,6 +147,7 @@
         & > p
           font-size: 14px
           color: $color-text-main
+          margin-right :10px
         .btn
           margin-left: 40px
           width: 90px
@@ -177,7 +178,6 @@
             &:hover > img
               transform: scale(1.2)
       & > dl
-        padding: 0 30px
         & > dt
           width: 100%
           box-sizing: border-box

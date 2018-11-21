@@ -2,7 +2,7 @@
   <div class="admin-select">
     <div class="select-item" v-for="(item,index) in city" :key="index"
          @click.stop="selectType(item.type, index)">
-      <span class="title">{{titleArr[index]}}</span>
+      <span class="title" :style="index? '' : 'margin:0'">{{titleArr[index]}}</span>
       <div class="admin-big-box" :class="{'input-height':item.select}" v-for="(items,idx) in item.children" :key="idx">
         <div class="admin-select-box input-height-item animate-hover" :class="{'admin-select-box-active': item.show}">{{items.content}}
           <img src="./icon-dropdown@2x.png" class="city-tap-top" :class="{'city-tap-top-active': item.select}">

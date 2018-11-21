@@ -41,13 +41,13 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  $input-width = 176px
   @import '~common/stylus/variable'
   @import '~common/stylus/mixin'
 
   .search-box
     display: flex
     align-items: center
-    margin-left: 10px
     .input-box-big
       position: relative
       transition: all 0.4s ease-out
@@ -58,7 +58,7 @@
         border-style: solid
         border-color: $color-text-D9
         border-right: 0
-        width: 224px
+        width: $input-width
         border-radius: 4px 0 0 4px
         height: 29px
         font-size: $font-size-12
@@ -98,7 +98,7 @@
         .after
           border-color: $color-text-999
           transition: all 0.4s ease-out
-          width: 224px
+          width: $input-width
         .before
           border-color: $color-text-999
           transition: all 0.4s ease-out
