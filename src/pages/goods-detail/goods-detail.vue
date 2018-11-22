@@ -201,20 +201,24 @@
         userDiscount: 9,
         merchantDiscount: 9,
         platformPrice: '',
-        credits: ''
+        credits: '',
+        goodsId: ''
       }
     },
     created() {
       this._getGoodsDetail()
-      this.userSelect[0].children[0].content = `${this.userDiscount}折`
-      this.merchantSelect[0].children[0].content = `${this.merchantDiscount}折`
+      // this.userSelect[0].children[0].content = `${this.userDiscount}折`
+      // this.merchantSelect[0].children[0].content = `${this.merchantDiscount}折`
     },
     methods: {
       _getGoodsDetail() {
         let goodsId = this.$route.query.goodsId
+        this.goodsId = goodsId
         if (!goodsId) return
         Goods.getGoodsDetail({goodsId}).then(res => {
-          console.log(res)
+          Object.assign(this.$data, res.data)
+          this.userSelect[0].children[0].content = `${this.userDiscount}折`
+          this.merchantSelect[0].children[0].content = `${this.merchantDiscount}折`
         })
       },
       // 下拉选择
@@ -267,10 +271,17 @@
           ...this.$data,
           type: this.isMoneyPage ? '1' : '2'
         }
-        Goods.createGoods(data).then(res => {
-          this.$toast.show('创建成功!')
-          this.$router.back()
-        })
+        if (this.goodsId) {
+          Goods.updateGoods(data).then(res => {
+            this.$toast.show('修改成功!')
+            this.$router.back()
+          })
+        } else {
+          Goods.createGoods(data).then(res => {
+            this.$toast.show('创建成功!')
+            this.$router.back()
+          })
+        }
       },
       _checkForm() {
         let arr = [
@@ -361,7 +372,11 @@
         return +this.merchantDiscount > 0 && +this.merchantDiscount < 10
       },
       platformPriceReg() {
-        return +this.platformPrice >= 0 && +this.platformPrice < +this.originPrice
+        let flag = true
+        if (!this.isMoneyPage) {
+          flag = +this.platformPrice >= 0 && +this.platformPrice < +this.originPrice
+        }
+        return flag
       },
       creditsReg() {
         return +this.credits >= 0

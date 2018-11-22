@@ -14,6 +14,7 @@ export default {
     let url = `/api/admin/goods/${data.goodsId}`
     return defaultProcess('get', url, data, loading, _resolveGoodsDetailData)
   },
+  // 上下架
   updateStatus (data, loading = true) {
     let url = `/api/admin/goods/updateShelfState/${data.goodsId}`
     return defaultProcess('post', url, data, loading)
@@ -21,12 +22,13 @@ export default {
   delete (data, loading = true) {
     let url = `/api/admin/goods/${data.goodsId}`
     return defaultProcess('delete', url, data, loading)
+  },
+  // 编辑
+  updateGoods (data, loading = true) {
+    let url = `/api/admin/goods/${data.goodsId}`
+    data = _formatCreateGoodsData(data)
+    return defaultProcess('put', url, data, loading)
   }
-}
-
-// 解析商品详情数量
-function _resolveGoodsDetailData(res) {
-  return res
 }
 
 // 解析商品列表数据
@@ -46,7 +48,7 @@ function _resolveGoodsListData(res) {
       platformPrice: item.price,
       browseCount: item.browse_count,
       saleCount: item.sale_count,
-      store: item.goods_sku[0].goods_sku_stock,
+      store: (item.goods_sku[0] && item.goods_sku[0].goods_sku_stock) || '',
       createdAt: item.created_at,
       goodsId: item.id
     }
@@ -54,7 +56,41 @@ function _resolveGoodsListData(res) {
   res.data = data
   return res
 }
-
+// 解析商品详情数量
+function _resolveGoodsDetailData(res) {
+  let resData = res.data
+  let goodsImages = resData.goods_images.map(item => {
+    return {
+      id: item.id,
+      imageId: item.image_id,
+      imageURL: item.image_url
+    }
+  })
+  let detailImages = resData.goods_banner_images.map(item => {
+    return {
+      id: item.id,
+      imageId: item.image_id,
+      imageURL: item.image_url
+    }
+  })
+  let data = {
+    title: resData.title,
+    isPutAway: +resData.on_line,
+    originPrice: +resData.original_price,
+    userDiscount: +resData.customer_discount,
+    merchantDiscount: +resData.store_discount,
+    credits: +resData.planting_beans,
+    platformPrice: +resData.price,
+    store: (resData.goods_sku[0] && resData.goods_sku[0].goods_sku_stock) || '',
+    goodsId: resData.id,
+    isRecommend: +resData.is_recommended,
+    commission: +resData.commission_rate,
+    goodsImages,
+    detailImages
+  }
+  res.data = data
+  return res
+}
 // 格式化创建商品数据
 function _formatCreateGoodsData(data) {
   let goodsImages = data.goodsImages.map(item => {
