@@ -205,10 +205,18 @@
       }
     },
     created() {
+      this._getGoodsDetail()
       this.userSelect[0].children[0].content = `${this.userDiscount}折`
       this.merchantSelect[0].children[0].content = `${this.merchantDiscount}折`
     },
     methods: {
+      _getGoodsDetail() {
+        let goodsId = this.$route.query.goodsId
+        if (!goodsId) return
+        Goods.getGoodsDetail({goodsId}).then(res => {
+          console.log(res)
+        })
+      },
       // 下拉选择
       setValue(obj, flag) {
         // flag 对应的 userDiscount | merchantDiscount

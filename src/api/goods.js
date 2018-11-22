@@ -9,7 +9,24 @@ export default {
   getGoodsList (data, loading = false) {
     let url = '/api/admin/goods'
     return defaultProcess('get', url, data, loading, _resolveGoodsListData)
+  },
+  getGoodsDetail (data, loading = false) {
+    let url = `/api/admin/goods/${data.goodsId}`
+    return defaultProcess('post', url, data, loading, _resolveGoodsDetailData)
+  },
+  updateStatus (data, loading = true) {
+    let url = `/api/admin/goods/updateShelfState/${data.goodsId}`
+    return defaultProcess('post', url, data, loading)
+  },
+  delete (data, loading = true) {
+    let url = `/api/admin/goods/${data.goodsId}`
+    return defaultProcess('delete', url, data, loading)
   }
+}
+
+// 解析商品详情数量
+function _resolveGoodsDetailData(res) {
+  return res
 }
 
 // 解析商品列表数据
@@ -20,7 +37,8 @@ function _resolveGoodsListData(res) {
       imageURL: item.image_url,
       imageUrlThumb: item.image_url_thumb,
       type: item.type,
-      isPutAway: +item.on_line ? '已上架' : '已下架',
+      isPutAwayStr: +item.on_line ? '已上架' : '已下架',
+      isPutAway: +item.on_line,
       originPrice: item.original_price,
       userDiscount: item.customer_discount,
       merchantDiscount: item.store_discount,
@@ -29,7 +47,8 @@ function _resolveGoodsListData(res) {
       browseCount: item.browse_count,
       saleCount: item.sale_count,
       store: item.goods_sku[0].goods_sku_stock,
-      createdAt: item.created_at
+      createdAt: item.created_at,
+      goodsId: item.id
     }
   })
   res.data = data

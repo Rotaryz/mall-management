@@ -1,11 +1,11 @@
 <template>
   <div class="goods-manager" >
-    <base-panel :showNull="showNull">
+    <base-panel :showNull="showNull" :pageDetails="pageDetails" @navToPage="navToPage">
       <div slot="content" class="goods-manager-wrapper">
         <header>
           <p>商品名</p>
           <section>
-            <search></search>
+            <search @search="search" placeholerTxt="请输入" ref="search"></search>
           </section>
           <router-link to="goods-detail" class="btn" append>
             <div>
@@ -29,23 +29,23 @@
           </dt>
           <dd v-for="(it, idx) in manageList" :key="idx">
             <nav class="common-wrapper" :style="item.wrapperStyle" v-for="(item, index) in listArr" :key="index">
-              <i v-if="item.subclass.includes('dot')" :class="item.subclass"></i>
+              <i v-if="item.subclass.includes('dot')" :class="it.isPutAway? 'green-dot': 'red-dot'"></i>
               <div v-if="item.subclass === 'figure'" :class="item.subclass">
-                <img src="./logo.jpg">
+                <img :src="it[item.icon]">
                 <span :class="item.subclass">{{it[item.name]}}</span>
               </div>
               <div v-else-if="item.subclass === 'btn-group'" :class="item.subclass">
-                <p @click="upHandle(it)">修改</p>
+                <p :class="it[item.name] ? '' : 'red'" @click="editorHandle(it)">修改</p>
                 <i></i>
-                <p class="red" @click="downHandle(it)">下架</p>
+                <p class="red" @click="upDownHandle(it)">{{it[item.name]?'下架':'上架'}}</p>
                 <i></i>
-                <p @click="delHandle(it)">删除</p>
+                <p :class="it[item.name] ? '' : 'red'" @click="delHandle(it)" >删除</p>
               </div>
               <span v-else>{{it[item.name]}}</span>
             </nav>
           </dd>
         </dl>
-        <confirm ref="confirm"></confirm>
+        <confirm ref="confirm" @confirm="confirmHandle"></confirm>
       </div>
     </base-panel>
   </div>
@@ -58,17 +58,29 @@
   import Confirm from 'components/confirm/confirm'
   import {Goods} from 'api'
 
-  let LIST = [
-    {name: 'title', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
+  let C_LIST = [
+    {name: 'title', icon: 'imageUrlThumb', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
+    {name: 'credits', type: '', title: '播豆', wrapperStyle: 'flex: 1.1', subclass: ''},
+    {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1', subclass: ''},
+    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
+    {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
+    {name: 'isPutAway', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
+  ]
+
+  let M_LIST = [
+    {name: 'title', icon: 'imageUrlThumb', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
     {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.1', subclass: ''},
     {name: 'merchantDiscount', type: '', title: '商家折扣', wrapperStyle: 'flex: 1', subclass: ''},
     {name: 'userDiscount', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
     {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
     {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
     {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'isPutAway', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
+    {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
-    {name: '操作', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
+    {name: 'isPutAway', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
   ]
   export default {
     name: 'GoodsManager',
@@ -79,30 +91,70 @@
     },
     data() {
       return {
-        listArr: LIST,
+        listArr: [],
         manageList: [],
         showNull: false,
         page: 1,
-        limit: 10
+        limit: 10,
+        currentGoods: null,
+        confirmType: '',
+        pageDetails: {
+          total: 1, // 总数量
+          per_page: 1, // 每一页的条数
+          total_page: 1 // 总页数
+        }
       }
     },
     created() {
+      this._initPageParams()
       this._getGoodsList()
     },
     methods: {
+      // 初始化页面
+      _initPageParams() {
+        this.page = 1
+        this.listArr = this.isMoneyPage ? M_LIST : C_LIST
+        this._clearSearchText()
+      },
+      // 搜索
+      search(text) {
+        if (!text) return
+        console.log(text)
+      },
+      _clearSearchText() {
+        this.$refs.search && this.$refs.search.clearTxt()
+      },
+      // 获取列表
       _getGoodsList() {
         const {page, limit} = this
-        Goods.getGoodsList({page, limit}).then(res => {
+        const type = this.GoodsType
+        Goods.getGoodsList({page, limit, type}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
+          if (!this.showNull) {
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: Math.ceil(res.meta.total / res.meta.per_page)
+            }
+          }
         })
       },
+      // 翻页
+      navToPage(page) {
+        this.page = page
+        this._getGoodsList()
+      },
+      // 排序
       sortHandle(item) {
+        console.log(item)
         this._resetListStatus(item.type)
         if (item.subclass.includes(`top-active`)) {
-          item.subclass = 'sort bottom-active'
+          item.subclass = 'sort bottom-active' // 下面亮灯:从大倒下
+          this._sortApi(item.type, 'big')
         } else {
-          item.subclass = 'sort top-active'
+          item.subclass = 'sort top-active' // 上面亮灯:从小到大
+          this._sortApi(item.type, 'small')
         }
       },
       _resetListStatus(type) {
@@ -112,17 +164,65 @@
           }
         })
       },
-      downHandle(it) {
-        this.$refs.confirm.showConfirm('', '已关联XXX大礼包了，无法下架')
+      _sortApi(sortOption, sortType) {
       },
-      upHandle(it) {
-        // this.$refs.confirm.show({text: '已关联XXX大礼包了，无法up架'})
+      // 上下架
+      upDownHandle(item) {
+        let data = {
+          goodsId: item.goodsId,
+          status: item.isPutAway ? '0' : '1'
+        }
+        Goods.updateStatus(data).then(res => {
+          this.$toast.show('操作成功')
+          this._getGoodsList()
+        })
       },
-      delHandle(it) {
-        // this.$refs.confirm.show({text: '已关联XXX大礼包了，无法del架'})
+      // 修改
+      editorHandle(item) {
+        if (item.isPutAway) return
+        this.$router.push(this.$route.path + `/goods-detail?goodsId=${item.goodsId}`)
+      },
+      // 删除
+      delHandle(item) {
+        if (item.isPutAway) return
+        this.$refs.confirm.showConfirm(`是否删除${item.title}?`)
+        this.currentGoods = item
+        this.confirmType = 'delete'
+      },
+      // confirm
+      confirmHandle() {
+        let data = {
+          goodsId: this.currentGoods.goodsId
+        }
+        switch (this.confirmType) {
+          case 'delete' :
+            Goods.delete(data).then(res => {
+              this.$toast.show('删除成功')
+              this._getGoodsList()
+            })
+            break
+          default:
+            break
+        }
+      }
+    },
+    computed: {
+      // 判断是否为折扣页面
+      isMoneyPage() {
+        return this.$route.path.includes('money')
+      },
+      GoodsType() {
+        return this.isMoneyPage ? '1' : '2' // 1折扣商品 2播豆商品
+      }
+    },
+    watch: {
+      $route() {
+        this._initPageParams()
+        this._getGoodsList()
       }
     },
     filters: {
+      // 排序样式
       allowSelect(item) {
         let styles = item.wrapperStyle
         if (item.subclass === 'sort') {
@@ -283,6 +383,7 @@
               user-select :none
               p
                 cursor: default
+                color: #999
                 &.red
                   color: $color-main
                   cursor: pointer

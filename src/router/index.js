@@ -13,7 +13,7 @@ const OrderManagerDetail = () => import('pages/order-manager-detail/order-manage
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsManagerMoney = () => import('pages/goods-manager-money/goods-manager-money')
-const GoodsManagerCredits = () => import('pages/goods-manager-credits/goods-manager-credits')
+// const GoodsManagerCredits = () => import('pages/goods-manager-credits/goods-manager-credits')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 const UserGifts = () => import('pages/user-gifts/user-gifts')
 const BusinessGifts = () => import('pages/business-gifts/business-gifts')
@@ -44,11 +44,18 @@ const route = new Router({
         },
         {
           path: 'goods-manager/credits',
-          component: GoodsManagerCredits,
+          component: GoodsManagerMoney,
           meta: {
             title: '播豆商品'
           }
         },
+        // {
+        //   path: 'goods-manager/credits',
+        //   component: GoodsManagerCredits,
+        //   meta: {
+        //     title: '播豆商品'
+        //   }
+        // },
         {
           path: 'goods-manager/credits/goods-detail',
           component: GoodsDetail,
