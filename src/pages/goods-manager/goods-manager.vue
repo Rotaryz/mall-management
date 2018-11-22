@@ -216,6 +216,7 @@
       }
     },
     watch: {
+      // 路由跳转
       $route() {
         this._initPageParams()
         this._getGoodsList()

@@ -70,6 +70,11 @@
       }
     },
     methods: {
+      clearLocationInfo() {
+        this.city.map(item => {
+          item.children[0].content = '请选择'
+        })
+      },
       clickHide(index) {
         this.city[index].select = false
       },

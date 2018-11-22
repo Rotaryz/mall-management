@@ -33,10 +33,14 @@
           }
         },
         time: '',
-        focus: false
+        focus: false,
+        defaultValue: Date.now()
       }
     },
     methods: {
+      clearTime() {
+        this.time = ''
+      },
       pickerFocus() {
         this.focus = true
       },

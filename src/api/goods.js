@@ -12,7 +12,7 @@ export default {
   },
   getGoodsDetail (data, loading = false) {
     let url = `/api/admin/goods/${data.goodsId}`
-    return defaultProcess('post', url, data, loading, _resolveGoodsDetailData)
+    return defaultProcess('get', url, data, loading, _resolveGoodsDetailData)
   },
   updateStatus (data, loading = true) {
     let url = `/api/admin/goods/updateShelfState/${data.goodsId}`

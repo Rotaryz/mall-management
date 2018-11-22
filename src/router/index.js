@@ -7,13 +7,11 @@ const OtherPages = () => import('pages/other-pages/other-pages')
 const Demo = () => import('pages/demo/demo')
 const Login = () => import('pages/login/login')
 const Home = () => import('pages/home/home')
-const OrderManagerMerchant = () => import('pages/order-manager-merchant/order-manager-merchant')
-const OrderManagerUser = () => import('pages/order-manager-user/order-manager-user')
+const OrderManager = () => import('pages/order-manager/order-manager')
 const OrderManagerDetail = () => import('pages/order-manager-detail/order-manager-detail')
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
 const GoodsManager = () => import('pages/goods-manager/goods-manager')
-// const GoodsManagerCredits = () => import('pages/goods-manager-credits/goods-manager-credits')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 const UserGifts = () => import('pages/user-gifts/user-gifts')
 const BusinessGifts = () => import('pages/business-gifts/business-gifts')
@@ -72,9 +70,16 @@ const route = new Router({
         },
         {
           path: 'order-manager/user',
-          component: OrderManagerUser,
+          component: OrderManager,
           meta: {
             title: '用户订单'
+          }
+        },
+        {
+          path: 'order-manager/merchant',
+          component: OrderManager,
+          meta: {
+            title: '商家订单'
           }
         },
         {
@@ -82,13 +87,6 @@ const route = new Router({
           component: OrderManagerDetail,
           meta: {
             title: '用户订单详情'
-          }
-        },
-        {
-          path: 'order-manager/merchant',
-          component: OrderManagerMerchant,
-          meta: {
-            title: '商家订单'
           }
         },
         {

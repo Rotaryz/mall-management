@@ -29,7 +29,7 @@
             <li>手机号：{{orderInfo.mobile}}</li>
           </ul>
           <div class="common">
-            <!--<span class="btn">发货</span>-->
+            <span class="btn">发货</span>
             <router-link tag="p" to="order-detail" append="" class="btn">查看详情</router-link>
           </div>
         </section>
