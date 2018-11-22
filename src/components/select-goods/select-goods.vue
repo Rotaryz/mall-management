@@ -26,7 +26,7 @@
           <span class="item">168.8</span>
           <div class="counter item">
             <span class="sub text hand" @click="subCount(index)">-</span>
-            <input type="number" readonly class="number text" v-model="item.count">
+            <input type="number" class="number text" v-model="item.count">
             <span class="add  text hand" @click="addCount(index)">+</span>
           </div>
         </div>

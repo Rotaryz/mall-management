@@ -92,7 +92,7 @@
               <span class="item">100</span>
               <div class="counter item">
                 <span class="sub text hand" @click="subCount(index)">-</span>
-                <input type="number" readonly class="number text" v-model="item.count">
+                <input type="number" class="number text" v-model="item.count">
                 <span class="add text hand" @click="addCount(index)">+</span>
               </div>
               <span class="item main hand" @click="deleteGoods(index)">删除</span>
@@ -254,6 +254,11 @@
           {value: this.goodsListReg, txt: '请添加赠品'}
         ]
         let res = this._testPropety(arr)
+        let allRight = this._testCount(this.arr)
+        if (!allRight) {
+          this.$toast.show('商品数量必须为整数，请从新选择数量')
+          return
+        }
         if (res) {
           this.$toast.show('保存成功')
         }
@@ -272,6 +277,12 @@
             return true
           }
         }
+      },
+      _testCount(arr) {
+        let allRight = arr.every((item, index) => {
+          return COUNTREG.test(item.count)
+        })
+        return allRight
       }
     },
     computed: {
