@@ -159,7 +159,6 @@ const route = new Router({
   ]
 })
 
-// todo
 const DEFAULT_TITLE = '智店积分商城'
 const DEFAULT_ROUTE = '/user-manager'
 const OAUTH_ROUTE = '/login' // 授权页面

@@ -154,6 +154,7 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import CommonSelect from 'components/common-select/common-select'
+  import {Goods} from 'api'
   const DEFAULT_SELECT_OPTIONS = [
     {title: '1折', status: '1'},
     {title: '2折', status: '2'},
@@ -236,6 +237,7 @@
               return this.$toast.show(item.message)
             }
             let obj = {
+              id: 0,
               imageId: item.data.id,
               imageURL: item.data.url
             }
@@ -253,7 +255,14 @@
       // 确认
       submitHandle() {
         if (!this._checkForm()) return
-        console.log('ok')
+        let data = {
+          ...this.$data,
+          type: this.isMoneyPage ? '1' : '2'
+        }
+        Goods.createGoods(data).then(res => {
+          this.$toast.show('创建成功!')
+          this.$router.back()
+        })
       },
       _checkForm() {
         let arr = [
