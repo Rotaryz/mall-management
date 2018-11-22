@@ -12,7 +12,7 @@ const OrderManagerUser = () => import('pages/order-manager-user/order-manager-us
 const OrderManagerDetail = () => import('pages/order-manager-detail/order-manager-detail')
 const UserManager = () => import('pages/user-manager/user-manager')
 const MerchantManager = () => import('pages/merchant-manager/merchant-manager')
-const GoodsManagerMoney = () => import('pages/goods-manager-money/goods-manager-money')
+const GoodsManager = () => import('pages/goods-manager/goods-manager')
 // const GoodsManagerCredits = () => import('pages/goods-manager-credits/goods-manager-credits')
 const GoodsDetail = () => import('pages/goods-detail/goods-detail')
 const UserGifts = () => import('pages/user-gifts/user-gifts')
@@ -44,37 +44,30 @@ const route = new Router({
         },
         {
           path: 'goods-manager/credits',
-          component: GoodsManagerMoney,
+          component: GoodsManager,
           meta: {
             title: '播豆商品'
           }
         },
-        // {
-        //   path: 'goods-manager/credits',
-        //   component: GoodsManagerCredits,
-        //   meta: {
-        //     title: '播豆商品'
-        //   }
-        // },
+        {
+          path: 'goods-manager/money',
+          component: GoodsManager,
+          meta: {
+            title: '折扣商品'
+          }
+        },
         {
           path: 'goods-manager/credits/goods-detail',
           component: GoodsDetail,
           meta: {
-            title: '新建商品'
-          }
-        },
-        {
-          path: 'goods-manager/money',
-          component: GoodsManagerMoney,
-          meta: {
-            title: '折扣商品'
+            title: '新建折扣商品'
           }
         },
         {
           path: 'goods-manager/money/goods-detail',
           component: GoodsDetail,
           meta: {
-            title: '播豆商品'
+            title: '新建播豆商品'
           }
         },
         {

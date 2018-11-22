@@ -309,17 +309,21 @@
       }
     },
     watch: {
+      // 清空佣金栏
       allowCreditsReg(val) {
         val && (this.commission = '')
       },
+      // 清空价格栏
       allowPlatformPriceReg(val) {
         val && (this.platformPrice = '')
       }
     },
     computed: {
+      // 判断是否为折扣商品
       isMoneyPage() {
         return this.$route.path.includes('money')
       },
+      // 表单验证
       userDisPrice() {
         return (this.originPrice * this.userDiscount / 10).toFixed(2)
       },
@@ -362,6 +366,7 @@
       creditsReg() {
         return +this.credits >= 0
       },
+      // 能否编辑价格栏
       allowPlatformPriceReg() {
         let flag = false
         if (!this.isMoneyPage) {
@@ -369,6 +374,7 @@
         }
         return flag
       },
+      // 能否编辑播豆栏
       allowCreditsReg() {
         let flag = false
         if (!this.isMoneyPage) {
