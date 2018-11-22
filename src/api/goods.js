@@ -1,31 +1,42 @@
-import request from 'common/js/request'
-import _this from '@/main'
+import {defaultProcess} from './api-utils'
 
 export default {
   createGoods (data, loading = true) {
     let url = '/api/admin/goods'
     data = _formatCreateGoodsData(data)
-    return _defaultProcess('post', url, data, loading)
+    return defaultProcess('post', url, data, loading)
+  },
+  getGoodsList (data, loading = false) {
+    let url = '/api/admin/goods'
+    return defaultProcess('get', url, data, loading, _resolveGoodsListData)
   }
 }
-// console.log(_defaultProcess)
-function _defaultProcess(...args) {
-  const [method, url, data, loading] = args
-  return new Promise((resolve, reject) => {
-    request[method](url, data, loading).then(res => {
-      if (loading) {
-        _this.$loading.hide()
-      }
-      if (_this.$ERR_OK !== res.error) {
-        _this.$toast.show(res.message)
-        return reject
-      }
-      resolve(res)
-    }).catch(err => {
-      reject(err)
-    })
+
+// 解析商品列表数据
+function _resolveGoodsListData(res) {
+  let data = res.data.map(item => {
+    return {
+      title: item.title,
+      imageURL: item.image_url,
+      imageUrlThumb: item.image_url_thumb,
+      type: item.type,
+      isPutAway: +item.on_line ? '已上架' : '已下架',
+      originPrice: item.original_price,
+      userDiscount: item.customer_discount,
+      merchantDiscount: item.store_discount,
+      credits: item.planting_beans,
+      platformPrice: item.price,
+      browseCount: item.browse_count,
+      saleCount: item.sale_count,
+      store: item.goods_sku[0].goods_sku_stock,
+      createdAt: item.created_at
+    }
   })
+  res.data = data
+  return res
 }
+
+// 格式化创建商品数据
 function _formatCreateGoodsData(data) {
   let goodsImages = data.goodsImages.map(item => {
     return {
@@ -55,19 +66,20 @@ function _formatCreateGoodsData(data) {
     'goods_category_id': '0',
     'goods_images': goodsImages,
     'goods_banner_images': bannerImages,
-    'image_id': goodsImages[0].image_id,
+    'image_id': data.goodsImages[0].imageId,
+    'usable_stock': data.store,
     'goods_skus': [
       {
-        'id': '0',
-        'image_id': '0',
-        'customer_discount': '1',
-        'store_discount': '2',
-        'original_price': '90',
-        'planting_beans': '88',
-        'price': '100',
+        'id': data.goodsImages[0].id,
+        'image_id': data.goodsImages[0].imageId,
+        'customer_discount': data.userDiscount,
+        'store_discount': data.merchantDiscount,
+        'original_price': data.originPrice,
+        'planting_beans': data.credits,
+        'price': data.originPrice,
         'goods_specs': '',
         'goods_specs_str': '',
-        'usable_stock': '100'
+        'usable_stock': data.store
       }
     ]
   }
