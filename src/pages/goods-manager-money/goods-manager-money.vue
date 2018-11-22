@@ -1,6 +1,6 @@
 <template>
   <div class="goods-manager" >
-    <base-panel :showNull="false">
+    <base-panel :showNull="showNull">
       <div slot="content" class="goods-manager-wrapper">
         <header>
           <p>商品名</p>
@@ -32,7 +32,7 @@
               <i v-if="item.subclass.includes('dot')" :class="item.subclass"></i>
               <div v-if="item.subclass === 'figure'" :class="item.subclass">
                 <img src="./logo.jpg">
-                <span :class="item.subclass">{{item.text}}</span>
+                <span :class="item.subclass">{{it[item.name]}}</span>
               </div>
               <div v-else-if="item.subclass === 'btn-group'" :class="item.subclass">
                 <p @click="upHandle(it)">修改</p>
@@ -41,14 +41,13 @@
                 <i></i>
                 <p @click="delHandle(it)">删除</p>
               </div>
-              <span v-else>{{item.text}}</span>
+              <span v-else>{{it[item.name]}}</span>
             </nav>
           </dd>
         </dl>
         <confirm ref="confirm"></confirm>
       </div>
     </base-panel>
-    <router-view></router-view>
   </div>
 
 </template>
@@ -57,18 +56,19 @@
   import BasePanel from 'components/base-panel/base-panel'
   import Search from 'components/search/search'
   import Confirm from 'components/confirm/confirm'
+  import {Goods} from 'api'
 
-  const LIST = [
-    {text: '在西库利亚那城，两个男人为一个寡妇发生的流血事件引起了整治风波。爱情、死亡、美丽的鲁加娜、塔兰泰拉、塔拉鲁奇亚是酒', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
-    {text: '9999.99', type: '', title: '价格', wrapperStyle: 'flex: 1.1', subclass: ''},
-    {text: '9折', type: '', title: '商家折扣', wrapperStyle: 'flex: 1', subclass: ''},
-    {text: '1折', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
-    {text: '9999999', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '999999', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '999999', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {text: '已上架', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
-    {text: '2018-03-15', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
-    {text: '操作', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
+  let LIST = [
+    {name: 'title', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
+    {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.1', subclass: ''},
+    {name: 'merchantDiscount', type: '', title: '商家折扣', wrapperStyle: 'flex: 1', subclass: ''},
+    {name: 'userDiscount', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
+    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'isPutAway', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
+    {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
+    {name: '操作', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
   ]
   export default {
     name: 'GoodsManager',
@@ -80,12 +80,23 @@
     data() {
       return {
         listArr: LIST,
-        manageList: new Array(10).fill(1)
+        manageList: [],
+        showNull: false,
+        page: 1,
+        limit: 10
       }
     },
     created() {
+      this._getGoodsList()
     },
     methods: {
+      _getGoodsList() {
+        const {page, limit} = this
+        Goods.getGoodsList({page, limit}).then(res => {
+          this.showNull = +res.meta.total <= 0
+          this.manageList = res.data
+        })
+      },
       sortHandle(item) {
         this._resetListStatus(item.type)
         if (item.subclass.includes(`top-active`)) {
