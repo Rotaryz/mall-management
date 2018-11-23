@@ -2,9 +2,12 @@
 import global from './global'
 import customer from './customer'
 import goods from './goods'
+import gifts from './gifts'
 
 export const Global = global
 
 export const Customer = customer
 
 export const Goods = goods
+
+export const Gifts = gifts

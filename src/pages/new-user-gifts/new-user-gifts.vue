@@ -94,12 +94,12 @@
             </div>
           </div>
           <div class="list-content">
-            <div class="list-item" v-for="(item, index) in arr">
+            <div class="list-item" v-if="item.checked" v-for="(item, index) in goodsArr" :key="index">
               <div class="item flex1">
                 <img class="head" src="./goods.jpg" alt="">
-                <span class="name">随便写点字</span>
+                <span class="name">{{item.title}}</span>
               </div>
-              <span class="item">100</span>
+              <span class="item">{{item.original_price}}</span>
               <div class="counter item">
                 <span class="sub text hand" @click="subCount(index)">-</span>
                 <input type="number" class="number text" v-model="item.count">
@@ -114,7 +114,7 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" @selectGoods="selectGoods" ></select-goods>
+      <select-goods ref="goodsList" :goodsArr="goodsArr" @selectGoods="selectGoods" ></select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>
@@ -124,10 +124,12 @@
   import BasePanel from 'components/base-panel/base-panel'
   import SelectGoods from 'components/select-goods/select-goods'
   import Confirm from 'components/confirm/confirm'
+  import {Gifts} from 'api'
 
   const MONEYREG = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
   const COUNTREG = /^[1-9]\d*$/
   const RATE = /^[0-9]\d*$/
+  const LIMIT = 10
   export default {
     name: 'new-user-gifts',
     data() {
@@ -149,17 +151,23 @@
           {title: '数量', class: 'item', show: 'counter', value: '1'},
           {title: '操作', class: 'item main', text: '删除'}
         ],
-        arr: [
-          {count: 1, name: 'a'},
-          {count: 1, name: 'b'}
-        ],
+        goodsArr: [],
         bannerSrc: '',
         detailSrc: '',
         disabledCover: false,
         willDelGoods: ''
       }
     },
+    created() {
+      this._getGoodsList()
+    },
     methods: {
+      _getGoodsList() {
+        Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
+          .then(res => {
+            this.goodsArr = res.data
+          })
+      },
       _fileChange(e, type) { // 上传图片
         let arr = Array.from(e.target.files)
         if (arr.length < 1) {
@@ -214,37 +222,38 @@
             break
         }
       },
-      selectGoods(goodsArr) { // 添加大礼包商品
-        let arrTemp = goodsArr
-        this.arr = this.arr.map((item, index) => {
-          goodsArr.map((val, i) => {
-            if ((item && item.name) === (val && val.name)) {
-              arrTemp.splice(i, 1)
-              item.count = val.count
-            }
-          })
-          return item
-        })
-        this.msg.giftpack_goods_skus = this.arr.concat(arrTemp)
-        this.arr = this.arr.concat(arrTemp)
+      selectGoods(goods) { // 添加大礼包商品
+        // let arrTemp = goods
+        // this.goodsArr = this.goodsArr.map((item, index) => {
+        //   goods.map((val, i) => {
+        //     if ((item && item.id) === (val && val.id)) {
+        //       arrTemp.splice(i, 1)
+        //       item.count = val.count
+        //     }
+        //   })
+        //   return item
+        // })
+        // this.msg.giftpack_goods_skus = this.goodsArr.concat(arrTemp)
+        // this.goodsArr = this.goodsArr.concat(arrTemp)
+        this.goodsArr = goods
       },
       addGoods() {
         this.$refs.goodsList.showGoodsList()
       },
       subCount(index) {
-        if (this.arr[index].count > 1) {
-          this.arr[index].count--
+        if (this.goodsArr[index].count > 1) {
+          this.goodsArr[index].count--
         }
       },
       addCount(index) {
-        this.arr[index].count++
+        this.goodsArr[index].count++
       },
       deleteGoods(index) { // 删除大礼包商品
         this.willDelGoods = index
         this.$refs.confirm.showConfirm('确定删除此商品吗？')
       },
       delGoods() {
-        this.arr.splice(this.willDelGoods, 1)
+        this.goodsArr.splice(this.willDelGoods, 1)
       },
       submitGifts() { // 提交大礼包
         if (this.disabledCover) return
@@ -267,7 +276,7 @@
           {value: this.goodsListReg, txt: '请添加赠品'}
         ]
         let res = this._testPropety(arr)
-        let allRight = this._testCount(this.arr)
+        let allRight = this._testCount(this.goodsArr)
         if (!allRight) {
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
@@ -470,8 +479,12 @@
             text-align: center
             color: $color-main
             border: 1px solid $color-main
+            font-family: $font-family-regular
             border-radius: 4px
             user-select: none
+            transition: all 0.3s
+            &:hover
+              font-size: 13px
         .goods
           padding-top: 15px
           .list-header

@@ -39,7 +39,9 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import Confirm from 'components/confirm/confirm'
+  import {Gifts} from 'api'
 
+  const LIMIT = 10
   export default {
     name: 'user-gifts',
     data() {
@@ -63,10 +65,20 @@
           total_page: 10 // 总页数
         },
         hasOther: true,
-        handleItem: ''
+        handleItem: '',
+        page: 1
       }
     },
+    created() {
+      this.getGiftsList()
+    },
     methods: {
+      getGiftsList() {
+        Gifts.getGiftsList({type: 1, page: this.page, limit: LIMIT})
+          .then((res) => {
+            console.log(res)
+          })
+      },
       showPop(type, item) { // 确认弹窗
         this.handleItem = item
         switch (type) {

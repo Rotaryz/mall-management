@@ -454,8 +454,12 @@
             text-align: center
             color: $color-main
             border: 1px solid $color-main
+            font-family: $font-family-regular
             border-radius: 4px
             user-select: none
+            transition: all 0.3s
+            &:hover
+              font-size: 13px
         .goods
           padding-top: 15px
           .list-header

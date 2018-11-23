@@ -17,13 +17,13 @@
       <div class="list-content">
         <div class="list-item" v-for="(item, index) in arr">
           <div class="item">
-            <span class="checkbox hand" :class="{'checked':arr[index].checked}" @click="goodsCheck(index)"></span>
+            <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
           </div>
           <div class="item flex1">
             <img class="head" src="./goods.jpg" alt="">
-            <span class="name">随便写点字</span>
+            <span class="name">{{item.title}}</span>
           </div>
-          <span class="item">168.8</span>
+          <span class="item">{{item.original_price}}</span>
           <div class="counter item">
             <span class="sub text hand" @click="subCount(index)">-</span>
             <input type="number" class="number text" v-model="item.count">
@@ -44,8 +44,13 @@
 
   const COUNTREG = /^[1-9]\d*$/
   export default {
-    components: {
-      BaseModal
+    props: {
+      goodsArr: {
+        type: Array,
+        default: () => {
+          return []
+        }
+      }
     },
     data() {
       return {
@@ -54,14 +59,7 @@
         showActive: false, // 控制出场离场动画
         headerList: ['勾选', '商品名称', '商品价格', '商品数量'],
         goodsCount: '1',
-        arr: [
-          {checked: false, count: 1, name: 'a'},
-          {checked: false, count: 1, name: 'b'},
-          {checked: false, count: 1, name: 'c'},
-          {checked: false, count: 1, name: 'd'},
-          {checked: false, count: 1, name: 'e'},
-          {checked: false, count: 1, name: 'f'}
-        ],
+        arr: [],
         selectArr: []
       }
     },
@@ -72,6 +70,12 @@
       showGoodsList() {
         this.show = true
         this.showActive = true
+        // this.arr = this.goodsArr.map(item => {
+        //   item.checked = false
+        //   item.count = 1
+        //   return item
+        // })
+        this.arr = this.goodsArr
       },
       searchGoods() {
         clearTimeout(this.timer)
@@ -80,21 +84,38 @@
         }, 1000)
       },
       goodsCheck(index) {
-        this.arr[index].checked = !this.arr[index].checked
+        this.arr = this.arr.map((item, i) => {
+          if (index === i) {
+            item.checked = !item.checked
+          }
+          return item
+        })
       },
       subCount(index) {
-        if (this.arr[index].count > 0) {
-          this.arr[index].count--
-        }
+        this.arr = this.arr.map((item, i) => {
+          if (index === i) {
+            if (item.count > 0) {
+              item.count--
+            }
+          }
+          return item
+        })
       },
       addCount(index) {
-        this.arr[index].count++
+        this.arr = this.arr.map((item, i) => {
+          if (index === i) {
+            if (item.count < item.goods_sku[0].goods_sku_stock) {
+              item.count++
+            }
+          }
+          return item
+        })
       },
       confirm() {
         if (!this.timeout) return
-        this.selectArr = this.arr.filter(item => {
-          return item.checked === true
-        })
+        // this.selectArr = this.arr.filter(item => {
+        //   return item.checked === true
+        // })
         if (!this._testCount(this.selectArr)) {
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
@@ -104,7 +125,7 @@
         }, 100)
         this.showActive = false
         this.timeout = false // 防止重复点击
-        this.$emit('selectGoods', this.selectArr)
+        this.$emit('selectGoods', this.arr)
         setTimeout(() => {
           this.timeout = true
         }, 500)
@@ -117,11 +138,16 @@
       },
       _testCount(arr) {
         let allRight = arr.every((item, index) => {
-          return COUNTREG.test(item.count)
+          if (item.checked) {
+            return COUNTREG.test(item.count)
+          }
         })
 
         return allRight
       }
+    },
+    components: {
+      BaseModal
     },
     watch: {
       $route() {
@@ -185,16 +211,18 @@
       color: $color-text-main
       font-size: 14px
       .header-key
-        flex: 1
+        width: 155px
         overflow: hidden
         &:nth-of-type(2)
-          flex: 1.8
+          width: 280px
         &:last-child
           text-indent: 23px
 
     .list-content
       height: 240px
       overflow-y: scroll
+      &::-webkit-scrollbar
+        display: none
       .list-item
         height: 60px
         flex: 1
@@ -218,7 +246,7 @@
           background-size: cover
           border: 0
         .item
-          flex: 1
+          width: 155px
           no-wrap()
           display: flex
           align-items: center
@@ -268,7 +296,7 @@
           .main
             color: $color-text-main
         .flex1
-          flex: 1.8
+          width: 280px
     .btn-group
       text-align: center
       display: flex
