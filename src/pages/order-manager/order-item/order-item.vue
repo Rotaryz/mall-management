@@ -36,7 +36,7 @@
         </section>
       </dd>
     </dl>
-    <order-send ref="orderSend"></order-send>
+    <order-send ref="orderSend" :sendInfo="sendInfo"></order-send>
   </div>
 
 </template>
@@ -87,6 +87,16 @@
     methods: {
       sendHandle() {
         this.$refs.orderSend.showConfirm()
+      }
+    },
+    computed: {
+      sendInfo() {
+        return {
+          orderNo: this.title.orderNo,
+          orderCustomer: this.title.orderCustomer,
+          address: this.orderInfo.address,
+          mobile: this.orderInfo.mobile
+        }
       }
     }
   }

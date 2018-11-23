@@ -6,19 +6,19 @@
         <ul class="wrapper">
           <li class="item-wrapper">
             <div class="left">订单号</div>
-            <div class="right">123345667899000</div>
+            <div class="right">{{sendInfo.orderNo}}</div>
           </li>
           <li class="item-wrapper">
             <div class="left">收货人</div>
-            <div class="right">123345667899000</div>
+            <div class="right">{{sendInfo.orderCustomer}}</div>
           </li>
           <li class="item-wrapper">
             <div class="left">手机号</div>
-            <div class="right">123345667899000</div>
+            <div class="right">{{sendInfo.mobile}}</div>
           </li>
           <li class="item-wrapper">
             <div class="left">收货地址</div>
-            <div class="right">广东省广州海珠区新港街道新港中路397号T.i.T创意园翡冷翠小镇A</div>
+            <div class="right">{{sendInfo.address}}</div>
           </li>
           <li class="line-wrapper">物流信息</li>
           <li class="item-wrapper">
@@ -68,6 +68,12 @@
     components: {
       BaseModal,
       CommonSelect
+    },
+    props: {
+      sendInfo: {
+        type: Object,
+        default: {}
+      }
     },
     data() {
       return {

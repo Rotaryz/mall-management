@@ -26,7 +26,7 @@
           </li>
         </ul>
         <dl>
-          <dd v-for="(item, index) in '1'">
+          <dd v-for="(item, index) in '112314142'">
             <order-item></order-item>
           </dd>
         </dl>

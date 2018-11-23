@@ -81,7 +81,7 @@ function _resolveGoodsDetailData(res) {
     merchantDiscount: +resData.store_discount,
     credits: +resData.planting_beans,
     platformPrice: +resData.price,
-    store: (resData.goods_sku[0] && resData.goods_sku[0].goods_sku_stock) || '',
+    store: (resData.goods_sku[0] && +resData.goods_sku[0].goods_sku_stock) || '',
     goodsId: resData.id,
     isRecommend: +resData.is_recommended,
     commission: +resData.commission_rate,
