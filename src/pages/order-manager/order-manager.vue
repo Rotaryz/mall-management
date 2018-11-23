@@ -5,10 +5,10 @@
         <header>
           <section>
             <p>时间范围</p>
-            <data-picker @change="dataChange"></data-picker>
+            <data-picker ref="dataPicker" @change="dataChange"></data-picker>
           </section>
           <section class="city">
-            <admin-select :isUse="!check" ref="city" @setValue="setValue"></admin-select>
+            <admin-select ref="location" @setValue="setValue"></admin-select>
           </section>
           <section>
             <p>订单号</p>
@@ -22,7 +22,7 @@
           <li v-for="(item, index) in tabList" :class="item.isActive ? 'active' : ''" @click="changeTabHandle(item, index)">
             <i></i>
             <em></em>
-            <p>{{item.title}}</p>
+            <p>{{item.title}}{{isUserPage?'user':''}}</p>
           </li>
         </ul>
         <dl>
@@ -40,7 +40,7 @@
   import Search from 'components/search/search'
   import AdminSelect from 'components/admin-select/admin-select'
   import DataPicker from 'components/data-picker/data-picker'
-  import OrderItem from 'components/order-item/order-item'
+  import OrderItem from './order-item/order-item'
   const TAB_LIST = [
     {title: '全部', isActive: true},
     {title: '待付款', isActive: false},
@@ -60,27 +60,81 @@
     },
     data() {
       return {
-        check: false,
-        city: '',
         excelUrl: '',
-        tabList: TAB_LIST
+        tabList: TAB_LIST,
+        page: 1,
+        limit: 10
       }
     },
+    created() {
+      this._initPageParams()
+      this._getOrderList()
+    },
     methods: {
-      setValue(city) {
-        this.city = city
-        console.log(city)
+      // 初始化页面
+      _initPageParams() {
+        this.page = 1
+        this.excelUrl = ''
+        this._clearSearchText()
+        this._clearLocation()
+        this._clearDateTime()
+        this._resetTabStatus()
       },
+      _getOrderList() {
+        // todo
+      },
+      // 城市选择器
+      setValue(location) {
+        const {province, city, area} = location
+        console.log(province, city, area)
+      },
+      _clearLocation() {
+        this.$refs.location && this.$refs.location.clearLocationInfo()
+      },
+      // 日期选择
       dataChange(time) {
         console.log(time)
       },
+      _clearDateTime() {
+        this.$refs.dataPicker && this.$refs.dataPicker.clearTime()
+      },
+      // 搜索
       search() {
         console.log('search')
       },
+      _clearSearchText() {
+        this.$refs.search && this.$refs.search.clearTxt()
+      },
+      // tab栏
       changeTabHandle(item, index) {
         this.tabList.forEach((it, idx) => {
           it.isActive = idx === index
         })
+      },
+      _resetTabStatus() {
+        this.tabList.forEach((it, idx) => {
+          it.isActive = idx === 0
+        })
+      },
+      // 翻页
+      navToPage(page) {
+        this.page = page
+      }
+    },
+    computed: {
+      // 判断是否为折扣页面
+      isUserPage() {
+        return this.$route.path.includes('user')
+      },
+      OrderType() {
+        return this.isUserPage ? '1' : '2' // 1折扣商品 2播豆商品 todo
+      }
+    },
+    watch: {
+      // 路由跳转
+      $route() {
+        this._initPageParams()
+        this._getOrderList()
       }
     }
   }
@@ -103,6 +157,7 @@
     .order-manager-wrapper
       position :relative
       & > header
+        padding: 0 30px
         height: 100px
         layout(row)
         align-items: center

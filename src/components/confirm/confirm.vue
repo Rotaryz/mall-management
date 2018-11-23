@@ -88,6 +88,7 @@
         line-height: 40px
         border-radius: 3px
         border: 1px solid $color-text-D9
+        cursor :pointer
       .cancel
         border-right: 1px solid $color-line
       .confirm

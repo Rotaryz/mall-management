@@ -17,7 +17,7 @@
           </transition>
         </section>
       </header>
-      <section class="router-content">
+      <section class="router-content" v-if="isShowPage">
         <slot></slot>
       </section>
     </div>
@@ -30,7 +30,9 @@
       return {
         image: `http://musicugc.qianqian.com/ugcdiy/pic/15be740121443b5a0f83fbd8104aadf5.jpg`,
         showLogout: false,
-        showModal: false
+        showModal: false,
+        isShare: false,
+        isShowPage: true
       }
     },
     methods: {
@@ -43,6 +45,15 @@
       },
       hideLogoutHandle() {
         this.showLogout = false
+      }
+    },
+    watch: {
+      $route(to) {
+        if (!to.meta.isShare) return
+        this.isShowPage = false
+        this.$nextTick(() => {
+          this.isShowPage = true
+        })
       }
     }
   }

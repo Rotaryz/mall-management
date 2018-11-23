@@ -30,6 +30,9 @@
       }
     },
     methods: {
+      clearTxt() {
+        this.txt = ''
+      },
       setInput(txt) {
         this.txt = txt
       },
@@ -87,7 +90,7 @@
         position: absolute
         z-index: 5
         height: 0
-        width: 224px
+        width: $input-width
         bottom: 0
         left: 0
         border-radius 4px 0 0 4px
@@ -134,6 +137,8 @@
       color: $color-white
       font-size: $font-size-12
       transition: font-size 0.4s ease-out
+      z-index :20
+      user-select :none
       &:hover
         font-size: 13px
 
