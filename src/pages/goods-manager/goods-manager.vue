@@ -118,17 +118,20 @@
       },
       // 搜索
       search(text) {
-        if (!text) return
-        console.log(text)
+        if (text) {
+          this._getGoodsList({keywords: text})
+        } else {
+          this._getGoodsList()
+        }
       },
       _clearSearchText() {
         this.$refs.search && this.$refs.search.clearTxt()
       },
       // 获取列表
-      _getGoodsList() {
+      _getGoodsList(data) {
         const {page, limit} = this
         const type = this.GoodsType
-        Goods.getGoodsList({page, limit, type}).then(res => {
+        Goods.getGoodsList({page, limit, type, ...data}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
           if (!this.showNull) {
