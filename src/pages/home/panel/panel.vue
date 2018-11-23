@@ -3,8 +3,8 @@
     <div class="content">
       <header>
         <section class="userInfo-wrapper" @mouseenter="showLogoutHandle" @mouseleave="hideLogoutHandle">
-          <div :style="{backgroundImage: 'url(' + image + ')'}"></div>
-          <p>傅小小</p>
+          <div :style="{backgroundImage: 'url(' + userInfo.avatar + ')'}"></div>
+          <p>{{userInfo.name}}</p>
           <em></em>
           <transition name="fade">
             <article class="logout-wrapper" v-show="showLogout">
@@ -28,12 +28,14 @@
   export default {
     data() {
       return {
-        image: `http://musicugc.qianqian.com/ugcdiy/pic/15be740121443b5a0f83fbd8104aadf5.jpg`,
         showLogout: false,
         showModal: false,
         isShare: false,
-        isShowPage: true
+        isShowPage: true,
+        userInfo: window.$storage.get('info', {})
       }
+    },
+    created() {
     },
     methods: {
       logoutHandle() {
