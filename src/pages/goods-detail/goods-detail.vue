@@ -4,7 +4,7 @@
       <div slot="content" class="detail-wrapper">
         <header>
           <i></i>
-          <div>新建商品</div>
+          <div>{{pageTitle}}</div>
         </header>
         <form>
           <section>
@@ -154,7 +154,6 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import CommonSelect from 'components/common-select/common-select'
-
   import {Goods} from 'api'
   const DEFAULT_SELECT_OPTIONS = [
     {title: '1折', status: '1'},
@@ -171,6 +170,9 @@
     goodsImages: 5,
     detailImages: 15
   }
+  const RATE = /^[0-9]\d*$/
+  const MONEYREG = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$|^(0|0.0|0.00)$/
+
   export default {
     name: 'GoodsDetail',
     components: {
@@ -191,6 +193,7 @@
           show: false,
           children: [{content: '1折', data: DEFAULT_SELECT_OPTIONS}]
         }],
+        pageTitle: '新建商品',
         isPutAway: true,
         isRecommend: true,
         goodsImages: [],
@@ -199,8 +202,8 @@
         store: '',
         originPrice: '',
         commission: '',
-        userDiscount: 9,
-        merchantDiscount: 9,
+        userDiscount: 1,
+        merchantDiscount: 1,
         platformPrice: '',
         credits: '',
         goodsId: ''
@@ -214,6 +217,8 @@
         let goodsId = this.$route.query.goodsId
         this.goodsId = goodsId
         if (!goodsId) return
+        document.title = document.title.replace('新建', '编辑')
+        this.pageTitle = this.pageTitle.replace('新建', '编辑')
         Goods.getGoodsDetail({goodsId}).then(res => {
           Object.assign(this.$data, res.data)
           this.userSelect[0].children[0].content = `${this.userDiscount}折`
@@ -291,13 +296,13 @@
           {value: this.titleReg, txt: '请输入商品标题'},
           {value: this.goodsImagesReg, txt: '请至少上传一张商品图片'},
           {value: this.detailImagesReg, txt: '请至少上传一张详情图片'},
-          {value: this.storeReg, txt: '库存数量应大于0'},
-          {value: this.originPriceReg, txt: '请输入正确的商品原价'},
+          {value: this.storeReg, txt: '库存数量应大于0的整数'},
+          {value: this.originPriceReg, txt: '请输入正确的商品原价(2位小数)'},
           {value: this.userDiscountReg, txt: '用户折扣应设置为1至9折'},
           {value: this.merchantDiscountReg, txt: '商家折扣应设置为1至9折'},
-          {value: this.platformPriceReg, txt: '价格为小于商品原价的正数'},
-          {value: this.creditsReg, txt: '播豆数量不能小于0'},
-          {value: this.commissionReg, txt: '佣金应设置为0至100'}
+          {value: this.platformPriceReg, txt: '价格为小于商品原价的正数(2位小数)'},
+          {value: this.creditsReg, txt: '播豆数量不能小于0的整数'},
+          {value: this.commissionReg, txt: '佣金应设置为0至100(2位小数)'}
         ]
         return this._checkAction(arr)
       },
@@ -359,13 +364,13 @@
         return this.detailImages.length
       },
       storeReg() {
-        return +this.store > 0
+        return +this.store > 0 && RATE.test(this.store)
       },
       originPriceReg() {
-        return +this.originPrice > 0
+        return +this.originPrice > 0 && MONEYREG.test(this.originPrice)
       },
       commissionReg() {
-        return +this.commission >= 0 && +this.commission <= 100
+        return +this.commission >= 0 && +this.commission <= 100 && MONEYREG.test('' + +this.commission)
       },
       userDiscountReg() {
         return +this.userDiscount > 0 && +this.userDiscount < 10
@@ -376,12 +381,16 @@
       platformPriceReg() {
         let flag = true
         if (!this.isMoneyPage) {
-          flag = +this.platformPrice >= 0 && +this.platformPrice < +this.originPrice
+          flag = +this.platformPrice >= 0 && +this.platformPrice < +this.originPrice && MONEYREG.test('' + +this.platformPrice)
         }
         return flag
       },
       creditsReg() {
-        return +this.credits >= 0
+        let flag = true
+        if (!this.isMoneyPage) {
+          flag = +this.credits > 0 && RATE.test(this.credits)
+        }
+        return flag
       },
       // 能否编辑价格栏
       allowPlatformPriceReg() {
