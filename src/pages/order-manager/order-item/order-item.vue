@@ -1,4 +1,5 @@
 <template>
+  <div>
     <dl class="order-item">
       <dt>
         <ul class="left">
@@ -29,17 +30,24 @@
             <li>手机号：{{orderInfo.mobile}}</li>
           </ul>
           <div class="common">
-            <span class="btn">发货</span>
+            <span class="btn" @click="sendHandle">发货</span>
             <router-link tag="p" to="order-detail" append="" class="btn">查看详情</router-link>
           </div>
         </section>
       </dd>
     </dl>
+    <order-send ref="orderSend" :sendInfo="sendInfo"></order-send>
+  </div>
+
 </template>
 
 <script type="text/ecmascript-6">
+  import OrderSend from '../order-send/order-send'
   export default {
     name: 'OrderItem',
+    components: {
+      OrderSend
+    },
     data() {
       return {
         title: {
@@ -74,6 +82,21 @@
             number: `1`
           }
         ]
+      }
+    },
+    methods: {
+      sendHandle() {
+        this.$refs.orderSend.showConfirm()
+      }
+    },
+    computed: {
+      sendInfo() {
+        return {
+          orderNo: this.title.orderNo,
+          orderCustomer: this.title.orderCustomer,
+          address: this.orderInfo.address,
+          mobile: this.orderInfo.mobile
+        }
       }
     }
   }
@@ -161,10 +184,12 @@
           padding-top:12px
           padding-bottom :14px
         div
-          layout(row)
+          layout(row,block,nowrap)
           color:$color-main
           .btn
+            user-select :none
             cursor :pointer
+            white-space :nowrap
           span
             border-right: 1px solid rgba(0,0,0,0.3)
             padding-right :10px

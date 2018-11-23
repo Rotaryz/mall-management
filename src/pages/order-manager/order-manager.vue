@@ -26,7 +26,7 @@
           </li>
         </ul>
         <dl>
-          <dd v-for="(item, index) in '1234567890'">
+          <dd v-for="(item, index) in '112314142'">
             <order-item></order-item>
           </dd>
         </dl>
@@ -178,6 +178,7 @@
         padding: 0 30px
         layout(row)
         border-bottom: 1px solid #CCCCCC;
+        user-select :none
         li
           position :relative
           height :46px
