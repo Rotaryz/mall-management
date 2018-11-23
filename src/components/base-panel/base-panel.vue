@@ -8,7 +8,7 @@
       </div>
     </section>
     <footer v-if="isShowPageDetails">
-      <page-detail :pageDtail="pageDetails" @addPage="addPage"></page-detail>
+      <page-detail :pageDtail="pageDetails" :pagination="pagination" ref="pageDetail" @addPage="addPage"></page-detail>
     </footer>
   </div>
 </template>
@@ -17,10 +17,15 @@
   import pageDetail from 'components/page-detail/page-detail'
 
   export default {
+    name: 'BASE_PANEL',
     components: {
       pageDetail
     },
     props: {
+      pagination: {
+        type: Number,
+        default: 1
+      },
       styles: {
         type: String,
         default: ''
@@ -51,6 +56,9 @@
     methods: {
       addPage(page) {
         this.$emit('navToPage', page)
+      },
+      initPage() {
+        this.$refs.pageDetail && this.$refs.pageDetail.beginPage()
       }
     }
   }

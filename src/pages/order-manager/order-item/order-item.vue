@@ -31,7 +31,7 @@
           </ul>
           <div class="common">
             <span class="btn" @click="sendHandle">发货</span>
-            <router-link tag="p" to="order-detail" append="" class="btn">查看详情</router-link>
+            <router-link tag="p" :to="'order-detail'" append="" class="btn">查看详情</router-link>
           </div>
         </section>
       </dd>
@@ -47,6 +47,12 @@
     name: 'OrderItem',
     components: {
       OrderSend
+    },
+    props: {
+      pagination: {
+        type: Number,
+        default: 1
+      }
     },
     data() {
       return {

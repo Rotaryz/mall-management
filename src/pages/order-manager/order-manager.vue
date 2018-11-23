@@ -1,6 +1,6 @@
 <template>
   <div class="order-manager">
-    <base-panel>
+    <base-panel ref="basePanel" :showNull="showNull" :pageDetails="pageDetails" :pagination="page" @navToPage="navToPage">
       <div slot="content" class="order-manager-wrapper">
         <header>
           <section>
@@ -26,8 +26,8 @@
           </li>
         </ul>
         <dl>
-          <dd v-for="(item, index) in '112314142'">
-            <order-item></order-item>
+          <dd v-for="(item, index) in '1'">
+            <order-item :pagination="page"></order-item>
           </dd>
         </dl>
       </div>
@@ -63,7 +63,13 @@
         excelUrl: '',
         tabList: TAB_LIST,
         page: 1,
-        limit: 10
+        limit: 10,
+        showNull: false,
+        pageDetails: {
+          total: 100, // 总数量
+          per_page: 10, // 每一页的条数
+          total_page: 10 // 总页数
+        }
       }
     },
     created() {
@@ -79,9 +85,19 @@
         this._clearLocation()
         this._clearDateTime()
         this._resetTabStatus()
+        this._initPage()
       },
+      // 获取订单列表
       _getOrderList() {
         // todo
+      },
+      // 翻页
+      navToPage(page) {
+        this.page = page
+        this._getOrderList()
+      },
+      _initPage() {
+        this.$refs.basePanel && this.$refs.basePanel.initPage()
       },
       // 城市选择器
       setValue(location) {
@@ -115,10 +131,6 @@
         this.tabList.forEach((it, idx) => {
           it.isActive = idx === 0
         })
-      },
-      // 翻页
-      navToPage(page) {
-        this.page = page
       }
     },
     computed: {

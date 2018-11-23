@@ -26,6 +26,7 @@
 
 <script type="text/ecmascript-6">
   export default {
+    name: 'HOME_PANEL',
     data() {
       return {
         showLogout: false,

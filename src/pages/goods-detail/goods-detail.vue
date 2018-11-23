@@ -263,6 +263,10 @@
           this[flag] = newImagesArr.slice(0, IMG_NUMBER[flag])
         })
       },
+      // 返回上级页面路由
+      _routerBack() {
+        this.$router.back()
+      },
       // 确认
       submitHandle() {
         if (!this._checkForm()) return
@@ -273,12 +277,12 @@
         if (this.goodsId) {
           Goods.updateGoods(data).then(res => {
             this.$toast.show('修改成功!')
-            this.$router.back()
+            this._routerBack()
           })
         } else {
           Goods.createGoods(data).then(res => {
             this.$toast.show('创建成功!')
-            this.$router.back()
+            this._routerBack()
           })
         }
       },
@@ -314,8 +318,7 @@
       },
       // 取消
       cancelHandle() {
-        console.log('cancel')
-        this.$router.back()
+        this._routerBack()
       }
     },
     watch: {

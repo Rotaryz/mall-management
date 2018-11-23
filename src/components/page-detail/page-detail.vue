@@ -62,6 +62,10 @@
             total_page: 5 // 总页数
           }
         }
+      },
+      pagination: {
+        type: Number,
+        default: 1
       }
     },
     data() {
@@ -70,7 +74,7 @@
         pageInput: '',
         isHand: {handLeft: 'pointer', handRight: 'pointer', handGo: 'pointer'},
         pageIndex: 0,
-        page: 1,
+        page: this.pagination,
         backClipped: true,
         preClipped: false,
         showFirst: false,
