@@ -154,6 +154,7 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import CommonSelect from 'components/common-select/common-select'
+
   import {Goods} from 'api'
   const DEFAULT_SELECT_OPTIONS = [
     {title: '1折', status: '1'},
@@ -207,8 +208,6 @@
     },
     created() {
       this._getGoodsDetail()
-      // this.userSelect[0].children[0].content = `${this.userDiscount}折`
-      // this.merchantSelect[0].children[0].content = `${this.merchantDiscount}折`
     },
     methods: {
       _getGoodsDetail() {
