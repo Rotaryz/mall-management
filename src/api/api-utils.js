@@ -42,6 +42,9 @@ export function commonProcess(...args) {
       }
       resolve(res)
     }).catch(err => {
+      if (loading) {
+        _this.$loading.hide()
+      }
       reject(err)
     })
   })

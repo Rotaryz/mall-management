@@ -198,7 +198,7 @@
           this.$toast.show('操作成功')
           this._getGoodsList()
         }).catch(res => {
-          if (res.error === 10) { // todo
+          if (res.code === 10) { // code=10下线异常错误码
             this.$refs.confirmOneBtn.showConfirm(res.message)
           } else {
             this.$toast.show(res.message)
