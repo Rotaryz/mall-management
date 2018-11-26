@@ -29,8 +29,8 @@
       iconSelected: require('./icon-user_select@2x.png'),
       childrenIndex: 0,
       showHeight: HEIGHT,
-      isRouter: true,
-      isLight: false,
+      isRouter: true, // 是否跳转
+      isLight: false, // 是否亮灯
       children: []
     },
     {
@@ -112,11 +112,10 @@
     }
   ]
   export default {
-    name: '',
+    name: 'NAVIGATION_BAR',
     data () {
       return {
-        navList: NAV_LIST,
-        preTabIndex: 0
+        navList: NAV_LIST
       }
     },
     created () {
@@ -149,6 +148,7 @@
           }
         }
       },
+      // 重置路由显示的状态
       _resetNavStatus (arr) {
         arr.map(item => {
           item.isLight = false
@@ -156,28 +156,36 @@
             it.isLight = false
           })
         })
+        // 没有子路由结束递归
         if (arr.children && arr.children.length) {
           this._resetNavStatus(arr.children)
         }
       },
+      // 刷新页面输出路由
       _initNavList () {
         let path = this.$route.fullPath
         this._resetNavLight(this.navList, path)
       },
+      // 重置路由亮灯的状态
       _resetNavLight(arr, path) {
+        // 路由包含的路由关系
         let index = arr.findIndex(item => path.includes(item.url))
+        // 路由名称全等的路由关系
         let fullIdx = arr.findIndex(item => path === item.url)
         let current = {}
+        // 全等权重大于包含
         if (fullIdx > -1 || index > -1) {
           current = fullIdx > -1 ? arr[fullIdx] : arr[Math.max(0, index)]
         }
         current.isLight = true
+        // 没有子路由结束递归
         if (index !== -1 && current.children && current.children.length) {
           return this._resetNavLight(current.children, path)
         }
       }
     },
     filters: {
+      // 子路有的激活状态过滤
       childrenActive(val, item) {
         let styles = val
         if (item.children.length && item.isLight) {
@@ -185,6 +193,7 @@
         }
         return styles
       },
+      // 本路由的激活状态过滤
       isActive (val, item) {
         let cname = val
         if (item.isLight) {

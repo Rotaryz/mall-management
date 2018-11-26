@@ -64,7 +64,7 @@
     {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.3', subclass: ''},
     {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
     {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
-    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.2', subclass: ''},
     {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1.1', subclass: 'green-dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
     {name: 'isPutAway', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
@@ -77,7 +77,7 @@
     {name: 'userDiscount', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
     {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
     {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: ''},
     {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
     {name: 'isPutAway', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
@@ -115,6 +115,7 @@
         this.listArr = this.isMoneyPage ? M_LIST : C_LIST
         this._clearSearchText()
         this._initPage()
+        this._resetListStatus()
       },
       // 搜索
       search(text) {
