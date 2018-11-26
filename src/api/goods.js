@@ -87,6 +87,7 @@ function _resolveGoodsDetailData(res) {
     isRecommend: +resData.is_recommended,
     commission: +resData.commission_rate || '',
     skuId: +sku0.id || 0,
+    saleCount: +resData.sale_count,
     goodsImages,
     detailImages
   }
