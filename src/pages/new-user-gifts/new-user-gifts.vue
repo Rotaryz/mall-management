@@ -46,7 +46,7 @@
           <div class="hover-short-input">
             <span class="before"></span>
             <span class="after"></span>
-            <input class="title-text short" v-model="msg.giftpack_stock" type="text">
+            <input class="title-text short" v-model="msg.gift_packs_stock" type="text">
           </div>
           <span class="unit">个</span>
           <em class="tip">如果已售罄不显示大礼包</em>
@@ -86,23 +86,23 @@
             <span class="label">赠品</span>
             <span class="add-goods hand" @click="addGoods">添加</span>
           </div>
-          <div class="goods">
+          <div class="goods" v-if="showList">
             <div class="list-header">
               <div class="header-key" :class="item.class" v-for="(item, index) in data">
                 <span class="contxt">{{item.title}}</span>
               </div>
             </div>
           </div>
-          <div class="list-content">
-            <div class="list-item" v-if="item.checked" v-for="(item, index) in goodsArr" :key="index">
+          <div class="list-content" v-if="showList">
+            <div class="list-item" v-for="(item, index) in goodsArr" :key="index">
               <div class="item flex1">
-                <img class="head" src="./goods.jpg" alt="">
+                <img class="head" :src="item.image_url_thumb" alt="">
                 <span class="name">{{item.title}}</span>
               </div>
               <span class="item">{{item.original_price}}</span>
               <div class="counter item">
                 <span class="sub text hand" @click="subCount(index)">-</span>
-                <input type="number" class="number text" v-model="item.count">
+                <input type="number" class="number text" v-model="item.stock">
                 <span class="add text hand" @click="addCount(index)">+</span>
               </div>
               <span class="item main hand" @click="deleteGoods(index)">删除</span>
@@ -114,7 +114,7 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" :goodsArr="goodsArr" @selectGoods="selectGoods" ></select-goods>
+      <select-goods ref="goodsList" :goodsArr="goodsArr" @selectGoods="selectGoods" v-if="showGoodsList" @hideGoodsList="hideGoodsList" ></select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>
@@ -129,7 +129,6 @@
   const MONEYREG = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
   const COUNTREG = /^[1-9]\d*$/
   const RATE = /^[0-9]\d*$/
-  const LIMIT = 10
   export default {
     name: 'new-user-gifts',
     data() {
@@ -138,12 +137,14 @@
           title: '',
           giftpack_banner_images: [],
           giftpack_images: [],
-          giftpack_stock: '',
+          gift_packs_stock: '',
           price: '',
           planting_beans: '',
           commission_rate: '',
           giftpack_goods_skus: [],
-          image_id: '' // 封面图id
+          image_id: '', // 封面图id
+          type: 1,
+          is_open: 1
         },
         data: [
           {title: '商品名称', class: 'item flex1', show: 'name'},
@@ -155,17 +156,32 @@
         bannerSrc: '',
         detailSrc: '',
         disabledCover: false,
-        willDelGoods: ''
+        willDelGoods: '',
+        showList: 0,
+        showGoodsList: false,
+        giftsId: ''
       }
     },
     created() {
-      this._getGoodsList()
+      if (this.$route.query.id) {
+        this.giftsId = this.$route.query.id
+        this._getGiftsDetail()
+      }
     },
     methods: {
-      _getGoodsList() {
-        Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
+      _getGiftsDetail() {
+        Gifts.giftsDetail(this.giftsId)
           .then(res => {
-            this.goodsArr = res.data
+            console.log(res)
+            this.msg = res.data
+            this.msg.gift_packs_stock = res.data.stock
+            this.bannerSrc = res.data.gift_packs_banner_images.image_url_thumb
+            this.detailSrc = res.data.gift_packs_images.image_url_thumb
+            this.goodsArr = res.data.gift_packs_goods_sku
+            this.showList = res.data.gift_packs_goods_sku.length
+            this.goodsArr.map(item => {
+              item.stock = item.total_stock
+            })
           })
       },
       _fileChange(e, type) { // 上传图片
@@ -175,6 +191,7 @@
         }
         switch (type) {
           case 'banner' :
+            this.$loading.show('图片上传中...')
             this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
               this.$loading.hide()
               if (resArr[0].error !== this.$ERR_OK) {
@@ -185,13 +202,13 @@
                 image_url: resArr[0].data.url,
                 id: 0
               }
-              console.log(resArr)
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
               this.msg.giftpack_banner_images[0] = obj
             })
             break
           case 'detail' :
+            this.$loading.show('图片上传中...')
             this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
               this.$loading.hide()
               if (resArr[0].error !== this.$ERR_OK) {
@@ -222,31 +239,30 @@
             break
         }
       },
-      selectGoods(goods) { // 添加大礼包商品
-        // let arrTemp = goods
-        // this.goodsArr = this.goodsArr.map((item, index) => {
-        //   goods.map((val, i) => {
-        //     if ((item && item.id) === (val && val.id)) {
-        //       arrTemp.splice(i, 1)
-        //       item.count = val.count
-        //     }
-        //   })
-        //   return item
-        // })
-        // this.msg.giftpack_goods_skus = this.goodsArr.concat(arrTemp)
-        // this.goodsArr = this.goodsArr.concat(arrTemp)
-        this.goodsArr = goods
+      selectGoods(selectArr) { // 添加大礼包商品
+        this.showList = selectArr.length
+        this.msg.giftpack_goods_skus = selectArr
+        this.goodsArr = selectArr
+      },
+      hideGoodsList() {
+        this.showGoodsList = false
       },
       addGoods() {
-        this.$refs.goodsList.showGoodsList()
+        this.showGoodsList = true
+        // this.$refs.goodsList.showGoodsList()
       },
       subCount(index) {
-        if (this.goodsArr[index].count > 1) {
-          this.goodsArr[index].count--
+        if (this.goodsArr[index].stock > 1) {
+          this.goodsArr[index].stock--
         }
       },
       addCount(index) {
-        this.goodsArr[index].count++
+        let stock = this.goodsArr[index].stock
+        console.log(this.goodsArr, index)
+        let skuStock = this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
+        if (stock < skuStock) {
+          this.goodsArr[index].stock++
+        }
       },
       deleteGoods(index) { // 删除大礼包商品
         this.willDelGoods = index
@@ -258,7 +274,6 @@
       submitGifts() { // 提交大礼包
         if (this.disabledCover) return
         this.disabledCover = true
-        console.log(this.msg)
         this.checkForm()
       },
       toBack() { // 取消新建大礼包
@@ -281,12 +296,27 @@
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
+        this.msg.giftpack_goods_skus = this.msg.giftpack_goods_skus.map(item => {
+          item = {
+            id: 0,
+            image_id: item.image_url,
+            stock: item.stock,
+            goods_id: item.id,
+            goods_sku_id: item.goods_sku[0].id
+          }
+          console.log(item)
+          return item
+        })
+        // this.disabledCover = false
         if (res) {
-          this.$toast.show('保存成功')
+          Gifts.createGifts(this.msg)
+            .then(res => {
+              this.$toast.show('保存成功')
+              setTimeout(() => {
+                this.$router.back()
+              }, 1500)
+            })
         }
-        // setTimeout(() => {
-        //   this.$router.back()
-        // }, 1500)
       },
       _testPropety(arr) {
         for (let i = 0, j = arr.length; i < j; i++) {
@@ -302,7 +332,7 @@
       },
       _testCount(arr) {
         let allRight = arr.every((item, index) => {
-          return COUNTREG.test(item.count)
+          return COUNTREG.test(item.stock)
         })
         return allRight
       }
@@ -318,7 +348,7 @@
         return this.msg.giftpack_images.length > 0
       },
       stockReg() {
-        return this.msg.giftpack_stock && COUNTREG.test(this.msg.giftpack_stock)
+        return this.msg.gift_packs_stock && COUNTREG.test(this.msg.gift_packs_stock)
       },
       priceReg() {
         return this.msg.price && MONEYREG.test(this.msg.price)

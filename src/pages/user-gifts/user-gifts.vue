@@ -12,20 +12,22 @@
           <div class="list-item" v-for="(item, index) in arr">
             <div :class="val.class" v-for="(val, i) in data" >
 
-              <span class="overflow" v-if="!val.show">{{val.title}}</span>
+              <span class="overflow" v-if="val.show === 'second'">{{item.price}}</span>
+              <span class="overflow" v-if="val.show === 'three'">{{item.stock}}</span>
+              <span class="overflow" v-if="val.show === 'four'">{{item.type === 1? '用户大礼包': '商家大礼包'}}</span>
 
               <div :class="val.class" v-if="val.show === 'first'">
-                <img class="head" src="./gifts.jpg" alt="">
-                <span class="title">随便写点字</span>
+                <img class="head" :src="item.image_url_thumb" alt="">
+                <span class="title">{{item.title}}</span>
               </div>
-
-              <span class="before" v-if="val.show === 'status'" :class="{'green': index%2 === 0}">{{index%2 === 0 ? '已开启' : '已关闭'}}</span>
+              <span class="overflow" v-if="!val.show">{{item.created_at}}</span>
+              <span class="before" v-if="val.show === 'status'" :class="{'green': item.is_open === 1}">{{item.is_open === 1 ? '已开启' : '已关闭'}}</span>
 
               <div :class="val.class" v-if="val.show === 'last'">
-                <span class="handle-item hand" @click="goEdit(item)">修改</span>
-                <span class="handle-item hand" v-if="false" @click="showPop('open', item)">开启</span>
-                <span class="handle-item hand" @click="showPop('close', item)">关闭</span>
-                <span class="handle-item hand" :class="{'grey': grey}" @click="showPop('delete', item)">删除</span>
+                <span class="handle-item hand" :class="{'grey':item.is_open === 1}" @click="goEdit(item)">修改</span>
+                <span class="handle-item hand" v-if="item.is_open === 0" @click="showPop('open', item)">开启</span>
+                <span class="handle-item hand" v-if="item.is_open === 1" @click="showPop('close', item)">关闭</span>
+                <span class="handle-item hand" :class="{'grey': item.is_open}" @click="showPop('delete', item)">删除</span>
               </div>
             </div>
           </div>
@@ -49,9 +51,9 @@
         pageType: '',
         data: [
           {title: '大礼包名称', class: 'item  flex1', name: '', show: 'first'},
-          {title: '价格', class: 'item', name: ''},
-          {title: '库存', class: 'item', name: ''},
-          {title: '类型', class: 'item', name: ''},
+          {title: '价格', class: 'item', name: '', show: 'second'},
+          {title: '库存', class: 'item', name: '', show: 'three'},
+          {title: '类型', class: 'item', name: '', show: 'four'},
           {title: '状态', class: 'item', name: '', show: 'status'},
           {title: '创建时间', class: 'item', name: ''},
           {title: '操作', class: 'item list-handle flex2', name: '', show: 'last'}
@@ -76,7 +78,7 @@
       getGiftsList() {
         Gifts.getGiftsList({type: 1, page: this.page, limit: LIMIT})
           .then((res) => {
-            console.log(res)
+            this.arr = res.data
           })
       },
       showPop(type, item) { // 确认弹窗
@@ -97,21 +99,35 @@
             break
           case 'delete':
             this.popType = 'delete'
+            if (item.is_open) return
             this.$refs.confirm.showConfirm('确定要删除大礼包吗？')
             break
         }
       },
       confirm() {
-        if (this.popType === 'open2') {
-          console.log('open2')
+        if (this.popType === 'open1') {
+          Gifts.handleGifts({id: this.handleItem.id, status: 1})
+            .then(res => {
+              this.$toast.show('开启成功')
+              this.getGiftsList()
+            })
         } else if (this.popType === 'close') {
-          console.log('close')
+          Gifts.handleGifts({id: this.handleItem.id, status: 0})
+            .then(res => {
+              this.$toast.show('关闭成功')
+              this.getGiftsList()
+            })
         } else if (this.popType === 'delete') {
-          console.log('delete')
+          Gifts.deleteGifts(this.handleItem.id)
+            .then(res => {
+              this.$toast.show('删除成功')
+              this.getGiftsList()
+            })
         }
       },
       goEdit(item) {
-        this.$router.replace({path: '/gifts/user-gifts/new-user-gifts', query: {id: item.id}})
+        if (+item.is_open === 1) return
+        this.$router.push({path: '/gifts/user-gifts/new-user-gifts', query: {id: item.id}})
       },
       navToPage(page) { // 翻页
         console.log(page)
@@ -238,6 +254,7 @@
                 border-left: 0
                 padding-left: 0
             .grey
+              cursor: inherit
               color: $color-text-2A
 
   .create-new
