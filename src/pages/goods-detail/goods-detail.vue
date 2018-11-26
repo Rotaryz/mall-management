@@ -146,6 +146,7 @@
             <li class="red" @click="submitHandle">确定</li>
           </ul>
         </form>
+        <goods-review ref="goodReview" :goodsInfo.sync="goodsInfo"></goods-review>
       </div>
     </base-panel>
   </div>
@@ -154,6 +155,7 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import CommonSelect from 'components/common-select/common-select'
+  import GoodsReview from './goods-review/goods-review'
   import {Goods} from 'api'
   const DEFAULT_SELECT_OPTIONS = [
     {title: '1折', status: '1'},
@@ -177,7 +179,8 @@
     name: 'GoodsDetail',
     components: {
       BasePanel,
-      CommonSelect
+      CommonSelect,
+      GoodsReview
     },
     data() {
       return {
@@ -194,18 +197,18 @@
           children: [{content: '1折', data: DEFAULT_SELECT_OPTIONS}]
         }],
         pageTitle: '新建商品',
-        isPutAway: true,
-        isRecommend: true,
+        isPutAway: true, // 是否上架
+        isRecommend: true, // 是否推荐
         goodsImages: [],
         detailImages: [],
         title: '',
-        store: '',
-        originPrice: '',
+        store: '', // 库存
+        originPrice: '', // 原价
         commission: '',
         userDiscount: 1,
         merchantDiscount: 1,
-        platformPrice: '',
-        credits: '',
+        platformPrice: '', // 平台价格
+        credits: '', // 播豆,积分
         goodsId: ''
       }
     },
@@ -319,7 +322,7 @@
       },
       // 预览
       reviewHandle() {
-        console.log('re')
+        this.$refs.goodReview && this.$refs.goodReview.show()
       },
       // 取消
       cancelHandle() {
@@ -407,6 +410,10 @@
           flag = +this.platformPrice <= 0
         }
         return flag
+      },
+      // 商品信息
+      goodsInfo() {
+        return {...this.$data, isMoneyPage: this.isMoneyPage}
       }
     }
   }
