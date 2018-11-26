@@ -1,20 +1,23 @@
 const state = {
-  pagination: 1
+  pagination: 1,
+  pagePath: ''
 }
 
 const getters = {
-  pagination: state => state.pagination
+  pagination: state => state.pagination,
+  pagePath: state => state.pagePath
 }
 
 const actions = {
-  updatePagination: ({ commit, state }, obj) => {
-    commit('do', obj)
+  updatePageStatus: ({ commit, state }, obj) => {
+    commit('update', obj)
   }
 }
 
 const mutations = {
-  do (state, obj) {
-    state.product = obj
+  update (state, obj) {
+    state.pagination = obj.pagination
+    state.pagePath = obj.pagePath
   }
 }
 

@@ -73,18 +73,20 @@ function _resolveGoodsDetailData(res) {
       imageURL: item.image_url
     }
   })
+  let sku0 = resData.goods_sku[0] || {}
   let data = {
     title: resData.title,
     isPutAway: +resData.on_line,
     originPrice: +resData.original_price,
     userDiscount: +resData.customer_discount,
     merchantDiscount: +resData.store_discount,
-    credits: +resData.planting_beans,
-    platformPrice: +resData.price,
-    store: (resData.goods_sku[0] && +resData.goods_sku[0].goods_sku_stock) || '',
+    credits: +resData.planting_beans || '',
+    platformPrice: +sku0.price || '',
+    store: +sku0.goods_sku_stock || '',
     goodsId: resData.id,
     isRecommend: +resData.is_recommended,
-    commission: +resData.commission_rate,
+    commission: +resData.commission_rate || '',
+    skuId: +sku0.id || 0,
     goodsImages,
     detailImages
   }
@@ -125,13 +127,13 @@ function _formatCreateGoodsData(data) {
     'usable_stock': data.store,
     'goods_skus': [
       {
-        'id': data.goodsImages[0].id,
+        'id': data.skuId || '0',
         'image_id': data.goodsImages[0].imageId,
         'customer_discount': data.userDiscount,
         'store_discount': data.merchantDiscount,
         'original_price': data.originPrice,
         'planting_beans': data.credits,
-        'price': data.originPrice,
+        'price': data.platformPrice || 0,
         'goods_specs': '',
         'goods_specs_str': '',
         'usable_stock': data.store

@@ -1,4 +1,5 @@
-import request from '../common/js/request'
+// import request from '../common/js/request'
+import {defaultProcess} from './api-utils'
 
 export default {
   /**
@@ -7,6 +8,7 @@ export default {
    */
   getCustomerList(data, loading = true) {
     let url = '/api/admin/customers'
-    return request.get(url, data, loading)
+    // return request.get(url, data, loading)
+    return defaultProcess('get', url, data, loading)
   }
 }

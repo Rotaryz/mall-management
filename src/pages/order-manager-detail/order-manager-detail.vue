@@ -107,8 +107,12 @@
       }
     },
     methods: {
-      backHandle() {
+      // 返回上级页面路由
+      _routerBack() {
         this.$router.back()
+      },
+      backHandle() {
+        this._routerBack()
       }
     }
   }

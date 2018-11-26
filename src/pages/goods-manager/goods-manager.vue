@@ -1,13 +1,13 @@
 <template>
   <div class="goods-manager" >
-    <base-panel :showNull="showNull" :pageDetails="pageDetails" @navToPage="navToPage">
+    <base-panel ref="basePanel" :showNull="showNull" :pageDetails="pageDetails" @navToPage="navToPage">
       <div slot="content" class="goods-manager-wrapper">
         <header>
           <p>商品名</p>
           <section>
             <search @search="search" placeholerTxt="请输入" ref="search"></search>
           </section>
-          <router-link to="goods-detail" class="btn" append>
+          <router-link :to="'goods-detail'" class="btn" append>
             <div>
               <img class="g" src="./icon-add@2x.png" alt="">
               <p>新建商品</p>
@@ -60,12 +60,12 @@
 
   let C_LIST = [
     {name: 'title', icon: 'imageUrlThumb', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
-    {name: 'credits', type: '', title: '播豆', wrapperStyle: 'flex: 1.1', subclass: ''},
-    {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1', subclass: ''},
-    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'green-dot'},
+    {name: 'credits', type: '', title: '播豆', wrapperStyle: 'flex: 1.3', subclass: ''},
+    {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.3', subclass: ''},
+    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1.1', subclass: 'green-dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
     {name: 'isPutAway', type: '', title: '操作', wrapperStyle: 'flex: 2', subclass: 'btn-group'}
   ]
@@ -112,23 +112,26 @@
     methods: {
       // 初始化页面
       _initPageParams() {
-        this.page = 1
         this.listArr = this.isMoneyPage ? M_LIST : C_LIST
         this._clearSearchText()
+        this._initPage()
       },
       // 搜索
       search(text) {
-        if (!text) return
-        console.log(text)
+        if (text) {
+          this._getGoodsList({keywords: text})
+        } else {
+          this._getGoodsList()
+        }
       },
       _clearSearchText() {
         this.$refs.search && this.$refs.search.clearTxt()
       },
       // 获取列表
-      _getGoodsList() {
+      _getGoodsList(data) {
         const {page, limit} = this
         const type = this.GoodsType
-        Goods.getGoodsList({page, limit, type}).then(res => {
+        Goods.getGoodsList({page, limit, type, ...data}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
           if (!this.showNull) {
@@ -136,6 +139,12 @@
               total: res.meta.total,
               per_page: res.meta.per_page,
               total_page: Math.ceil(res.meta.total / res.meta.per_page)
+            }
+          } else {
+            this.pageDetails = {
+              total: 1,
+              per_page: 1,
+              total_page: 1
             }
           }
         })
@@ -145,9 +154,11 @@
         this.page = page
         this._getGoodsList()
       },
+      _initPage() {
+        this.$refs.basePanel && this.$refs.basePanel.initPage()
+      },
       // 排序
       sortHandle(item) {
-        console.log(item)
         this._resetListStatus(item.type)
         if (item.subclass.includes(`top-active`)) {
           item.subclass = 'sort bottom-active' // 下面亮灯:从大倒下
@@ -180,7 +191,7 @@
       // 修改
       editorHandle(item) {
         if (item.isPutAway) return
-        this.$router.push(this.$route.path + `/goods-detail?goodsId=${item.goodsId}`)
+        this.$router.push(this.$route.path + `/goods-detail?goodsId=${item.goodsId}&pagination=${this.page}`)
       },
       // 删除
       delHandle(item) {
