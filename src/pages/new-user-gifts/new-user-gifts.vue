@@ -135,16 +135,16 @@
       return {
         msg: {
           title: '',
-          giftpack_banner_images: [],
-          giftpack_images: [],
-          gift_packs_stock: '',
-          price: '',
-          planting_beans: '',
-          commission_rate: '',
-          giftpack_goods_skus: [],
-          image_id: '', // 封面图id
           type: 1,
-          is_open: 1
+          is_open: 1,
+          giftpack_banner_images: [], // 大礼包banner图
+          giftpack_images: [], // 大礼包详情图
+          gift_packs_stock: '', // 大礼包库存
+          price: '',
+          planting_beans: '', // 播豆数
+          commission_rate: '', // 佣金
+          giftpack_goods_skus: [], // 商品列表
+          image_id: '' // 封面图id
         },
         data: [
           {title: '商品名称', class: 'item flex1', show: 'name'},
@@ -172,15 +172,26 @@
       _getGiftsDetail() {
         Gifts.giftsDetail(this.giftsId)
           .then(res => {
-            console.log(res)
-            this.msg = res.data
-            this.msg.gift_packs_stock = res.data.stock
-            this.bannerSrc = res.data.gift_packs_banner_images.image_url_thumb
-            this.detailSrc = res.data.gift_packs_images.image_url_thumb
-            this.goodsArr = res.data.gift_packs_goods_sku
-            this.showList = res.data.gift_packs_goods_sku.length
-            this.goodsArr.map(item => {
+            let data = res.data
+            this.msg = {
+              title: data.title,
+              type: 1,
+              is_open: 1,
+              giftpack_banner_images: data.gift_packs_banner_images,
+              giftpack_images: data.gift_packs_images,
+              gift_packs_stock: data.stock,
+              price: data.price,
+              planting_beans: parseInt(data.planting_beans),
+              commission_rate: parseInt(data.commission_rate),
+              giftpack_goods_skus: data.gift_packs_goods_sku,
+              image_id: '' // 封面图id
+            }
+            this.bannerSrc = data.gift_packs_banner_images.image_url_thumb
+            this.detailSrc = data.gift_packs_images.image_url_thumb
+            this.showList = data.gift_packs_goods_sku.length
+            this.goodsArr = data.gift_packs_goods_sku.map(item => {
               item.stock = item.total_stock
+              return item
             })
           })
       },
@@ -258,8 +269,13 @@
       },
       addCount(index) {
         let stock = this.goodsArr[index].stock
+        let skuStock
         console.log(this.goodsArr, index)
-        let skuStock = this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
+        if (this.giftsId) {
+          skuStock = this.goodsArr[index].total_stock
+        } else {
+          skuStock = this.goodsArr[index].goods_sku && this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
+        }
         if (stock < skuStock) {
           this.goodsArr[index].stock++
         }

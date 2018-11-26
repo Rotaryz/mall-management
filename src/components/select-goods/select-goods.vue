@@ -62,7 +62,9 @@
         headerList: ['勾选', '商品名称', '商品价格', '商品数量'],
         arr: this.goodsArr,
         selectArr: [],
-        searchText: ''
+        searchText: '',
+        hasMore: true,
+        page: 1
       }
     },
     destroyed() {
@@ -78,8 +80,9 @@
         // Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
         Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keyword})
           .then(res => {
+            this.page = 1
             this.arr = res.data.map(item => {
-              if (this.goodsArr.length) {
+              if (this.goodsArr.length) { // 如果有已选产品，对新数据做比较
                 this.goodsArr.map(val => {
                   if (item.goods_sku.length) {
                     if (val.id === item.id) {
@@ -96,6 +99,34 @@
               }
               return item
             })
+            console.log(this.arr)
+          })
+      },
+      pullDown() {
+        console.log('jiazai')
+        if (!this.hasMore) return
+        this.page++
+        Gifts.getGoodsList({page: this.page, limit: LIMIT, on_line: 1, keyword: this.searchText})
+          .then(res => {
+            let newGoods = res.data.map(item => {
+              if (this.goodsArr.length) { // 如果有已选产品，对新数据做比较
+                this.goodsArr.map(val => {
+                  if (item.goods_sku.length) {
+                    if (val.id === item.id) {
+                      item = val
+                    } else {
+                      item.checked = false
+                      item.stock = 1
+                    }
+                  }
+                })
+              } else {
+                item.checked = false
+                item.stock = 1
+              }
+              return item
+            })
+            this.arr = newGoods.concat(this.arr)
             console.log(this.arr)
           })
       },
@@ -236,6 +267,7 @@
       background: $color-FAFAFA
       height: 50px
       line-height: 50px
+      padding-right: 17px
       font-family: $font-family-medium
       display: flex
       text-align: left
@@ -250,12 +282,9 @@
           width: 280px
         &:last-child
           text-indent: 23px
-
     .list-content
       height: 240px
       overflow-y: scroll
-      &::-webkit-scrollbar
-        display: none
       .list-item
         height: 60px
         flex: 1

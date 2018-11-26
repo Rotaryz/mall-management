@@ -72,13 +72,18 @@
       }
     },
     created() {
-      this.getGiftsList()
+      this.getGiftsList(this.page)
     },
     methods: {
-      getGiftsList() {
-        Gifts.getGiftsList({type: 1, page: this.page, limit: LIMIT})
+      getGiftsList(page) {
+        Gifts.getGiftsList({type: 1, page, limit: LIMIT})
           .then((res) => {
             this.arr = res.data
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: res.meta.last_page
+            }
           })
       },
       showPop(type, item) { // 确认弹窗
@@ -109,19 +114,19 @@
           Gifts.handleGifts({id: this.handleItem.id, status: 1})
             .then(res => {
               this.$toast.show('开启成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         } else if (this.popType === 'close') {
           Gifts.handleGifts({id: this.handleItem.id, status: 0})
             .then(res => {
               this.$toast.show('关闭成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         } else if (this.popType === 'delete') {
           Gifts.deleteGifts(this.handleItem.id)
             .then(res => {
               this.$toast.show('删除成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         }
       },
@@ -130,7 +135,8 @@
         this.$router.push({path: '/gifts/user-gifts/new-user-gifts', query: {id: item.id}})
       },
       navToPage(page) { // 翻页
-        console.log(page)
+        this.page = page
+        this.getGiftsList(page)
       },
       createNew() { // 新建大礼包
         this.$router.push({path: '/gifts/user-gifts/new-user-gifts'})
