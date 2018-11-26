@@ -75,8 +75,8 @@
     {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.1', subclass: ''},
     {name: 'merchantDiscount', type: '', title: '商家折扣', wrapperStyle: 'flex: 1', subclass: ''},
     {name: 'userDiscount', type: '', title: '用户折扣', wrapperStyle: 'flex: 1', subclass: ''},
-    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
-    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'browseCount', type: 'browse_count', title: '浏览量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
+    {name: 'saleCount', type: 'sale_count', title: '销量', wrapperStyle: 'flex: 1.1', subclass: 'sort'},
     {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.1', subclass: ''},
     {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1', subclass: 'dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
@@ -163,10 +163,10 @@
         this._resetListStatus(item.type)
         if (item.subclass.includes(`top-active`)) {
           item.subclass = 'sort bottom-active' // 下面亮灯:从大倒下
-          this._sortApi(item.type, 'big')
+          this._sortApi(item.type, 'desc')
         } else {
           item.subclass = 'sort top-active' // 上面亮灯:从小到大
-          this._sortApi(item.type, 'small')
+          this._sortApi(item.type, 'asc')
         }
       },
       _resetListStatus(type) {
@@ -176,7 +176,16 @@
           }
         })
       },
-      _sortApi(sortOption, sortType) {
+      _sortApi(sortKey, sortValue) {
+        let data = {
+          'order_by': [
+            {
+              'sort_key': sortKey,
+              'sort_value': sortValue
+            }
+          ]
+        }
+        this._getGoodsList(data)
       },
       // 上下架
       upDownHandle(item) {
