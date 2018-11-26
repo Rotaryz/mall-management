@@ -20,7 +20,8 @@
             <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
           </div>
           <div class="item flex1">
-            <img class="head" :src="item.image_url_thumb" alt="">
+            <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+            <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
             <span class="name">{{item.title}}</span>
           </div>
           <span class="item">{{item.original_price}}</span>
@@ -320,6 +321,9 @@
             margin-right: 10px
             border: 1px solid #E8E8E8
             border-radius: 2px
+            background-size: cover
+            background-position: center
+            overflow: hidden
           .name
             width: 180px
             word-break: break-all

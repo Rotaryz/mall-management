@@ -18,7 +18,7 @@
 
               <div :class="val.class" v-if="val.show === 'first'">
                 <!--<img class="head" :src="item.image_url_thumb" alt="">-->
-                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}" :src="item.image_url_thumb" alt=""></div>
+                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
                 <span class="title">{{item.title}}</span>
               </div>
               <span class="overflow" v-if="!val.show">{{item.created_at}}</span>

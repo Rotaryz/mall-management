@@ -105,12 +105,22 @@
         switch (value.type) {
           case 'pro':
             let index = regionArr.findIndex(child => child.name === value.title)
+            if (index !== this.cityIndex || index === 0) {
+              this.content.city = ''
+              this.city[1].children = [{content: '请选择', data: []}]
+            }
             this.cityIndex = index
             this._infoCity(index)
             this.content.province = value.title
+            this.city[2].children = [{content: '请选择', data: []}]
+            this.content.area = ''
             break
           case 'city' :
             let idx = regionArr[this.cityIndex].sub.findIndex(child => child.name === value.title)
+            if (value.title !== this.content.city || idx === 0) {
+              this.content.area = ''
+              this.city[2].children = [{content: '请选择', data: []}]
+            }
             this._infoArea(idx)
             this.content.city = value.title
             break
