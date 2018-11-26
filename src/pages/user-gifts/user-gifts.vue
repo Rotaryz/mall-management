@@ -1,5 +1,5 @@
 <template>
-  <base-panel :pageDetails="pageDetails" @navToPage="navToPage">
+  <base-panel :pageDetails="pageDetails" :showNull="showNull" @navToPage="navToPage">
     <div slot="content" class="user-gifts">
       <div class="header-btn hand" @click="createNew">新建大礼包</div>
       <div class="content-list">
@@ -17,7 +17,8 @@
               <span class="overflow" v-if="val.show === 'four'">{{item.type === 1? '用户大礼包': '商家大礼包'}}</span>
 
               <div :class="val.class" v-if="val.show === 'first'">
-                <img class="head" :src="item.image_url_thumb" alt="">
+                <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}" :src="item.image_url_thumb" alt=""></div>
                 <span class="title">{{item.title}}</span>
               </div>
               <span class="overflow" v-if="!val.show">{{item.created_at}}</span>
@@ -68,7 +69,8 @@
         },
         hasOther: true,
         handleItem: '',
-        page: 1
+        page: 1,
+        showNull: false
       }
     },
     created() {
@@ -78,6 +80,7 @@
       getGiftsList(page) {
         Gifts.getGiftsList({type: 1, page, limit: LIMIT})
           .then((res) => {
+            this.showNull = +res.meta.total <= 0
             this.arr = res.data
             this.pageDetails = {
               total: res.meta.total,
@@ -223,6 +226,8 @@
               width: 54px
               height: 40px
               margin-right: 10px
+              background-size: cover
+              background-position: center
             .title
               word-break: break-all
               white-space: pre-wrap

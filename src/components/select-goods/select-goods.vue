@@ -74,11 +74,11 @@
       this._getGoodsList()
     },
     methods: {
-      _getGoodsList(keyword) {
+      _getGoodsList(keywords) {
         this.showActive = true
         this.show = true
         // Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
-        Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keyword})
+        Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keywords})
           .then(res => {
             this.page = 1
             this.arr = res.data.map(item => {
