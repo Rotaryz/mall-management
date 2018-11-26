@@ -15,7 +15,8 @@
               <span class="dot-box green-dot" v-if="index1 == 6"></span>
               <span class="dot-box red-dot" v-if="index1 == 6"></span>
               <span v-if="index1 != 0">{{item1.title}}</span>
-              <img src="./logo.jpg" class="avatar" v-if="index1 == 0">
+              <!--<img src="./logo.jpg" class="avatar" v-if="index1 == 0">-->
+              <div class="avatar" :style="{backgroundImage: 'url(' + './logo.jpg' +')'}" v-if="index1 == 0"></div>
             </div>
           </div>
         </div>
@@ -65,7 +66,7 @@
           // end_at: this.endAt
         }
         Customer.getCustomerList(data).then(res => {
-          console.log(res)
+          // console.log(res)
         })
       }
     },
@@ -138,6 +139,9 @@
           border: 1px solid #d9d9d9
           border-raidus: 2px
           margin-left: 8px
+          background-repeat :no-repeat
+          background-position :center center
+          background-size :cover
         &.flex1
           flex: 1
         &.flex2

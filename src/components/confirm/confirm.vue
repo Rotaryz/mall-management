@@ -3,7 +3,10 @@
     <div slot="content" class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
       <!--<div class="title">{{title}}</div>-->
       <div class="text">{{text}}</div>
-      <div class="btn-group">
+      <div class="btn-group" v-if="oneBtn">
+        <span @click="cancel" class="btn confirm one-btn">确定</span>
+      </div>
+      <div class="btn-group" v-else>
         <span @click="cancel" class="btn cancel">取消</span>
         <span @click="confirm" class="btn confirm">确定</span>
       </div>
@@ -17,6 +20,12 @@
   export default {
     components: {
       BaseModal
+    },
+    props: {
+      oneBtn: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
@@ -72,7 +81,7 @@
 
   .confirm-content
     width: 356px
-    height: 200px
+    height: 210px
     background: $color-white
     border-radius: 3px
     box-shadow: 0 0 5px 0 rgba(12, 6, 14, 0.6)
@@ -96,6 +105,8 @@
         background: $color-main
         color: $color-white
         margin-left: 20px
+      .one-btn
+        margin-left :0
     .title
       font-size: $font-size-16
       font-family: $font-family-medium
@@ -109,8 +120,8 @@
       display: flex
       align-items: center
       justify-content: center
-      padding: 0 15px
-      padding-top: 10px
+      margin: 10px 15px
+      overflow-y :auto
 
   .model-active
     animation: layerFadeIn .3s

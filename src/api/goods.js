@@ -1,4 +1,4 @@
-import {defaultProcess} from './api-utils'
+import {defaultProcess, commonProcess} from './api-utils'
 
 export default {
   createGoods (data, loading = true) {
@@ -15,9 +15,9 @@ export default {
     return defaultProcess('get', url, data, loading, _resolveGoodsDetailData)
   },
   // 上下架
-  updateStatus (data, loading = true) {
+  updateStatus (data, loading = true, toast = false) {
     let url = `/api/admin/goods/updateShelfState/${data.goodsId}`
-    return defaultProcess('post', url, data, loading)
+    return commonProcess('post', url, {}, loading, toast)
   },
   delete (data, loading = true) {
     let url = `/api/admin/goods/${data.goodsId}`

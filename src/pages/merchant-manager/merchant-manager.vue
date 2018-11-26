@@ -15,7 +15,8 @@
               <span class="dot-box green-dot" v-if="item1.showType === 'dot'"></span>
               <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
               <span v-if="item1.showType !== 'img'">{{item1.title}}</span>
-              <img src="./logo.jpg" class="avatar" v-if="item1.showType === 'img'">
+              <!--<img src="./logo.jpg" class="avatar" v-if="item1.showType === 'img'">-->
+              <div class="avatar" :style="{backgroundImage: 'url(' + './logo.jpg' +')'}" v-if="item1.showType === 'img'"></div>
             </div>
             <div class="list-item-row red-item flex1 hand" @click="showModal">查看店铺</div>
           </div>
@@ -143,6 +144,9 @@
           border: 1px solid #d9d9d9
           border-raidus: 2px
           margin-left: 8px
+          background-repeat :no-repeat
+          background-position :center center
+          background-size :cover
         &.flex1
           flex: 1
         &.flex2

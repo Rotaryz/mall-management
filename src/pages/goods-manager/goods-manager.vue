@@ -31,7 +31,7 @@
             <nav class="common-wrapper" :style="item.wrapperStyle" v-for="(item, index) in listArr" :key="index">
               <i v-if="item.subclass.includes('dot')" :class="it.isPutAway? 'green-dot': 'red-dot'"></i>
               <div v-if="item.subclass === 'figure'" :class="item.subclass">
-                <img :src="it[item.icon]">
+                <div class="icon" :style="{backgroundImage: 'url(' + it[item.icon] +')'}"></div>
                 <span :class="item.subclass">{{it[item.name]}}</span>
               </div>
               <div v-else-if="item.subclass === 'btn-group'" :class="item.subclass">
@@ -46,6 +46,7 @@
           </dd>
         </dl>
         <confirm ref="confirm" @confirm="confirmHandle"></confirm>
+        <confirm ref="confirmOneBtn" :oneBtn="true"></confirm>
       </div>
     </base-panel>
   </div>
@@ -191,11 +192,17 @@
       upDownHandle(item) {
         let data = {
           goodsId: item.goodsId,
-          status: item.isPutAway ? '0' : '1'
+          status: item.isPutAway ? '0' : '1' // 1上架 0下架
         }
         Goods.updateStatus(data).then(res => {
           this.$toast.show('操作成功')
           this._getGoodsList()
+        }).catch(res => {
+          if (res.error === 10) { // todo
+            this.$refs.confirmOneBtn.showConfirm(res.message)
+          } else {
+            this.$toast.show(res.message)
+          }
         })
       },
       // 修改
@@ -386,7 +393,8 @@
               overflow: hidden
               layout(row,block,nowrap)
               align-items :center
-              & > img
+              & > .icon
+                display :inline-block
                 width: 40px
                 height: 40px
                 box-sizing: border-box
@@ -394,6 +402,9 @@
                 border-raidus: 2px
                 margin-left: 8px
                 vertical-align :middle
+                background-position :center content
+                background-repeat :no-repeat
+                background-size: cover
               & > span
                 flex: 1
                 overflow :hidden
