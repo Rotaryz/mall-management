@@ -15,7 +15,15 @@ export default {
    */
   giftsDetail (data, loading = true) {
     let url = `api/admin/gift_packs/${data}`
-    return defaultProcess('post', url, {}, loading)
+    return defaultProcess('get', url, {}, loading)
+  },
+  /**
+   * 开启/关闭大礼包
+   * @returns {*}
+   */
+  handleGifts (data, loading = true) {
+    let url = `api/admin/gift_packs/update_open_state/${data.id}`
+    return defaultProcess('post', url, data, loading)
   },
   /**
    * 删除大礼包

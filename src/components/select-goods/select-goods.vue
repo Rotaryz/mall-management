@@ -1,10 +1,10 @@
 <template>
   <base-modal :isShow="show">
-    <div slot="content" class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'">
+    <div slot="content" class="confirm-content" :class="showActive ? 'model-active' : 'model-un-active'" >
       <div class="top">
         <div class="title">选择商品</div>
         <div class="search">
-          <input class="input" type="text" @input="searchGoods" placeholder="请输入商品名称">
+          <input class="input" type="text" @input="searchGoods" v-model="searchText" placeholder="请输入商品名称">
           <span class="before"></span>
           <span class="after"></span>
         </div>
@@ -20,13 +20,13 @@
             <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
           </div>
           <div class="item flex1">
-            <img class="head" src="./goods.jpg" alt="">
+            <img class="head" :src="item.image_url_thumb" alt="">
             <span class="name">{{item.title}}</span>
           </div>
           <span class="item">{{item.original_price}}</span>
           <div class="counter item">
             <span class="sub text hand" @click="subCount(index)">-</span>
-            <input type="number" class="number text" v-model="item.count">
+            <input type="number" class="number text" v-model="item.stock">
             <span class="add  text hand" @click="addCount(index)">+</span>
           </div>
         </div>
@@ -41,8 +41,10 @@
 
 <script type="text/ecmascript-6">
   import BaseModal from 'components/base-modal/base-modal'
+  import {Gifts} from 'api'
 
   const COUNTREG = /^[1-9]\d*$/
+  const LIMIT = 10
   export default {
     props: {
       goodsArr: {
@@ -58,29 +60,52 @@
         timeout: true,
         showActive: false, // 控制出场离场动画
         headerList: ['勾选', '商品名称', '商品价格', '商品数量'],
-        goodsCount: '1',
-        arr: [],
-        selectArr: []
+        arr: this.goodsArr,
+        selectArr: [],
+        searchText: ''
       }
     },
     destroyed() {
       this.timeout && clearTimeout(this.timeout)
     },
+    created() {
+      this._getGoodsList()
+    },
     methods: {
+      _getGoodsList(keyword) {
+        this.showActive = true
+        this.show = true
+        // Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
+        Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keyword})
+          .then(res => {
+            this.arr = res.data.map(item => {
+              if (this.goodsArr.length) {
+                this.goodsArr.map(val => {
+                  if (item.goods_sku.length) {
+                    if (val.id === item.id) {
+                      item = val
+                    } else {
+                      item.checked = false
+                      item.stock = 1
+                    }
+                  }
+                })
+              } else {
+                item.checked = false
+                item.stock = 1
+              }
+              return item
+            })
+            console.log(this.arr)
+          })
+      },
       showGoodsList() {
         this.show = true
-        this.showActive = true
-        // this.arr = this.goodsArr.map(item => {
-        //   item.checked = false
-        //   item.count = 1
-        //   return item
-        // })
-        this.arr = this.goodsArr
       },
       searchGoods() {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
-          console.log('search')
+          this._getGoodsList(this.searchText)
         }, 1000)
       },
       goodsCheck(index) {
@@ -90,12 +115,13 @@
           }
           return item
         })
+        console.log(this.arr, this.goodsArr)
       },
       subCount(index) {
         this.arr = this.arr.map((item, i) => {
           if (index === i) {
-            if (item.count > 0) {
-              item.count--
+            if (item.stock > 1) {
+              item.stock--
             }
           }
           return item
@@ -104,8 +130,8 @@
       addCount(index) {
         this.arr = this.arr.map((item, i) => {
           if (index === i) {
-            if (item.count < item.goods_sku[0].goods_sku_stock) {
-              item.count++
+            if (item.stock < item.goods_sku[0].goods_sku_stock) {
+              item.stock++
             }
           }
           return item
@@ -113,11 +139,15 @@
       },
       confirm() {
         if (!this.timeout) return
-        // this.selectArr = this.arr.filter(item => {
-        //   return item.checked === true
-        // })
-        if (!this._testCount(this.selectArr)) {
-          this.$toast.show('商品数量必须为整数，请从新选择数量')
+        this.selectArr = this.arr.filter(item => {
+          return item.checked === true
+        })
+        // if (!this._testCount(this.selectArr)) {
+        //   this.$toast.show('商品数量必须为整数，请从新选择数量')
+        //   return
+        // }
+        if (this._testCount(this.selectArr)) {
+          this.$toast.show(this._testCount(this.selectArr))
           return
         }
         setTimeout(() => {
@@ -125,25 +155,28 @@
         }, 100)
         this.showActive = false
         this.timeout = false // 防止重复点击
-        this.$emit('selectGoods', this.arr)
+        this.$emit('selectGoods', this.selectArr)
         setTimeout(() => {
           this.timeout = true
+          this.$emit('hideGoodsList')
         }, 500)
       },
       cancel() {
         setTimeout(() => {
           this.show = false
-        }, 100)
+          this.$emit('hideGoodsList')
+        }, 200)
         this.showActive = false
       },
       _testCount(arr) {
-        let allRight = arr.every((item, index) => {
-          if (item.checked) {
-            return COUNTREG.test(item.count)
+        for (let item of arr) {
+          if (item.stock > item.goods_sku[0].goods_sku_stock) {
+            return `商品【${item.title}】的数量不能大于库存数${item.goods_sku[0].goods_sku_stock}`
+          } else if (!COUNTREG.test(item.stock)) {
+            return '商品数量必须为整数，请从新选择数量'
           }
-        })
-
-        return allRight
+        }
+        return false
       }
     },
     components: {
