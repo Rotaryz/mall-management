@@ -4,15 +4,15 @@
       <img src="./pic-logo@2x.png" class="icon">
       <p>兑换商城</p>
     </header>
-    <dl v-for="(item, index) in navList" :key="index">
-      <dt @click="navHandle(item, index)" :class=" '' | isActive(item)">
+    <dl v-for="(item, index) in navList">
+      <dt @click="navHandle(item, index)" :class="item | isActive">
         <img :src="item.isLight ? item.iconSelected : item.icon" alt="">
         <p>{{item.title}}</p>
         <i :class="item.children.length ? 'rotate' : ''"></i>
       </dt>
-      <dd :style="'' | childrenActive(item)">
-        <template v-for="(it, idx) in item.children">
-          <p :key="idx" :class=" '' | isActive(it)" @click="navHandle(it, idx, item)">{{it.title}}</p>
+      <dd :style="item | childrenActive">
+        <template v-for="(child, index) in item.children">
+          <p :class="child | isActive" @click="navHandle(child, index, item)">{{child.title}}</p>
         </template>
       </dd>
     </dl>
@@ -186,20 +186,20 @@
     },
     filters: {
       // 子路有的激活状态过滤
-      childrenActive(val, item) {
-        let styles = val
-        if (item.children.length && item.isLight) {
-          styles = `height:${item.children.length * HEIGHT}px`
+      childrenActive(value) {
+        let styles = ''
+        if (value.children.length && value.isLight) {
+          styles = `height:${value.children.length * HEIGHT}px`
         }
         return styles
       },
       // 本路由的激活状态过滤
-      isActive (val, item) {
-        let cname = val
-        if (item.isLight) {
+      isActive (value) {
+        let cname = ''
+        if (value.isLight) {
           cname = 'active'
         }
-        if (item.isLight && item.children && item.children.length) {
+        if (value.isLight && value.children && value.children.length) {
           cname += ' no-border'
         }
         return cname
