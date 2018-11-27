@@ -121,7 +121,7 @@
       // 搜索
       search(text) {
         if (text) {
-          this._getGoodsList({keywords: text})
+          this._getGoodsList({keywords: text.trim()})
         } else {
           this._getGoodsList()
         }

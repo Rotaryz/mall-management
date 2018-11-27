@@ -1,10 +1,10 @@
 <template>
   <div class="merchant-manager">
-    <base-panel>
+    <base-panel :showNull="showNull" :pageDetails="pageDetails" @navToPage="navToPage">
       <div slot="content">
         <div class="search-top">
           <p class="top-title">手机号</p>
-          <search placeholerTxt="请输入手机号"></search>
+          <search @search="search" placeholerTxt="请输入" ref="search"></search>
         </div>
         <div class="list-content">
           <div class="list-head">
@@ -12,30 +12,27 @@
           </div>
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
             <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className" v-if="index1 != (listArr.length - 1)">
-              <span class="dot-box green-dot" v-if="item1.showType === 'dot'"></span>
+              <span class="dot-box green-dot" v-if="item1.showType === 'dot' && item[item1.name] === '已开通'"></span>
               <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
-              <span v-if="item1.showType !== 'img'">{{item1.title}}</span>
-              <!--<img src="./logo.jpg" class="avatar" v-if="item1.showType === 'img'">-->
-              <div class="avatar" :style="{backgroundImage: 'url(' + './logo.jpg' +')'}" v-if="item1.showType === 'img'"></div>
+              <span v-if="item1.showType !== 'img'">{{item[item1.name]}}</span>
+              <div class="avatar" :style="{backgroundImage: 'url(' + item[item1.name] +')'}" v-if="item1.showType === 'img'"></div>
             </div>
-            <div class="list-item-row red-item flex1 hand" @click="showModal">查看店铺</div>
+            <div class="list-item-row red-item flex1 hand" @click="showModal(item)">查看店铺</div>
           </div>
         </div>
       </div>
     </base-panel>
     <base-modal :isShow="coverShow">
       <div slot="content">
-        <transition name="fade">
-          <div class="qrcode-container" v-if="coverShow">
-            <div class="cover-top">
-              <div class="top-left">店铺二维码</div>
-              <img src="./icon-close@2x.png" class="close-btn hand" @click="hideModal">
-            </div>
-            <div class="cover-down">
-              <img src="./logo.jpg" class="qrcode">
-            </div>
+        <div class="qr-code-container" :class="showActive ? 'model-active' : 'model-un-active'">
+          <div class="cover-top">
+            <div class="top-left">店铺二维码</div>
+            <img src="./icon-close@2x.png" class="close-btn hand" @click="hideModal">
           </div>
-        </transition>
+          <figure class="cover-down">
+            <div class="qr-code" :style="{backgroundImage: 'url(' + currentMerchant.shopQrCode + ')'}"></div>
+          </figure>
+        </div>
       </div>
     </base-modal>
   </div>
@@ -45,33 +42,102 @@
   import BasePanel from 'components/base-panel/base-panel'
   import BaseModal from 'components/base-modal/base-modal'
   import Search from 'components/search/search'
+  import { Merchant } from 'api'
 
   const LIST = [
     {name: 'logo', title: '门店LOGO', className: 'flex1', showType: 'img'},
-    {name: '', title: '门店名称', className: 'flex1'},
-    {name: '', title: '店长', className: 'flex1'},
-    {name: '', title: '手机号', className: 'flex1'},
-    {name: '', title: '地区', className: 'flex1'},
-    {name: '', title: '详细地址', className: 'flex2'},
-    {name: '', title: '大礼包', className: 'flex1', showType: 'dot'},
-    {name: '', title: '开店时间', className: 'flex1'},
-    {name: '', title: '操作', className: 'flex1'}
+    {name: 'shopName', title: '门店名称', className: 'flex1-p20'},
+    {name: 'managerName', title: '店长', className: 'flex1-p20'},
+    {name: 'mobile', title: '手机号', className: 'flex1'},
+    {name: 'region', title: '地区', className: 'flex1-p20'},
+    {name: 'address', title: '详细地址', className: 'flex1-p20'},
+    {name: 'isGiftPack', title: '大礼包', className: 'flex1', showType: 'dot'},
+    {name: 'createdAt', title: '开店时间', className: 'flex1'},
+    {name: '操作', title: '操作', className: 'flex1'}
   ]
   export default {
     name: 'merchantManager',
     data() {
       return {
         listArr: LIST,
-        manageList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        coverShow: false
+        manageList: [],
+        coverShow: false,
+        showActive: false,
+        timer: null,
+        currentMerchant: {},
+        page: 1,
+        limit: 10,
+        showNull: false,
+        pageDetails: {
+          total: 1, // 总数量
+          per_page: 1, // 每一页的条数
+          total_page: 1 // 总页数
+        }
       }
     },
+    created() {
+      this._getList()
+    },
     methods: {
-      showModal() {
+      showModal(item) {
+        if (this.timer) return
+        this.currentMerchant = item
         this.coverShow = true
+        this.showActive = true
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer)
+          this.timer = null
+        }, 500)
       },
       hideModal() {
+        if (this.timer) return
         this.coverShow = false
+        this.showActive = false
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer)
+          this.timer = null
+          this.currentMerchant = {}
+        }, 500)
+      },
+      // 获取列表
+      _getList(data) {
+        const {page, limit} = this
+        Merchant.getList({limit, page, ...data}).then(res => {
+          this.manageList = res.data
+          this.showNull = +res.meta.total <= 0
+          if (!this.showNull) {
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: Math.ceil(res.meta.total / res.meta.per_page)
+            }
+          } else {
+            this.pageDetails = {
+              total: 1,
+              per_page: 1,
+              total_page: 1
+            }
+          }
+        })
+      },
+      // 翻页
+      navToPage(page) {
+        this.page = page
+        this._getList()
+      },
+      _initPage() {
+        this.$refs.basePanel && this.$refs.basePanel.initPage()
+      },
+      // 搜索
+      search(text) {
+        if (text) {
+          this._getList({mobile: text.trim()})
+        } else {
+          this._getList()
+        }
+      },
+      _clearSearchText() {
+        this.$refs.search && this.$refs.search.clearTxt()
       }
     },
     components: {
@@ -85,6 +151,43 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
+
+  .model-active
+    animation: layerFadeIn .3s
+
+  .model-un-active
+    animation: hideFadeIn .4s
+
+  @keyframes layerFadeIn {
+    0% {
+      opacity: 0
+      transform: scale(.5)
+    }
+    100% {
+      opacity: 1
+      transform: scale(1)
+    }
+  }
+
+  @keyframes hideFadeIn {
+    0% {
+      opacity: 1
+      transform: scale(1)
+    }
+    100% {
+      transform: scale(.5)
+      opacity: 0
+    }
+  }
+
+  .flex1-p20
+    flex: 1
+    padding-right :20px
+
+  .merchant-manager
+    position :relative
+    layout()
+    flex:1
 
   .search-top
     padding-left: 30px
@@ -155,9 +258,7 @@
         &.red-item
           color: $color-main
 
-  .qrcode-container
-    position: absolute
-    all-center()
+  .qr-code-container
     width: 356px
     height: 274px
     background: $color-white
@@ -186,9 +287,12 @@
       display: flex
       align-items: center
       justify-content: center
-      .qrcode
+      .qr-code
         width: 130px
         height: 130px
         border: 2px solid #ededed
         border-radius: 2px
+        background-repeat :no-repeat
+        background-position :center center
+        background-size :cover
 </style>
