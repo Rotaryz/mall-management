@@ -270,6 +270,7 @@
       display: flex
       align-items: center
       justify-content: space-between
+      user-select :none
       .top-left
         font-size: $font-size-16
         font-family: $font-family-light
