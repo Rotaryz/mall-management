@@ -18,7 +18,7 @@
         <div class="list-content" ref="content">
           <div class="list-item" v-for="(item, index) in arr">
             <div class="item">
-              <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
+              <span class="checkbox hand" :class="{'checked': item.checked, 'no-handle': item.noHandle}" @click="goodsCheck(index, item)"></span>
             </div>
             <div class="item flex1">
               <!--<img class="head" :src="item.image_url_thumb" alt="">-->
@@ -55,6 +55,12 @@
         default: () => {
           return []
         }
+      },
+      hasId: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
       }
     },
     data() {
@@ -81,12 +87,14 @@
       _getGoodsList(keywords) {
         this.showActive = true
         this.show = true
-        // Gifts.getGoodsList({type: 1, page: 1, limit: LIMIT})
         Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keywords})
           .then(res => {
             this.page = 1
             if (res.data.length < LIMIT) this.hasMore = false
-            let arr = res.data.map(item => {
+            let resArr = res.data.filter(item => {
+              return item.goods_sku[0].goods_sku_stock > 0
+            })
+            let arr = resArr.map(item => {
               item.stock = 1
               item.checked = false
               return item
@@ -102,6 +110,7 @@
               if (index > -1) {
                 arr[index].stock = item.stock
                 arr[index].checked = item.checked
+                arr[index].noHandle = item.checked
                 arr[index].goods_sku_id = arr[index].goods_sku[0].id
               }
             })
@@ -114,7 +123,6 @@
           let boxBottom = this.$refs.goodsBox.getBoundingClientRect().bottom
           let contentBottom = this.$refs.content.getBoundingClientRect().bottom
           let d = -e.detail / 3 || e.wheelDelta / 120
-          console.log(contentBottom, boxBottom)
           if (contentBottom === boxBottom && d < 0 && this.canAddMore) {
             this.canAddMore = false
             this.pullDown()
@@ -159,7 +167,8 @@
           this._getGoodsList(this.searchText)
         }, 1000)
       },
-      goodsCheck(index) {
+      goodsCheck(index, item) {
+        if (item.noHandle) return
         this.arr = this.arr.map((item, i) => {
           if (index === i) {
             item.checked = !item.checked
@@ -189,14 +198,17 @@
       },
       confirm() {
         if (!this.timeout) return
-        this.selectArr = this.arr.filter(item => {
-          item.goods_sku_id = item.goods_sku[0].id
-          return item.checked === true
-        })
         if (this._testCount(this.selectArr)) {
           this.$toast.show(this._testCount(this.selectArr))
           return
         }
+        this.selectArr = this.arr.filter(item => {
+          item.goods_sku_id = item.goods_sku[0].id
+          item.goods_id = item.id
+          item.id = 0
+          return item.checked === true
+        })
+        console.log(this.selectArr, 'cccc')
         setTimeout(() => {
           this.show = false
         }, 100)
@@ -324,6 +336,8 @@
           background: url('./group.png') no-repeat;
           background-size: cover
           border: 0
+        .no-handle
+          background-image: url('./ungroup.png');
         .item
           width: 155px
           no-wrap()

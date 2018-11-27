@@ -48,5 +48,13 @@ export default {
   getGoodsList (data, loading = true) {
     let url = '/api/admin/goods'
     return defaultProcess('get', url, data, loading)
+  },
+  /**
+   * 编辑大礼包
+   * @returns {*}
+   */
+  editGoodsList (data, giftsId, loading = true) {
+    let url = `/api/admin/gift_packs/${giftsId}`
+    return defaultProcess('put', url, data, loading)
   }
 }

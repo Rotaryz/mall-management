@@ -115,7 +115,7 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" :goodsArr="goodsArr" @selectGoods="selectGoods" v-if="showGoodsList" @hideGoodsList="hideGoodsList" ></select-goods>
+      <select-goods ref="goodsList" :goodsArr="goodsArr" :hasId="hasId" @selectGoods="selectGoods" v-if="showGoodsList" @hideGoodsList="hideGoodsList" ></select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>
@@ -137,6 +137,7 @@
         msg: {
           title: '',
           type: 1,
+          is_open: 0,
           giftpack_banner_images: [], // 大礼包banner图
           giftpack_images: [], // 大礼包详情图
           gift_packs_stock: '', // 大礼包库存
@@ -178,6 +179,7 @@
             this.msg = {
               title: data.title,
               type: 1,
+              is_open: 0,
               giftpack_banner_images: [data.gift_packs_banner_images],
               giftpack_images: [data.gift_packs_images],
               gift_packs_stock: data.stock,
@@ -185,15 +187,15 @@
               planting_beans: parseInt(data.planting_beans),
               commission_rate: parseInt(data.commission_rate),
               giftpack_goods_skus: data.gift_packs_goods_sku,
-              image_id: data.gift_packs_banner_images.image_id // 封面图id
+              image_id: data.gift_packs_banner_images && data.gift_packs_banner_images.image_id // 封面图id
             }
             this.msg.giftpack_goods_skus = data.gift_packs_goods_sku.map(item => {
               item.image_id = item.goods_sku_image_id
               item.title = item.goods_title
               return item
             })
-            this.bannerSrc = data.gift_packs_banner_images.image_url_thumb
-            this.detailSrc = data.gift_packs_images.image_url_thumb
+            this.bannerSrc = data.gift_packs_banner_images && data.gift_packs_banner_images.image_url_thumb
+            this.detailSrc = data.gift_packs_images && data.gift_packs_images.image_url_thumb
             this.showList = data.gift_packs_goods_sku.length
             this.goodsArr = data.gift_packs_goods_sku.map(item => {
               item.goods_sku_stock = item.origin_sku_stock
@@ -259,8 +261,16 @@
       },
       selectGoods(selectArr) { // 添加大礼包商品
         this.showList = selectArr.length
-        this.msg.giftpack_goods_skus = selectArr
-        this.goodsArr = selectArr
+        let arr = this._compareList(this.goodsArr, selectArr)
+        this.goodsArr = arr
+        this.msg.giftpack_goods_skus = arr
+      },
+      _compareList(oldArr, newArr) {
+        oldArr.forEach(item => {
+          let node = newArr.find(val => val.goods_id === item.goods_id)
+          node && (node.id = item.id)
+        })
+        return newArr
       },
       hideGoodsList() {
         this.showGoodsList = false
@@ -277,8 +287,8 @@
       addCount(index) {
         let stock = this.goodsArr[index].stock
         let skuStock
-        if (this.giftsId) {
-          skuStock = this.goodsArr[index].total_stock
+        if (this.hasId) {
+          skuStock = this.goodsArr[index].origin_sku_stock
         } else {
           skuStock = this.goodsArr[index].goods_sku && this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
         }
@@ -318,19 +328,26 @@
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
-        this.msg.giftpack_goods_skus = this.msg.giftpack_goods_skus.map(item => {
-          item.goods_sku_id = item.goods_sku[0].id
-          return item
-        })
         this.disabledCover = false
+        console.log(this.msg)
         if (res) {
-          Gifts.createGifts(this.msg)
-            .then(res => {
-              this.$toast.show('保存成功')
-              setTimeout(() => {
-                this.$router.back()
-              }, 1500)
-            })
+          if (this.hasId) {
+            Gifts.editGoodsList(this.msg, this.giftsId)
+              .then(res => {
+                this.$toast.show('保存成功')
+                setTimeout(() => {
+                  this.$router.back()
+                }, 1500)
+              })
+          } else {
+            Gifts.createGifts(this.msg)
+              .then(res => {
+                this.$toast.show('保存成功')
+                setTimeout(() => {
+                  this.$router.back()
+                }, 1500)
+              })
+          }
         }
       },
       _testPropety(arr) {

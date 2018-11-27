@@ -118,7 +118,7 @@ const route = new Router({
           }
         },
         {
-          path: '/gifts/user-gifts/new-business-gifts',
+          path: '/gifts/business-gifts/new-business-gifts',
           component: NewBusinessGifts,
           meta: {
             title: '用户大礼包'

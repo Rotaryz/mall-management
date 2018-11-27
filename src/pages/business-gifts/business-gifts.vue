@@ -1,5 +1,5 @@
 <template>
-  <base-panel :pageDetails="pageDetails" @navToPage="navToPage">
+  <base-panel :pageDetails="pageDetails" :showNull="showNull" @navToPage="navToPage">
     <div slot="content" class="user-gifts">
       <div class="header-btn hand" @click="createNew">新建大礼包</div>
       <div class="content-list">
@@ -10,27 +10,32 @@
         </div>
         <div class="list-content">
           <div class="list-item" v-for="(item, index) in arr">
-            <div :class="val.class" v-for="(val, i) in data" >
+            <div :class="val.class" v-for="(val, i) in data">
 
-              <span class="overflow" v-if="!val.show">{{val.title}}</span>
+              <span class="overflow" v-if="val.show === 'second'">{{item.price}}</span>
+              <span class="overflow" v-if="val.show === 'three'">{{item.stock}}</span>
+              <span class="overflow" v-if="val.show === 'four'">{{item.type === 1? '用户大礼包': '商家大礼包'}}</span>
 
               <div :class="val.class" v-if="val.show === 'first'">
-                <img class="head" src="./gifts.jpg" alt="">
-                <span class="title">随便写点字</span>
+                <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
+                <span class="title">{{item.title}}</span>
               </div>
-
-              <span class="before" v-if="val.show === 'status'" :class="{'green': index%2 === 0}">{{index%2 === 0 ? '已开启' : '已关闭'}}</span>
+              <span class="overflow" v-if="!val.show">{{item.created_at}}</span>
+              <span class="before" v-if="val.show === 'status'" :class="{'green': item.is_open === 1}">{{item.is_open === 1 ? '已开启' : '已关闭'}}</span>
 
               <div :class="val.class" v-if="val.show === 'last'">
-                <span class="handle-item hand" @click="showPop('open', item)">修改</span>
-                <span class="handle-item hand" @click="showPop('close', item)">关闭</span>
-                <span class="handle-item hand" :class="{'grey': grey}" @click="showPop('delete', item)">删除</span>
+                <span class="handle-item hand" :class="{'grey':item.is_open === 1}" @click="goEdit(item)">修改</span>
+                <span class="handle-item hand" v-if="item.is_open === 0" @click="showPop('open', item)">开启</span>
+                <span class="handle-item hand" v-if="item.is_open === 1" @click="showPop('close', item)">关闭</span>
+                <span class="handle-item hand" :class="{'grey': item.is_open}"
+                      @click="showPop('delete', item)">删除</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <confirm ref="confirm" @confirm="confirm" @cancel="cancel"></confirm>
+      <confirm ref="confirm" @confirm="confirm"></confirm>
     </div>
   </base-panel>
 </template>
@@ -38,7 +43,9 @@
 <script type="text/ecmascript-6">
   import BasePanel from 'components/base-panel/base-panel'
   import Confirm from 'components/confirm/confirm'
+  import { Gifts } from 'api'
 
+  const LIMIT = 10
   export default {
     name: 'business-gifts',
     data() {
@@ -46,9 +53,9 @@
         pageType: '',
         data: [
           {title: '大礼包名称', class: 'item  flex1', name: '', show: 'first'},
-          {title: '价格', class: 'item', name: ''},
-          {title: '库存', class: 'item', name: ''},
-          {title: '类型', class: 'item', name: ''},
+          {title: '价格', class: 'item', name: '', show: 'second'},
+          {title: '库存', class: 'item', name: '', show: 'three'},
+          {title: '类型', class: 'item', name: '', show: 'four'},
           {title: '状态', class: 'item', name: '', show: 'status'},
           {title: '创建时间', class: 'item', name: ''},
           {title: '操作', class: 'item list-handle flex2', name: '', show: 'last'}
@@ -60,38 +67,84 @@
           total: 100, // 总数量
           per_page: 10, // 一页条数
           total_page: 10 // 总页数
-        }
+        },
+        hasOther: true,
+        handleItem: '',
+        page: 1,
+        showNull: false
       }
     },
+    created() {
+      this.getGiftsList(this.page)
+    },
     methods: {
-      showPop(type) {
-        this.popType = type
+      getGiftsList(page) {
+        Gifts.getGiftsList({type: 2, page, limit: LIMIT})
+          .then((res) => {
+            this.showNull = +res.meta.total <= 0
+            this.arr = res.data
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: res.meta.last_page
+            }
+          })
+      },
+      showPop(type, item) { // 确认弹窗
+        this.handleItem = item
         switch (type) {
           case 'open':
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            if (this.hasOther) {
+              this.popType = 'open1'
+              this.$refs.confirm.showConfirm('已有开启的大礼包，请关闭')
+            } else {
+              this.popType = 'open2'
+              this.$refs.confirm.showConfirm('确定要开启大礼包吗？')
+            }
             break
           case 'close':
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            this.popType = 'close'
+            this.$refs.confirm.showConfirm('确定要关闭大礼包吗？')
             break
           case 'delete':
-            this.$refs.confirm.showConfirm('你确定要上架？')
+            this.popType = 'delete'
+            if (item.is_open) return
+            this.$refs.confirm.showConfirm('确定要删除大礼包吗？')
             break
         }
       },
       confirm() {
-        console.log('close')
+        if (this.popType === 'open1') {
+          Gifts.handleGifts({id: this.handleItem.id, status: 1})
+            .then(res => {
+              this.$toast.show('开启成功')
+              this.getGiftsList(this.page)
+            })
+        } else if (this.popType === 'close') {
+          Gifts.handleGifts({id: this.handleItem.id, status: 0})
+            .then(res => {
+              this.$toast.show('关闭成功')
+              this.getGiftsList(this.page)
+            })
+        } else if (this.popType === 'delete') {
+          Gifts.deleteGifts(this.handleItem.id)
+            .then(res => {
+              this.$toast.show('删除成功')
+              this.getGiftsList(this.page)
+            })
+        }
       },
-      cancel() {
-        console.log('cancel')
+      goEdit(item) {
+        if (+item.is_open === 1) return
+        this.$router.push({path: '/gifts/business-gifts/new-business-gifts', query: {id: item.id}})
       },
-      navToPage(page) {
-        console.log(page)
+      navToPage(page) { // 翻页
+        this.page = page
+        this.getGiftsList(page)
       },
       createNew() { // 新建大礼包
-        this.$router.push({path: '/gifts/user-gifts/new-business-gifts'})
+        this.$router.push({path: '/gifts/business-gifts/new-business-gifts'})
       }
-    },
-    watch: {
     },
     components: {
       BasePanel,
@@ -105,6 +158,7 @@
   @import '~common/stylus/mixin'
 
   .user-gifts
+
     display: flex
     flex: 1
     flex-direction: column
@@ -173,6 +227,8 @@
               width: 54px
               height: 40px
               margin-right: 10px
+              background-size: cover
+              background-position: center
             .title
               word-break: break-all
               white-space: pre-wrap
@@ -210,6 +266,7 @@
                 border-left: 0
                 padding-left: 0
             .grey
+              cursor: inherit
               color: $color-text-2A
 
   .create-new
@@ -257,7 +314,6 @@
         .tip
           margin-left: 20px
           font-style: normal
-
 
 
 </style>
