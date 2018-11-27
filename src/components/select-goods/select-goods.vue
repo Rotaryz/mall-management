@@ -14,21 +14,23 @@
           <span class="contxt">{{item}}</span>
         </div>
       </div>
-      <div class="list-content">
-        <div class="list-item" v-for="(item, index) in arr">
-          <div class="item">
-            <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
-          </div>
-          <div class="item flex1">
-            <!--<img class="head" :src="item.image_url_thumb" alt="">-->
-            <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
-            <span class="name">{{item.title}}</span>
-          </div>
-          <span class="item">{{item.original_price}}</span>
-          <div class="counter item">
-            <span class="sub text hand" @click="subCount(index)">-</span>
-            <input type="number" class="number text" v-model="item.stock">
-            <span class="add  text hand" @click="addCount(index)">+</span>
+      <div class="goods-box" ref="goodsBox" @mousewheel="boxWheel">
+        <div class="list-content" ref="content">
+          <div class="list-item" v-for="(item, index) in arr">
+            <div class="item">
+              <span class="checkbox hand" :class="{'checked':item.checked}" @click="goodsCheck(index)"></span>
+            </div>
+            <div class="item flex1">
+              <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+              <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
+              <span class="name">{{item.title}}</span>
+            </div>
+            <span class="item">{{item.original_price}}</span>
+            <div class="counter item">
+              <span class="sub text hand" @click="subCount(index)">-</span>
+              <input type="number" class="number text" v-model="item.stock">
+              <span class="add  text hand" @click="addCount(index)">+</span>
+            </div>
           </div>
         </div>
       </div>
@@ -65,7 +67,8 @@
         selectArr: [],
         searchText: '',
         hasMore: true,
-        page: 1
+        page: 1,
+        canAddMore: true
       }
     },
     destroyed() {
@@ -82,53 +85,69 @@
         Gifts.getGoodsList({page: 1, limit: LIMIT, on_line: 1, keywords})
           .then(res => {
             this.page = 1
-            this.arr = res.data.map(item => {
-              if (this.goodsArr.length) { // 如果有已选产品，对新数据做比较
-                this.goodsArr.map(val => {
-                  if (item.goods_sku.length) {
-                    if (val.id === item.id) {
-                      item = val
-                    } else {
-                      item.checked = false
-                      item.stock = 1
-                    }
-                  }
-                })
-              } else {
-                item.checked = false
-                item.stock = 1
-              }
+            if (res.data.length < LIMIT) this.hasMore = false
+            let arr = res.data.map(item => {
+              item.stock = 1
+              item.checked = false
               return item
             })
-            console.log(this.arr)
+            if (!this.goodsArr.length) { // 如果没有已选择商品，直接赋值
+              this.arr = res.data
+              return
+            }
+            this.goodsArr.map(item => {
+              let index = arr.findIndex(val => {
+                return val.goods_sku[0].id === item.goods_sku_id
+              })
+              if (index > -1) {
+                arr[index].stock = item.stock
+                arr[index].checked = item.checked
+                arr[index].goods_sku_id = arr[index].goods_sku[0].id
+              }
+            })
+            this.arr = arr
           })
       },
+      boxWheel(e) {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          let boxBottom = this.$refs.goodsBox.getBoundingClientRect().bottom
+          let contentBottom = this.$refs.content.getBoundingClientRect().bottom
+          let d = -e.detail / 3 || e.wheelDelta / 120
+          console.log(contentBottom, boxBottom)
+          if (contentBottom === boxBottom && d < 0 && this.canAddMore) {
+            this.canAddMore = false
+            this.pullDown()
+          }
+        }, 300)
+      },
       pullDown() {
-        console.log('jiazai')
         if (!this.hasMore) return
         this.page++
         Gifts.getGoodsList({page: this.page, limit: LIMIT, on_line: 1, keyword: this.searchText})
           .then(res => {
-            let newGoods = res.data.map(item => {
-              if (this.goodsArr.length) { // 如果有已选产品，对新数据做比较
-                this.goodsArr.map(val => {
-                  if (item.goods_sku.length) {
-                    if (val.id === item.id) {
-                      item = val
-                    } else {
-                      item.checked = false
-                      item.stock = 1
-                    }
-                  }
-                })
-              } else {
-                item.checked = false
-                item.stock = 1
-              }
+            if (res.data.length < LIMIT) this.hasMore = false
+            this.canAddMore = true
+            let arr = res.data.map(item => {
+              item.stock = 1
+              item.checked = false
               return item
             })
-            this.arr = newGoods.concat(this.arr)
-            console.log(this.arr)
+            if (!this.goodsArr.length) { // 如果没有已选择商品，就直接合并
+              this.arr = this.arr.concat(arr)
+              return
+            }
+            this.goodsArr.map(item => {
+              let index = arr.findIndex(val => {
+                return val.goods_sku[0].id === item.goods_sku_id
+              })
+              if (index > -1) {
+                arr[index].stock = item.stock
+                arr[index].checked = item.checked
+                arr[index].goods_sku_id = arr[index].goods_sku[0].id
+              }
+            })
+            this.arr = arr.concat(this.arr)
           })
       },
       showGoodsList() {
@@ -147,7 +166,6 @@
           }
           return item
         })
-        console.log(this.arr, this.goodsArr)
       },
       subCount(index) {
         this.arr = this.arr.map((item, i) => {
@@ -172,12 +190,9 @@
       confirm() {
         if (!this.timeout) return
         this.selectArr = this.arr.filter(item => {
+          item.goods_sku_id = item.goods_sku[0].id
           return item.checked === true
         })
-        // if (!this._testCount(this.selectArr)) {
-        //   this.$toast.show('商品数量必须为整数，请从新选择数量')
-        //   return
-        // }
         if (this._testCount(this.selectArr)) {
           this.$toast.show(this._testCount(this.selectArr))
           return
@@ -283,9 +298,10 @@
           width: 280px
         &:last-child
           text-indent: 23px
-    .list-content
+    .goods-box
       height: 240px
       overflow-y: scroll
+    .list-content
       .list-item
         height: 60px
         flex: 1

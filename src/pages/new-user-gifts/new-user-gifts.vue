@@ -137,7 +137,6 @@
         msg: {
           title: '',
           type: 1,
-          is_open: 1,
           giftpack_banner_images: [], // 大礼包banner图
           giftpack_images: [], // 大礼包详情图
           gift_packs_stock: '', // 大礼包库存
@@ -160,11 +159,13 @@
         willDelGoods: '',
         showList: 0,
         showGoodsList: false,
-        giftsId: ''
+        giftsId: '',
+        hasId: false
       }
     },
     created() {
       if (this.$route.query.id) {
+        this.hasId = true
         this.giftsId = this.$route.query.id
         this._getGiftsDetail()
       }
@@ -177,21 +178,26 @@
             this.msg = {
               title: data.title,
               type: 1,
-              is_open: 1,
-              giftpack_banner_images: data.gift_packs_banner_images,
-              giftpack_images: data.gift_packs_images,
+              giftpack_banner_images: [data.gift_packs_banner_images],
+              giftpack_images: [data.gift_packs_images],
               gift_packs_stock: data.stock,
               price: data.price,
               planting_beans: parseInt(data.planting_beans),
               commission_rate: parseInt(data.commission_rate),
               giftpack_goods_skus: data.gift_packs_goods_sku,
-              image_id: '' // 封面图id
+              image_id: data.gift_packs_banner_images.image_id // 封面图id
             }
+            this.msg.giftpack_goods_skus = data.gift_packs_goods_sku.map(item => {
+              item.image_id = item.goods_sku_image_id
+              item.title = item.goods_title
+              return item
+            })
             this.bannerSrc = data.gift_packs_banner_images.image_url_thumb
             this.detailSrc = data.gift_packs_images.image_url_thumb
             this.showList = data.gift_packs_goods_sku.length
             this.goodsArr = data.gift_packs_goods_sku.map(item => {
-              item.stock = item.total_stock
+              item.goods_sku_stock = item.origin_sku_stock
+              item.checked = true
               return item
             })
           })
@@ -212,7 +218,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: 0
+                id: this.hasId ? 1 : 0
               }
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
@@ -229,7 +235,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: 0
+                id: this.hasId ? 1 : 0
               }
               this.detailSrc = resArr[0].data.image_url_thumb
               this.msg.giftpack_images[0] = obj
@@ -271,7 +277,6 @@
       addCount(index) {
         let stock = this.goodsArr[index].stock
         let skuStock
-        console.log(this.goodsArr, index)
         if (this.giftsId) {
           skuStock = this.goodsArr[index].total_stock
         } else {
@@ -314,17 +319,10 @@
           return
         }
         this.msg.giftpack_goods_skus = this.msg.giftpack_goods_skus.map(item => {
-          item = {
-            id: 0,
-            image_id: item.image_url,
-            stock: item.stock,
-            goods_id: item.id,
-            goods_sku_id: item.goods_sku[0].id
-          }
-          console.log(item)
+          item.goods_sku_id = item.goods_sku[0].id
           return item
         })
-        // this.disabledCover = false
+        this.disabledCover = false
         if (res) {
           Gifts.createGifts(this.msg)
             .then(res => {
