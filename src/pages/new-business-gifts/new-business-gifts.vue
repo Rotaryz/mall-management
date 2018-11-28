@@ -99,8 +99,14 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" :goodsArr="goodsArr" :hasId="hasId" @selectGoods="selectGoods" v-if="showGoodsList"
-                    @hideGoodsList="hideGoodsList"></select-goods>
+      <select-goods ref="goodsList"
+                    v-if="showGoodsList"
+                    :goodsArr="goodsArr"
+                    :hasId="hasId"
+                    :giftsStock="msg.gift_packs_stock"
+                    @selectGoods="selectGoods"
+                    @hideGoodsList="hideGoodsList" >
+      </select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>

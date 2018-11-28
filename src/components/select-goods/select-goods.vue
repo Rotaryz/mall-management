@@ -217,6 +217,9 @@
       },
       confirm() {
         if (!this.timeout) return
+        this.selectArr = this.arr.filter(item => {
+          return item.checked === true
+        })
         if (this._testCount(this.selectArr)) {
           this.$toast.show(this._testCount(this.selectArr))
           return
@@ -248,7 +251,9 @@
       },
       _testCount(arr) {
         for (let item of arr) {
-          if (item.stock > item.goods_sku[0].goods_sku_stock) {
+          if (this.giftsStock && (item.stock > Math.floor(item.goods_sku[0].goods_sku_stock / this.giftsStock))) {
+            return `商品【${item.title}】的数量不能大于库存数${item.goods_sku[0].goods_sku_stock}`
+          } else if (!this.giftsStock && item.stock > item.goods_sku[0].goods_sku_stock) {
             return `商品【${item.title}】的数量不能大于库存数${item.goods_sku[0].goods_sku_stock}`
           } else if (!COUNTREG.test(item.stock)) {
             return '商品数量必须为整数，请从新选择数量'
