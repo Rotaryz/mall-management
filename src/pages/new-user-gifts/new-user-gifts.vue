@@ -358,11 +358,12 @@
         ]
         let res = this._testPropety(arr)
         let allRight = this._testCount(this.goodsArr)
+        let stock = this._testStock()
         if (!allRight) {
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
-        if (res && this.testStock) {
+        if (res && stock) {
           if (this.hasId) {
             // 编辑大礼包
             Gifts.editGoodsList(this.msg, this.giftsId)
@@ -401,6 +402,23 @@
           return COUNTREG.test(item.stock)
         })
         return allRight
+      },
+      // 遍历计算库存数
+      _testStock() {
+        let result = this.goodsArr.every((item, index) => {
+          if (this.hasId) {
+            if (item.stock * this.msg.gift_packs_stock > item.origin_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.origin_sku_stock
+          } else {
+            if (item.stock * this.msg.gift_packs_stock > item.goods_sku[0].goods_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.goods_sku[0].goods_sku_stock
+          }
+        })
+        return result
       }
     },
     computed: {
@@ -430,23 +448,6 @@
       },
       goodsListReg() {
         return this.msg.giftpack_goods_skus.length > 0
-      },
-      // 遍历计算库存数
-      testStock() {
-        let result = this.goodsArr.every((item, index) => {
-          if (this.hasId) {
-            if (item.stock * this.msg.gift_packs_stock > item.origin_sku_stock) {
-              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
-            }
-            return item.stock * this.msg.gift_packs_stock < item.origin_sku_stock
-          } else {
-            if (item.stock * this.msg.gift_packs_stock > item.goods_sku[0].goods_sku_stock) {
-              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
-            }
-            return item.stock * this.msg.gift_packs_stock < item.goods_sku[0].goods_sku_stock
-          }
-        })
-        return result
       }
     },
     components: {
