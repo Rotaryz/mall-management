@@ -61,6 +61,12 @@
         default: () => {
           return false
         }
+      },
+      giftsStock: {
+        type: Number,
+        default: () => {
+          return 0
+        }
       }
     },
     data() {
@@ -155,7 +161,7 @@
                 arr[index].goods_sku_id = arr[index].goods_sku[0].id
               }
             })
-            this.arr = arr.concat(this.arr)
+            this.arr = this.arr.concat(arr)
           })
       },
       showGoodsList() {
@@ -189,7 +195,7 @@
       addCount(index) {
         this.arr = this.arr.map((item, i) => {
           if (index === i) {
-            if (item.stock < item.goods_sku[0].goods_sku_stock) {
+            if ((item.stock * this.giftsStock) < item.goods_sku[0].goods_sku_stock) {
               item.stock++
             }
           }
@@ -206,6 +212,7 @@
           item.goods_sku_id = item.goods_sku[0].id
           item.goods_id = item.id
           item.id = 0
+          item.origin_sku_stock = item.goods_sku[0].goods_sku_stock
           return item.checked === true
         })
         console.log(this.selectArr, 'cccc')
