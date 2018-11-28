@@ -136,18 +136,10 @@
         Goods.getGoodsList({page, limit, type, ...data}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
-          if (!this.showNull) {
-            this.pageDetails = {
-              total: res.meta.total,
-              per_page: res.meta.per_page,
-              total_page: Math.ceil(res.meta.total / res.meta.per_page)
-            }
-          } else {
-            this.pageDetails = {
-              total: 1,
-              per_page: 1,
-              total_page: 1
-            }
+          this.pageDetails = {
+            total: res.meta.total,
+            per_page: res.meta.per_page,
+            total_page: res.meta.last_page
           }
         })
       },
