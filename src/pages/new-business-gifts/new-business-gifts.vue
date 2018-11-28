@@ -200,7 +200,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: this.hasId ? 1 : 0
+                id: 0
               }
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
@@ -217,7 +217,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: this.hasId ? 1 : 0
+                id: 0
               }
               this.detailSrc = resArr[0].data.image_url_thumb
               this.msg.giftpack_images[0] = obj
