@@ -115,7 +115,14 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" :goodsArr="goodsArr" :hasId="hasId" @selectGoods="selectGoods" v-if="showGoodsList" @hideGoodsList="hideGoodsList" ></select-goods>
+      <select-goods ref="goodsList"
+                    v-if="showGoodsList"
+                    :goodsArr="goodsArr"
+                    :hasId="hasId"
+                    :giftsStock="msg.gift_packs_stock"
+                    @selectGoods="selectGoods"
+                    @hideGoodsList="hideGoodsList" >
+      </select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>
@@ -158,7 +165,6 @@
         detailSrc: '',
         disabledCover: false,
         willDelGoods: '',
-        showList: 0,
         showGoodsList: false,
         giftsId: '',
         hasId: false
@@ -196,7 +202,7 @@
             })
             this.bannerSrc = data.gift_packs_banner_images && data.gift_packs_banner_images.image_url_thumb
             this.detailSrc = data.gift_packs_images && data.gift_packs_images.image_url_thumb
-            this.showList = data.gift_packs_goods_sku.length
+            // this.showList = data.gift_packs_goods_sku.length
             this.goodsArr = data.gift_packs_goods_sku.map(item => {
               item.goods_sku_stock = item.origin_sku_stock
               item.checked = true
@@ -260,7 +266,7 @@
         }
       },
       selectGoods(selectArr) { // 添加大礼包商品
-        this.showList = selectArr.length
+        // this.showList = selectArr.length
         let arr = this._compareList(this.goodsArr, selectArr)
         this.goodsArr = arr
         this.msg.giftpack_goods_skus = arr
@@ -273,9 +279,13 @@
         return newArr
       },
       hideGoodsList() {
+        document.body.style.overflow = 'auto'
+        document.body.style.paddingRight = '0'
         this.showGoodsList = false
       },
       addGoods() {
+        document.body.style.overflow = 'hidden'
+        document.body.style.paddingRight = '17px'
         this.showGoodsList = true
         // this.$refs.goodsList.showGoodsList()
       },
@@ -285,7 +295,7 @@
         }
       },
       addCount(index) {
-        let stock = this.goodsArr[index].stock
+        let stock = this.goodsArr[index].stock * (this.msg.gift_packs_stock && this.msg.gift_packs_stock)
         let skuStock
         if (this.hasId) {
           skuStock = this.goodsArr[index].origin_sku_stock
@@ -329,7 +339,6 @@
           return
         }
         this.disabledCover = false
-        console.log(this.msg)
         if (res) {
           if (this.hasId) {
             Gifts.editGoodsList(this.msg, this.giftsId)
@@ -370,6 +379,9 @@
       }
     },
     computed: {
+      showList() {
+        return this.goodsArr.length
+      },
       titleReg() {
         return this.msg.title
       },
