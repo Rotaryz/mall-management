@@ -127,8 +127,8 @@
       boxWheel(e) {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
-          let boxBottom = this.$refs.goodsBox.getBoundingClientRect().bottom
-          let contentBottom = this.$refs.content.getBoundingClientRect().bottom
+          let boxBottom = this.$refs.goodsBox && this.$refs.goodsBox.getBoundingClientRect().bottom
+          let contentBottom = this.$refs.content && this.$refs.content.getBoundingClientRect().bottom
           let d = -e.detail / 3 || e.wheelDelta / 120
           // 滚动到底部加载更多
           if (contentBottom === boxBottom && d < 0 && this.canAddMore) {
@@ -228,7 +228,6 @@
           item.origin_sku_stock = item.goods_sku[0].goods_sku_stock
           return item.checked === true
         })
-        console.log(this.selectArr, 'cccc')
         setTimeout(() => {
           this.show = false
         }, 100)
