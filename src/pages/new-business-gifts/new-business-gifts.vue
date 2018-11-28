@@ -242,8 +242,8 @@
       selectGoods(selectArr) { // 添加大礼包商品
         let arr = this._compareList(this.goodsArr, selectArr)
         let arrTemp = this._compareArr(this.goodsArr, arr)
-        this.msg.giftpack_goods_skus = arr.concat(arrTemp)
         this.goodsArr = arr.concat(arrTemp)
+        this.msg.giftpack_goods_skus = this.goodsArr
       },
       // 比较数组，对相同的做处理
       _compareList(oldArr, newArr) {
@@ -257,8 +257,8 @@
       _compareArr(oldArr, newArr) {
         let indexArr = []
         oldArr.forEach((item, index) => {
-          let ind = newArr.findIndex(val => item.goods_id === val.goods_id)
-          indexArr.push(ind)
+          let node = newArr.find(val => val.goods_id === item.goods_id)
+          node && indexArr.push(index)
         })
         indexArr.map(item => {
           oldArr.splice(item)
@@ -305,6 +305,7 @@
       },
       delGoods() {
         this.goodsArr.splice(this.willDelGoods, 1)
+        this.msg.giftpack_goods_skus = this.goodsArr
       },
       submitGifts() { // 提交大礼包
         if (this.disabledCover) return
