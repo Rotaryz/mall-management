@@ -120,7 +120,7 @@
       return {
         msg: {
           title: '',
-          type: 2,
+          type: 2, // 商家大礼包
           is_open: 0,
           giftpack_banner_images: [], // 大礼包banner图
           giftpack_images: [], // 大礼包详情图
@@ -140,13 +140,13 @@
         detailSrc: '',
         disabledCover: false,
         willDelGoods: '',
-        showList: 0,
         showGoodsList: false,
         giftsId: '',
         hasId: false
       }
     },
     created() {
+      // 编辑大礼包时取路由里的大礼包id
       if (this.$route.query.id) {
         this.hasId = true
         this.giftsId = this.$route.query.id
@@ -158,6 +158,7 @@
         Gifts.giftsDetail(this.giftsId)
           .then(res => {
             let data = res.data
+            // 编辑大礼包时初始化数据
             this.msg = {
               title: data.title,
               type: 2,
@@ -176,7 +177,6 @@
             })
             this.bannerSrc = data.gift_packs_banner_images && data.gift_packs_banner_images.image_url_thumb
             this.detailSrc = data.gift_packs_images && data.gift_packs_images.image_url_thumb
-            this.showList = data.gift_packs_goods_sku.length
             this.goodsArr = data.gift_packs_goods_sku.map(item => {
               item.goods_sku_stock = item.origin_sku_stock
               item.checked = true
@@ -258,10 +258,10 @@
         this.showGoodsList = false
       },
       addGoods() {
+        // 打开弹窗时禁止body滚动
         document.body.style.overflow = 'hidden'
         document.body.style.paddingRight = '17px'
         this.showGoodsList = true
-        // this.$refs.goodsList.showGoodsList()
       },
       subCount(index) {
         if (this.goodsArr[index].stock > 1) {
@@ -271,13 +271,19 @@
       addCount(index) {
         let stock = this.goodsArr[index].stock
         let skuStock
+        // 编辑大礼包和创建大礼包取字段不同
         if (this.hasId) {
           skuStock = this.goodsArr[index].origin_sku_stock
         } else {
           skuStock = this.goodsArr[index].goods_sku && this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
         }
-        if (stock < skuStock) {
+        // 计算商品库存和礼包库存相乘
+        if (this.msg.gift_packs_stock && (stock < Math.floor(skuStock / this.msg.gift_packs_stock))) {
           this.goodsArr[index].stock++
+        } else if (!this.msg.gift_packs_stock && stock < skuStock) {
+          this.goodsArr[index].stock++
+        } else {
+          this.$toast.show('已达到商品最大库存数')
         }
       },
       deleteGoods(index) { // 删除大礼包商品
@@ -290,6 +296,9 @@
       submitGifts() { // 提交大礼包
         if (this.disabledCover) return
         this.disabledCover = true
+        setTimeout(() => {
+          this.disabledCover = false
+        }, 500)
         this.checkForm()
       },
       toBack() { // 取消新建大礼包
@@ -310,9 +319,9 @@
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
-        this.disabledCover = false
         if (res) {
           if (this.hasId) {
+            // 编辑大礼包
             Gifts.editGoodsList(this.msg, this.giftsId)
               .then(res => {
                 this.$toast.show('保存成功')
@@ -321,6 +330,7 @@
                 }, 1500)
               })
           } else {
+            // 新建大礼包
             Gifts.createGifts(this.msg)
               .then(res => {
                 this.$toast.show('保存成功')
@@ -351,6 +361,9 @@
       }
     },
     computed: {
+      showList() {
+        return this.goodsArr.length
+      },
       titleReg() {
         return this.msg.title
       },

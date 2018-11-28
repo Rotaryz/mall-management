@@ -63,7 +63,6 @@
         }
       },
       giftsStock: {
-        type: Number,
         default: () => {
           return 0
         }
@@ -97,6 +96,7 @@
           .then(res => {
             this.page = 1
             if (res.data.length < LIMIT) this.hasMore = false
+            // 过滤库存大于0的商品
             let resArr = res.data.filter(item => {
               return item.goods_sku[0].goods_sku_stock > 0
             })
@@ -109,6 +109,7 @@
               this.arr = res.data
               return
             }
+            // 查找已选商品
             this.goodsArr.map(item => {
               let index = arr.findIndex(val => {
                 return val.goods_sku[0].id === item.goods_sku_id
@@ -129,6 +130,7 @@
           let boxBottom = this.$refs.goodsBox.getBoundingClientRect().bottom
           let contentBottom = this.$refs.content.getBoundingClientRect().bottom
           let d = -e.detail / 3 || e.wheelDelta / 120
+          // 滚动到底部加载更多
           if (contentBottom === boxBottom && d < 0 && this.canAddMore) {
             this.canAddMore = false
             this.pullDown()
@@ -142,7 +144,11 @@
           .then(res => {
             if (res.data.length < LIMIT) this.hasMore = false
             this.canAddMore = true
-            let arr = res.data.map(item => {
+            // 过滤库存大于0的商品
+            let resArr = res.data.filter(item => {
+              return item.goods_sku[0].goods_sku_stock > 0
+            })
+            let arr = resArr.map(item => {
               item.stock = 1
               item.checked = false
               return item
@@ -151,6 +157,7 @@
               this.arr = this.arr.concat(arr)
               return
             }
+            // 查找已选商品
             this.goodsArr.map(item => {
               let index = arr.findIndex(val => {
                 return val.goods_sku[0].id === item.goods_sku_id
@@ -158,6 +165,7 @@
               if (index > -1) {
                 arr[index].stock = item.stock
                 arr[index].checked = item.checked
+                arr[index].noHandle = item.checked
                 arr[index].goods_sku_id = arr[index].goods_sku[0].id
               }
             })
@@ -194,9 +202,14 @@
       },
       addCount(index) {
         this.arr = this.arr.map((item, i) => {
+          // 通过大礼包库存判断选择商品库存是否超过库存量
           if (index === i) {
-            if ((item.stock * this.giftsStock) < item.goods_sku[0].goods_sku_stock) {
+            if (this.giftsStock && (item.stock < Math.floor(item.goods_sku[0].goods_sku_stock / this.giftsStock))) {
               item.stock++
+            } else if (!this.giftsStock && item.stock < item.goods_sku[0].goods_sku_stock) {
+              item.stock++
+            } else {
+              this.$toast.show('已达到商品最大库存数')
             }
           }
           return item
