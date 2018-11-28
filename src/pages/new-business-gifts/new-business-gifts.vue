@@ -18,7 +18,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*">
                 <div class="img" v-if="bannerSrc"
                      :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="bannerSrc" @click.stop="deleteImg($event, 'banner')" class="delete" src="./icon-del.png"
@@ -34,7 +34,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*">
                 <div class="img" v-if="detailSrc"
                      :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="detailSrc" @click.stop="deleteImg($event, 'detail')" class="delete" src="./icon-del.png"
