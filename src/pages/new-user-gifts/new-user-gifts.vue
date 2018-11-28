@@ -268,15 +268,29 @@
       },
       selectGoods(selectArr) { // 添加大礼包商品
         let arr = this._compareList(this.goodsArr, selectArr)
-        this.goodsArr = arr
-        this.msg.giftpack_goods_skus = arr
+        let arrTemp = this._compareArr(this.goodsArr, arr)
+        this.msg.giftpack_goods_skus = arr.concat(arrTemp)
+        this.goodsArr = arr.concat(arrTemp)
       },
+      // 比较数组，对相同的做处理
       _compareList(oldArr, newArr) {
         oldArr.forEach(item => {
           let node = newArr.find(val => val.goods_id === item.goods_id)
           node && (node.id = item.id)
         })
         return newArr
+      },
+      // 比较数组，去掉旧数组相同的元素
+      _compareArr(oldArr, newArr) {
+        let indexArr = []
+        oldArr.forEach((item, index) => {
+          let ind = newArr.findIndex(val => item.goods_id === val.goods_id)
+          indexArr.push(ind)
+        })
+        indexArr.map(item => {
+          oldArr.splice(item)
+        })
+        return oldArr
       },
       hideGoodsList() {
         document.body.style.overflow = 'auto'
@@ -347,7 +361,7 @@
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
-        if (res) {
+        if (res && this.testStock) {
           if (this.hasId) {
             // 编辑大礼包
             Gifts.editGoodsList(this.msg, this.giftsId)
@@ -415,6 +429,23 @@
       },
       goodsListReg() {
         return this.msg.giftpack_goods_skus.length > 0
+      },
+      // 遍历计算库存数
+      testStock() {
+        let result = this.goodsArr.every((item, index) => {
+          if (this.hasId) {
+            if (item.stock * this.msg.gift_packs_stock > item.origin_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.origin_sku_stock
+          } else {
+            if (item.stock * this.msg.gift_packs_stock > item.goods_sku[0].goods_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.goods_sku[0].goods_sku_stock
+          }
+        })
+        return result
       }
     },
     components: {

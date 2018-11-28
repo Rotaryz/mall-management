@@ -228,7 +228,6 @@
           item.origin_sku_stock = item.goods_sku[0].goods_sku_stock
           return item.checked === true
         })
-        console.log(this.selectArr, 'cccc')
         setTimeout(() => {
           this.show = false
         }, 100)
