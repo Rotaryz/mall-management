@@ -45,7 +45,7 @@ export default {
    * 商品列表
    * @returns {*}
    */
-  getGoodsList (data, loading = true) {
+  getGoodsList (data, loading = false) {
     let url = '/api/admin/goods'
     return defaultProcess('get', url, data, loading)
   },

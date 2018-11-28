@@ -18,7 +18,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*">
                 <div class="img" v-if="bannerSrc" :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="bannerSrc" @click.stop="deleteImg($event, 'banner')" class="delete" src="./icon-del.png" alt="">
               </div>
@@ -32,7 +32,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*">
                 <div class="img" v-if="detailSrc" :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="detailSrc" @click.stop="deleteImg($event, 'detail')" class="delete" src="./icon-del.png" alt="">
               </div>
@@ -227,7 +227,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: this.hasId ? 1 : 0
+                id: 0
               }
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
@@ -244,7 +244,7 @@
               let obj = {
                 image_id: resArr[0].data.id,
                 image_url: resArr[0].data.url,
-                id: this.hasId ? 1 : 0
+                id: 0
               }
               this.detailSrc = resArr[0].data.image_url_thumb
               this.msg.giftpack_images[0] = obj
@@ -287,10 +287,9 @@
           let node = newArr.find(val => val.goods_id === item.goods_id)
           node && indexArr.push(index)
         })
-        indexArr.map(item => {
-          oldArr.splice(item)
+        return oldArr.filter((item, index) => {
+          return indexArr.indexOf(index) === -1
         })
-        return oldArr
       },
       hideGoodsList() {
         document.body.style.overflow = 'auto'
