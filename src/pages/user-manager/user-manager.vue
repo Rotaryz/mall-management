@@ -33,7 +33,7 @@
     {name: 'avatar', title: '用户头像', className: 'flex1'},
     {name: 'nickname', title: '用户昵称', className: 'flex1-p20'},
     {name: 'sex', title: '性别', className: 'flex1'},
-    {name: 'region', title: '地区', className: 'flex1'},
+    {name: 'region', title: '地区', className: 'flex1-p20'},
     {name: 'mobile', title: '手机号', className: 'flex1'},
     {name: 'credits', title: '播豆', className: 'flex1'},
     {name: 'isGiftPack', title: '大礼包', className: 'flex1'},

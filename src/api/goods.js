@@ -48,7 +48,7 @@ function _resolveGoodsListData(res) {
       platformPrice: item.price,
       browseCount: item.browse_count,
       saleCount: item.sale_count,
-      store: (item.goods_sku[0] && item.goods_sku[0].goods_sku_stock) || '',
+      store: (item.goods_sku[0] && item.goods_sku[0].goods_sku_stock),
       createdAt: item.created_at,
       goodsId: item.id
     }

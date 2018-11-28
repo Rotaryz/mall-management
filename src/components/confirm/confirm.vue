@@ -122,6 +122,9 @@
       justify-content: center
       margin: 10px 15px
       overflow-y :auto
+      text-align :justify
+      word-break :break-all
+      line-height :1.4
 
   .model-active
     animation: layerFadeIn .3s
