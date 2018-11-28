@@ -260,10 +260,9 @@
           let node = newArr.find(val => val.goods_id === item.goods_id)
           node && indexArr.push(index)
         })
-        indexArr.map(item => {
-          oldArr.splice(item)
+        return oldArr.filter((item, index) => {
+          return indexArr.indexOf(index) === -1
         })
-        return oldArr
       },
       hideGoodsList() {
         document.body.style.overflow = 'auto'

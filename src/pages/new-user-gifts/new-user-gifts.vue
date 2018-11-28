@@ -269,6 +269,7 @@
       selectGoods(selectArr) { // 添加大礼包商品
         let arr = this._compareList(this.goodsArr, selectArr)
         let arrTemp = this._compareArr(this.goodsArr, arr)
+        console.log(arrTemp)
         this.goodsArr = arr.concat(arrTemp)
         this.msg.giftpack_goods_skus = this.goodsArr
       },
@@ -287,10 +288,9 @@
           let node = newArr.find(val => val.goods_id === item.goods_id)
           node && indexArr.push(index)
         })
-        indexArr.map(item => {
-          oldArr.splice(item)
+        return oldArr.filter((item, index) => {
+          return indexArr.indexOf(index) === -1
         })
-        return oldArr
       },
       hideGoodsList() {
         document.body.style.overflow = 'auto'
