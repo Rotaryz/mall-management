@@ -17,7 +17,7 @@ export default {
   // 上下架
   updateStatus (data, loading = true, toast = false) {
     let url = `/api/admin/goods/updateShelfState/${data.goodsId}`
-    return commonProcess('post', url, {}, loading, toast)
+    return commonProcess('post', url, data, loading, toast)
   },
   delete (data, loading = true) {
     let url = `/api/admin/goods/${data.goodsId}`
