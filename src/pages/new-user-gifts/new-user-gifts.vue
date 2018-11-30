@@ -231,7 +231,7 @@
               }
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_banner_images[0] = obj
+              this.msg.giftpack_banner_images.splice(0, 1, obj)
             })
             break
           case 'detail' :
@@ -247,7 +247,7 @@
                 id: 0
               }
               this.detailSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_images[0] = obj
+              this.msg.giftpack_images.splice(0, 1, obj)
             })
             break
         }
