@@ -110,7 +110,7 @@
             font-size: 14px
             color: #666
             padding: 0 4px 0 13px
-          & > div
+          & > .img
             width: 43px
             height: @width
             border-radius: 50%

@@ -15,7 +15,7 @@
               <span class="dot-box green-dot" v-if="index1 == 6 && item[item1.name] === '已开通'"></span>
               <span class="dot-box red-dot" v-if="index1 == 6"></span>
               <span v-if="index1 !== 0">{{item[item1.name]}}</span>
-              <img class="avatar" :src="item[item1.name]" />
+              <img v-if="index1 === 0"class="avatar" :src="item[item1.name]" />
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@
               <span class="dot-box green-dot" v-if="item1.showType === 'dot' && item[item1.name] === '已开通'"></span>
               <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
               <span v-if="item1.showType !== 'img'">{{item[item1.name]}}</span>
-              <img class="avatar" :src="item[item1.name]"/>
+              <img v-if="index1 === 0" class="avatar" :src="item[item1.name]"/>
             </div>
             <div class="list-item-row red-item flex1 hand" @click="showModal(item)">查看店铺</div>
           </div>
