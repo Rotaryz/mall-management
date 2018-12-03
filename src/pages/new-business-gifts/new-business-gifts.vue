@@ -80,8 +80,8 @@
           <div class="list-content" v-if="showList">
             <div class="list-item" v-for="(item, index) in goodsArr" :key="index">
               <div class="item flex1">
-                <!--<img class="head" :src="item.image_url_thumb" alt="">-->
-                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
+                <img class="head" :src="item.image_url_thumb" alt="">
+                <!--<div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>-->
                 <span class="name">{{item.title}}</span>
               </div>
               <span class="item">{{item.original_price}}</span>
@@ -619,8 +619,7 @@
                 margin-right: 10px
                 border: 1px solid $color-ccc
                 border-radius: 2px
-                background-position: center
-                background-size: cover
+                object-fit: cover
                 overflow: hidden
               .name
                 width: 260px
