@@ -19,7 +19,8 @@
               <div class="update-image hand">
                 <span class="text">选择图片</span>
                 <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*">
-                <div class="img" v-if="bannerSrc" :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
+                <img :src="bannerSrc" v-if="bannerSrc"  class="img">
+                <!--<div class="img" v-if="bannerSrc" :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>-->
                 <img v-if="bannerSrc" @click.stop="deleteImg($event, 'banner')" class="delete" src="./icon-del.png" alt="">
               </div>
             </label>
@@ -33,7 +34,8 @@
               <div class="update-image hand">
                 <span class="text">选择图片</span>
                 <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*">
-                <div class="img" v-if="detailSrc" :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
+                <img :src="detailSrc" v-if="detailSrc" class="img">
+                <!--<div class="img" v-if="detailSrc" :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>-->
                 <img v-if="detailSrc" @click.stop="deleteImg($event, 'detail')" class="delete" src="./icon-del.png" alt="">
               </div>
             </label>
@@ -562,6 +564,7 @@
             border: 1px solid #fff
             border-radius: 2px
             background: #fff
+            object-fit: cover
           .delete
             width: 18px
             height: 18px
