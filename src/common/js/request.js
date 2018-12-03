@@ -19,7 +19,7 @@ const http = axios.create({
 
 http.interceptors.request.use(config => {
   // 请求数据前的拦截
-  config.headers['Authorization'] = storage.get('token', '')
+  config.headers['Access-Token'] = storage.get('token', '')
   return config
 }, error => {
   return Promise.reject(error)
