@@ -3,7 +3,8 @@
     <div slot="content" class="review-wrapper" :class="showActive ? 'model-active' : 'model-un-active'">
       <header>预览效果</header>
       <section class="wrapper">
-        <figure class="goods-images" v-if="goodsImage[0]" :style="{backgroundImage: 'url(' + goodsImage[0].imageURL +')'} ">
+        <figure class="goods-images">
+          <img class="img" v-if="goodsImage[0]" :src="goodsImage[0].imageURL" alt="">
           <div>1<span>/</span>{{goodsImage.length}}</div>
         </figure>
         <article class="content">
@@ -177,10 +178,12 @@
       .goods-images
         width :$wrapper-width
         height :@width
-        background-position :center center
-        background-size: cover
-        background-repeat :no-repeat
         position :relative
+        .img
+          position :relative
+          width :100%
+          height :100%
+          object-fit :cover
         div
           height :20px
           position :absolute

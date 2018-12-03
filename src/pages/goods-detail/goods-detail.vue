@@ -25,8 +25,7 @@
                     <input type="file" accept="image/*" multiple @change="_fileChange($event, index, 'goodsImages')">
                     <i></i>
                     <span>选择图片</span>
-                    <div v-if="goodsImages[index]" :style="{backgroundImage: 'url('+ goodsImages[index].imageURL +')'}"></div>
-
+                    <img class="img" v-if="goodsImages[index]":src="goodsImages[index].imageURL"/>
                   </label>
                   <img v-if="goodsImages[index]" src="./icon-del@2x.png" @click.stop="deleteImgHandle(index, 'goodsImages')"/>
                 </figure>
@@ -43,8 +42,7 @@
                     <input type="file" accept="image/*" multiple @change="_fileChange($event, index, 'detailImages')">
                     <i></i>
                     <span>选择图片</span>
-                    <div v-if="detailImages[index]" :style="{backgroundImage: 'url('+ detailImages[index].imageURL +')'}"></div>
-
+                    <img class="img" v-if="detailImages[index]" :src="detailImages[index].imageURL" />
                   </label>
                   <img v-if="detailImages[index]" src="./icon-del@2x.png" @click.stop="deleteImgHandle(index, 'detailImages')"/>
                 </figure>
@@ -530,7 +528,7 @@
                   justify-content :center
                   align-items :center
                   cursor :pointer
-                  div
+                  .img
                     position :absolute
                     width :90px
                     height :90px
@@ -538,9 +536,7 @@
                     left: -1px
                     border: 1px solid #E8E8E8;
                     border-radius: 2px;
-                    background-repeat :no-repeat
-                    background-position : center center
-                    background-size: cover
+                    object-fit :cover
                   i
                     width :30px
                     height :@width

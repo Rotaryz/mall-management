@@ -12,7 +12,7 @@
         <nav class="left" >
           <ul class="left" v-for="(item,index) in goodsInfo" :key="index">
             <li class="p-l-39 li-left" :class="index !== goodsInfo.length - 1 ? 'bottom-border': ''">
-              <div :style="{backgroundImage: 'url(' + item.imageURL + ')'}"></div>
+              <img class="img" :src="item.imageURL"/>
               <span>{{item.goodsName}}</span>
             </li>
             <li class="p-l-80" :class="[index !== goodsInfo.length - 1 ? 'bottom-border': '', goodsInfo.length > 1 ? 'right-border' : '']">
@@ -157,7 +157,7 @@
               border-right : 1px solid #EFEFEF;
             &.bottom-border
               border-bottom : 1px solid #EFEFEF;
-            & > div
+            & > .img
               width :40px
               height: 40px
               box-sizing :border-box
@@ -165,9 +165,7 @@
               margin-right :10px
               border: 1px solid #E8E8E8;
               border-radius: 2px;
-              background-repeat :no-repeat
-              background-size: cover
-              background-position :center center
+              object-fit :cover
             & > span
               flex: 1
               line-height :1.2

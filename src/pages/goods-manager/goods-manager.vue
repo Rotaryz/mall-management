@@ -31,7 +31,7 @@
             <nav class="common-wrapper" :style="item.wrapperStyle" v-for="(item, index) in listArr" :key="index">
               <i v-if="item.subclass.includes('dot')" :class="it.isPutAway? 'green-dot': 'red-dot'"></i>
               <div v-if="item.subclass === 'figure'" :class="item.subclass">
-                <div class="icon" :style="{backgroundImage: 'url(' + it[item.icon] +')'}"></div>
+                <img class="icon" :src="it[item.icon]"/>
                 <span :class="item.subclass">{{it[item.name]}}</span>
               </div>
               <div v-else-if="item.subclass === 'btn-group'" :class="item.subclass">
@@ -394,9 +394,7 @@
                 border-raidus: 2px
                 margin-left: 8px
                 vertical-align :middle
-                background-position :center content
-                background-repeat :no-repeat
-                background-size: cover
+                object-fit: cover
               & > span
                 flex: 1
                 overflow :hidden
