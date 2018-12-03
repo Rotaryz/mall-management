@@ -60,8 +60,6 @@
 
   .border-el-date-picker
     position: relative
-    .el-input__icon.el-range__close-icon
-      z-index :2
     &:after
       content: ''
       border-top: 0.5px solid transparent
@@ -101,6 +99,6 @@
         transition: all 0.3s ease-out
         height: 100%
   .animate-border
-    border-color: $color-text-D9
+    border-color: $color-text-D9 !important
     color: $color-main
 </style>

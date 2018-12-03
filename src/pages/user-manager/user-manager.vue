@@ -1,10 +1,10 @@
 <template>
   <div class="merchant-manager">
-    <base-panel>
+    <base-panel :showNull="showNull" :pageDetails="pageDetails" @navToPage="navToPage">
       <div slot="content">
         <div class="search-top">
           <p class="top-title">手机号</p>
-          <search placeholerTxt="请输入手机号"></search>
+          <search @search="search" placeholerTxt="请输入" ref="search"></search>
         </div>
         <div class="list-content">
           <div class="list-head">
@@ -12,11 +12,10 @@
           </div>
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
             <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className">
-              <span class="dot-box green-dot" v-if="index1 == 6"></span>
+              <span class="dot-box green-dot" v-if="index1 == 6 && item[item1.name] === '已开通'"></span>
               <span class="dot-box red-dot" v-if="index1 == 6"></span>
-              <span v-if="index1 != 0">{{item1.title}}</span>
-              <!--<img src="./logo.jpg" class="avatar" v-if="index1 == 0">-->
-              <div class="avatar" :style="{backgroundImage: 'url(' + './logo.jpg' +')'}" v-if="index1 == 0"></div>
+              <span v-if="index1 !== 0">{{item[item1.name]}}</span>
+              <div class="avatar" :style="{backgroundImage: 'url(' + item[item1.name] +')'}" v-if="index1 == 0"></div>
             </div>
           </div>
         </div>
@@ -31,43 +30,73 @@
   import { Customer } from 'api'
 
   const LIST = [
-    {name: '', title: '用户头像', className: 'flex1'},
-    {name: '', title: '用户昵称', className: 'flex1'},
-    {name: '', title: '性别', className: 'flex1'},
-    {name: '', title: '地区', className: 'flex1'},
-    {name: '', title: '手机号', className: 'flex1'},
-    {name: '', title: '播豆', className: 'flex1'},
-    {name: '', title: '大礼包', className: 'flex1'},
-    {name: '', title: '注册时间', className: 'flex1'}
+    {name: 'avatar', title: '用户头像', className: 'flex1'},
+    {name: 'nickname', title: '用户昵称', className: 'flex1-p20'},
+    {name: 'sex', title: '性别', className: 'flex1'},
+    {name: 'region', title: '地区', className: 'flex1-p20'},
+    {name: 'mobile', title: '手机号', className: 'flex1'},
+    {name: 'credits', title: '播豆', className: 'flex1'},
+    {name: 'isGiftPack', title: '大礼包', className: 'flex1'},
+    {name: 'createdAt', title: '注册时间', className: 'flex1'}
   ]
   export default {
     name: 'merchantManager',
     data() {
       return {
         listArr: LIST,
-        manageList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        manageList: [],
         page: 1,
         limit: 10,
-        mobile: '',
-        startAt: '',
-        endAt: ''
+        showNull: false,
+        pageDetails: {
+          total: 1, // 总数量
+          per_page: 1, // 每一页的条数
+          total_page: 1 // 总页数
+        }
       }
     },
     created() {
-      this.getList()
+      this._getList()
     },
     methods: {
-      getList() {
-        let data = {
-          page: this.page,
-          limit: this.limit
-          // mobile: this.mobile,
-          // start_at: this.startAt,
-          // end_at: this.endAt
-        }
-        Customer.getCustomerList(data).then(res => {
-          // console.log(res)
+      _getList(data) {
+        const {page, limit} = this
+        Customer.getCustomerList({limit, page, ...data}).then(res => {
+          this.manageList = res.data
+          this.showNull = +res.meta.total <= 0
+          if (!this.showNull) {
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: Math.ceil(res.meta.total / res.meta.per_page)
+            }
+          } else {
+            this.pageDetails = {
+              total: 1,
+              per_page: 1,
+              total_page: 1
+            }
+          }
         })
+      },
+      // 翻页
+      navToPage(page) {
+        this.page = page
+        this._getList()
+      },
+      _initPage() {
+        this.$refs.basePanel && this.$refs.basePanel.initPage()
+      },
+      // 搜索
+      search(text) {
+        if (text) {
+          this._getList({mobile: text.trim()})
+        } else {
+          this._getList()
+        }
+      },
+      _clearSearchText() {
+        this.$refs.search && this.$refs.search.clearTxt()
       }
     },
     components: {
@@ -81,6 +110,16 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
 
+  .flex1-p20
+    flex: 1
+    padding-right :20px
+  .flex0-8
+    flex: 0.8
+
+  .merchant-manager
+    position :relative
+    layout()
+    flex:1
   .search-top
     padding-left: 30px
     height: 100px
@@ -122,12 +161,17 @@
         color: $color-text-sub
         font-size: $font-size-14
         line-height: 18px
+        layout(row,block,nowrap)
+        align-items :center
+        span
+          no-wrap-plus()
         .dot-box
           margin-right: 8px
           width: 6px
           height: 6px
           border-radius: 50%
           display: inline-block
+          white-space :nowrap
         .green-dot
           background: #26bd26
         .red-dot

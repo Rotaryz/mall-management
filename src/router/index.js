@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import storage from 'storage-controller'
 
-const HelloWorld = () => import('pages/hello-world/hello-world')
-const OtherPages = () => import('pages/other-pages/other-pages')
-const Demo = () => import('pages/demo/demo')
+// const HelloWorld = () => import('pages/hello-world/hello-world')
+// const OtherPages = () => import('pages/other-pages/other-pages')
+// const Demo = () => import('pages/demo/demo')
 const Login = () => import('pages/login/login')
 const Home = () => import('pages/home/home')
 const OrderManager = () => import('pages/order-manager/order-manager')
@@ -58,14 +58,14 @@ const route = new Router({
           path: 'goods-manager/credits/goods-detail',
           component: GoodsDetail,
           meta: {
-            title: '新建折扣商品'
+            title: '新建播豆商品'
           }
         },
         {
           path: 'goods-manager/money/goods-detail',
           component: GoodsDetail,
           meta: {
-            title: '新建播豆商品'
+            title: '新建折扣商品'
           }
         },
         {
@@ -97,20 +97,6 @@ const route = new Router({
           }
         },
         {
-          path: 'hello-world',
-          component: HelloWorld,
-          meta: {
-            title: 'one'
-          }
-        },
-        {
-          path: 'other-pages',
-          component: OtherPages,
-          meta: {
-            title: 'tab-two'
-          }
-        },
-        {
           path: '/gifts/user-gifts',
           component: UserGifts,
           meta: {
@@ -132,17 +118,10 @@ const route = new Router({
           }
         },
         {
-          path: '/gifts/user-gifts/new-business-gifts',
+          path: '/gifts/business-gifts/new-business-gifts',
           component: NewBusinessGifts,
           meta: {
             title: '用户大礼包'
-          }
-        },
-        {
-          path: 'demo',
-          component: Demo,
-          meta: {
-            title: 'demo'
           }
         }
       ]

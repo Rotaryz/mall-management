@@ -121,7 +121,7 @@
       // 搜索
       search(text) {
         if (text) {
-          this._getGoodsList({keywords: text})
+          this._getGoodsList({keywords: text.trim()})
         } else {
           this._getGoodsList()
         }
@@ -136,18 +136,10 @@
         Goods.getGoodsList({page, limit, type, ...data}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
-          if (!this.showNull) {
-            this.pageDetails = {
-              total: res.meta.total,
-              per_page: res.meta.per_page,
-              total_page: Math.ceil(res.meta.total / res.meta.per_page)
-            }
-          } else {
-            this.pageDetails = {
-              total: 1,
-              per_page: 1,
-              total_page: 1
-            }
+          this.pageDetails = {
+            total: res.meta.total,
+            per_page: res.meta.per_page,
+            total_page: res.meta.last_page
           }
         })
       },
@@ -198,7 +190,7 @@
           this.$toast.show('操作成功')
           this._getGoodsList()
         }).catch(res => {
-          if (res.error === 10) { // todo
+          if (res.code === 10) { // code=10下线异常错误码
             this.$refs.confirmOneBtn.showConfirm(res.message)
           } else {
             this.$toast.show(res.message)

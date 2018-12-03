@@ -1,5 +1,5 @@
 <template>
-  <base-panel :pageDetails="pageDetails" @navToPage="navToPage">
+  <base-panel :pageDetails="pageDetails" :showNull="showNull" @navToPage="navToPage">
     <div slot="content" class="user-gifts">
       <div class="header-btn hand" @click="createNew">新建大礼包</div>
       <div class="content-list">
@@ -17,7 +17,8 @@
               <span class="overflow" v-if="val.show === 'four'">{{item.type === 1? '用户大礼包': '商家大礼包'}}</span>
 
               <div :class="val.class" v-if="val.show === 'first'">
-                <img class="head" :src="item.image_url_thumb" alt="">
+                <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
                 <span class="title">{{item.title}}</span>
               </div>
               <span class="overflow" v-if="!val.show">{{item.created_at}}</span>
@@ -68,17 +69,24 @@
         },
         hasOther: true,
         handleItem: '',
-        page: 1
+        page: 1,
+        showNull: false
       }
     },
     created() {
-      this.getGiftsList()
+      this.getGiftsList(this.page)
     },
     methods: {
-      getGiftsList() {
-        Gifts.getGiftsList({type: 1, page: this.page, limit: LIMIT})
+      getGiftsList(page) {
+        Gifts.getGiftsList({type: 1, page, limit: LIMIT})
           .then((res) => {
+            this.showNull = +res.meta.total <= 0
             this.arr = res.data
+            this.pageDetails = {
+              total: res.meta.total,
+              per_page: res.meta.per_page,
+              total_page: res.meta.last_page
+            }
           })
       },
       showPop(type, item) { // 确认弹窗
@@ -109,19 +117,19 @@
           Gifts.handleGifts({id: this.handleItem.id, status: 1})
             .then(res => {
               this.$toast.show('开启成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         } else if (this.popType === 'close') {
           Gifts.handleGifts({id: this.handleItem.id, status: 0})
             .then(res => {
               this.$toast.show('关闭成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         } else if (this.popType === 'delete') {
           Gifts.deleteGifts(this.handleItem.id)
             .then(res => {
               this.$toast.show('删除成功')
-              this.getGiftsList()
+              this.getGiftsList(this.page)
             })
         }
       },
@@ -130,7 +138,8 @@
         this.$router.push({path: '/gifts/user-gifts/new-user-gifts', query: {id: item.id}})
       },
       navToPage(page) { // 翻页
-        console.log(page)
+        this.page = page
+        this.getGiftsList(page)
       },
       createNew() { // 新建大礼包
         this.$router.push({path: '/gifts/user-gifts/new-user-gifts'})
@@ -217,6 +226,8 @@
               width: 54px
               height: 40px
               margin-right: 10px
+              background-size: cover
+              background-position: center
             .title
               word-break: break-all
               white-space: pre-wrap

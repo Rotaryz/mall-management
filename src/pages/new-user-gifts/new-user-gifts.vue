@@ -18,7 +18,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*">
                 <div class="img" v-if="bannerSrc" :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="bannerSrc" @click.stop="deleteImg($event, 'banner')" class="delete" src="./icon-del.png" alt="">
               </div>
@@ -32,7 +32,7 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*" multiple>
+                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*">
                 <div class="img" v-if="detailSrc" :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>
                 <img v-if="detailSrc" @click.stop="deleteImg($event, 'detail')" class="delete" src="./icon-del.png" alt="">
               </div>
@@ -96,7 +96,8 @@
           <div class="list-content" v-if="showList">
             <div class="list-item" v-for="(item, index) in goodsArr" :key="index">
               <div class="item flex1">
-                <img class="head" :src="item.image_url_thumb" alt="">
+                <!--<img class="head" :src="item.image_url_thumb" alt="">-->
+                <div class="head" :style="{backgroundImage: 'url('+item.image_url_thumb+')'}"></div>
                 <span class="name">{{item.title}}</span>
               </div>
               <span class="item">{{item.original_price}}</span>
@@ -114,7 +115,14 @@
           <span @click="submitGifts" class="btn confirm hand">确定</span>
         </div>
       </div>
-      <select-goods ref="goodsList" :goodsArr="goodsArr" @selectGoods="selectGoods" v-if="showGoodsList" @hideGoodsList="hideGoodsList" ></select-goods>
+      <select-goods ref="goodsList"
+                    v-if="showGoodsList"
+                    :goodsArr="goodsArr"
+                    :hasId="hasId"
+                    :giftsStock="msg.gift_packs_stock"
+                    @selectGoods="selectGoods"
+                    @hideGoodsList="hideGoodsList" >
+      </select-goods>
       <confirm ref="confirm" @confirm="delGoods"></confirm>
     </div>
   </base-panel>
@@ -135,16 +143,16 @@
       return {
         msg: {
           title: '',
-          giftpack_banner_images: [],
-          giftpack_images: [],
-          gift_packs_stock: '',
+          type: 1, // 用户大礼包
+          is_open: 0,
+          giftpack_banner_images: [], // 大礼包banner图
+          giftpack_images: [], // 大礼包详情图
+          gift_packs_stock: '', // 大礼包库存
           price: '',
-          planting_beans: '',
-          commission_rate: '',
-          giftpack_goods_skus: [],
-          image_id: '', // 封面图id
-          type: 1,
-          is_open: 1
+          planting_beans: '', // 播豆数
+          commission_rate: '', // 佣金
+          giftpack_goods_skus: [], // 商品列表
+          image_id: '' // 封面图id
         },
         data: [
           {title: '商品名称', class: 'item flex1', show: 'name'},
@@ -157,13 +165,15 @@
         detailSrc: '',
         disabledCover: false,
         willDelGoods: '',
-        showList: 0,
         showGoodsList: false,
-        giftsId: ''
+        giftsId: '',
+        hasId: false
       }
     },
     created() {
+      // 编辑大礼包时取路由里的大礼包id
       if (this.$route.query.id) {
+        this.hasId = true
         this.giftsId = this.$route.query.id
         this._getGiftsDetail()
       }
@@ -172,15 +182,32 @@
       _getGiftsDetail() {
         Gifts.giftsDetail(this.giftsId)
           .then(res => {
-            console.log(res)
-            this.msg = res.data
-            this.msg.gift_packs_stock = res.data.stock
-            this.bannerSrc = res.data.gift_packs_banner_images.image_url_thumb
-            this.detailSrc = res.data.gift_packs_images.image_url_thumb
-            this.goodsArr = res.data.gift_packs_goods_sku
-            this.showList = res.data.gift_packs_goods_sku.length
-            this.goodsArr.map(item => {
-              item.stock = item.total_stock
+            let data = res.data
+            // 编辑大礼包时初始化数据
+            this.msg = {
+              title: data.title,
+              type: 1,
+              is_open: 0,
+              giftpack_banner_images: [data.gift_packs_banner_images],
+              giftpack_images: [data.gift_packs_images],
+              gift_packs_stock: data.stock,
+              price: data.price,
+              planting_beans: parseInt(data.planting_beans),
+              commission_rate: parseInt(data.commission_rate),
+              giftpack_goods_skus: data.gift_packs_goods_sku,
+              image_id: data.gift_packs_banner_images && data.gift_packs_banner_images.image_id // 封面图id
+            }
+            this.msg.giftpack_goods_skus = data.gift_packs_goods_sku.map(item => {
+              item.image_id = item.goods_sku_image_id
+              item.title = item.goods_title
+              return item
+            })
+            this.bannerSrc = data.gift_packs_banner_images && data.gift_packs_banner_images.image_url_thumb
+            this.detailSrc = data.gift_packs_images && data.gift_packs_images.image_url_thumb
+            this.goodsArr = data.gift_packs_goods_sku.map(item => {
+              item.goods_sku_stock = item.origin_sku_stock
+              item.checked = true
+              return item
             })
           })
       },
@@ -204,7 +231,7 @@
               }
               this.msg.image_id = resArr[0].data.id
               this.bannerSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_banner_images[0] = obj
+              this.msg.giftpack_banner_images.splice(0, 1, obj)
             })
             break
           case 'detail' :
@@ -220,7 +247,7 @@
                 id: 0
               }
               this.detailSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_images[0] = obj
+              this.msg.giftpack_images.splice(0, 1, obj)
             })
             break
         }
@@ -240,16 +267,40 @@
         }
       },
       selectGoods(selectArr) { // 添加大礼包商品
-        this.showList = selectArr.length
-        this.msg.giftpack_goods_skus = selectArr
-        this.goodsArr = selectArr
+        let arr = this._compareList(this.goodsArr, selectArr)
+        let arrTemp = this._compareArr(this.goodsArr, arr)
+        this.goodsArr = arr.concat(arrTemp)
+        this.msg.giftpack_goods_skus = this.goodsArr
+      },
+      // 比较数组，对相同的做处理
+      _compareList(oldArr, newArr) {
+        oldArr.forEach(item => {
+          let node = newArr.find(val => val.goods_id === item.goods_id)
+          node && (node.id = item.id)
+        })
+        return newArr
+      },
+      // 比较数组，去掉旧数组相同的元素
+      _compareArr(oldArr, newArr) {
+        let indexArr = []
+        oldArr.forEach((item, index) => {
+          let node = newArr.find(val => val.goods_id === item.goods_id)
+          node && indexArr.push(index)
+        })
+        return oldArr.filter((item, index) => {
+          return indexArr.indexOf(index) === -1
+        })
       },
       hideGoodsList() {
+        document.body.style.overflow = 'auto'
+        document.body.style.paddingRight = '0'
         this.showGoodsList = false
       },
       addGoods() {
+        // 打开弹窗时禁止body滚动
+        document.body.style.overflow = 'hidden'
+        document.body.style.paddingRight = '17px'
         this.showGoodsList = true
-        // this.$refs.goodsList.showGoodsList()
       },
       subCount(index) {
         if (this.goodsArr[index].stock > 1) {
@@ -258,10 +309,20 @@
       },
       addCount(index) {
         let stock = this.goodsArr[index].stock
-        console.log(this.goodsArr, index)
-        let skuStock = this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
-        if (stock < skuStock) {
+        let skuStock
+        // 编辑大礼包和创建大礼包取字段不同
+        if (this.hasId) {
+          skuStock = this.goodsArr[index].origin_sku_stock
+        } else {
+          skuStock = this.goodsArr[index].goods_sku && this.goodsArr[index].goods_sku[0] && this.goodsArr[index].goods_sku[0].goods_sku_stock
+        }
+        // 计算商品库存和礼包库存相乘
+        if (this.msg.gift_packs_stock && (stock < Math.floor(skuStock / this.msg.gift_packs_stock))) {
           this.goodsArr[index].stock++
+        } else if (!this.msg.gift_packs_stock && stock < skuStock) {
+          this.goodsArr[index].stock++
+        } else {
+          this.$toast.show('已达到商品最大库存数')
         }
       },
       deleteGoods(index) { // 删除大礼包商品
@@ -270,10 +331,14 @@
       },
       delGoods() {
         this.goodsArr.splice(this.willDelGoods, 1)
+        this.msg.giftpack_goods_skus = this.goodsArr
       },
       submitGifts() { // 提交大礼包
         if (this.disabledCover) return
         this.disabledCover = true
+        setTimeout(() => {
+          this.disabledCover = false
+        }, 500)
         this.checkForm()
       },
       toBack() { // 取消新建大礼包
@@ -292,30 +357,31 @@
         ]
         let res = this._testPropety(arr)
         let allRight = this._testCount(this.goodsArr)
+        let stock = this._testStock()
         if (!allRight) {
           this.$toast.show('商品数量必须为整数，请从新选择数量')
           return
         }
-        this.msg.giftpack_goods_skus = this.msg.giftpack_goods_skus.map(item => {
-          item = {
-            id: 0,
-            image_id: item.image_url,
-            stock: item.stock,
-            goods_id: item.id,
-            goods_sku_id: item.goods_sku[0].id
+        if (res && stock) {
+          if (this.hasId) {
+            // 编辑大礼包
+            Gifts.editGoodsList(this.msg, this.giftsId)
+              .then(res => {
+                this.$toast.show('保存成功')
+                setTimeout(() => {
+                  this.$router.back()
+                }, 1500)
+              })
+          } else {
+            // 新建大礼包
+            Gifts.createGifts(this.msg)
+              .then(res => {
+                this.$toast.show('保存成功')
+                setTimeout(() => {
+                  this.$router.back()
+                }, 1500)
+              })
           }
-          console.log(item)
-          return item
-        })
-        // this.disabledCover = false
-        if (res) {
-          Gifts.createGifts(this.msg)
-            .then(res => {
-              this.$toast.show('保存成功')
-              setTimeout(() => {
-                this.$router.back()
-              }, 1500)
-            })
         }
       },
       _testPropety(arr) {
@@ -335,9 +401,29 @@
           return COUNTREG.test(item.stock)
         })
         return allRight
+      },
+      // 遍历计算库存数
+      _testStock() {
+        let result = this.goodsArr.every((item, index) => {
+          if (this.hasId) {
+            if (item.stock * this.msg.gift_packs_stock > item.origin_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.origin_sku_stock
+          } else {
+            if (item.stock * this.msg.gift_packs_stock > item.goods_sku[0].goods_sku_stock) {
+              this.$toast.show(`商品【${this.goodsArr[index].title}】库存不足`)
+            }
+            return item.stock * this.msg.gift_packs_stock < item.goods_sku[0].goods_sku_stock
+          }
+        })
+        return result
       }
     },
     computed: {
+      showList() {
+        return this.goodsArr.length
+      },
       titleReg() {
         return this.msg.title
       },
@@ -562,6 +648,9 @@
                 margin-right: 10px
                 border: 1px solid $color-ccc
                 border-radius: 2px
+                background-position: center
+                background-size: cover
+                overflow: hidden
               .name
                 width: 260px
                 word-break: break-all
