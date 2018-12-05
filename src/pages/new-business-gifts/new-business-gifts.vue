@@ -111,7 +111,6 @@
         msg: {
           title: '',
           type: 2, // 商家大礼包
-          is_open: 0,
           giftpack_banner_images: [], // 大礼包banner图
           gift_packs_stock: '', // 大礼包库存
           price: '',
@@ -150,7 +149,6 @@
             this.msg = {
               title: data.title,
               type: 2,
-              is_open: 0,
               giftpack_banner_images: [data.gift_packs_banner_images],
               gift_packs_stock: data.stock,
               price: data.price,
