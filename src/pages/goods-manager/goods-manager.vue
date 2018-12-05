@@ -63,8 +63,8 @@
     {name: 'title', icon: 'imageUrlThumb', title: '商品名称', wrapperStyle: 'flex:3;padding-right:90px', subclass: 'figure'},
     {name: 'credits', type: '', title: '播豆', wrapperStyle: 'flex: 1.3', subclass: ''},
     {name: 'originPrice', type: '', title: '价格', wrapperStyle: 'flex: 1.3', subclass: ''},
-    {name: 'browseCount', type: 'view', title: '浏览量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
-    {name: 'saleCount', type: 'sales', title: '销量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'browseCount', type: 'browse_count', title: '浏览量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
+    {name: 'saleCount', type: 'sale_count', title: '销量', wrapperStyle: 'flex: 1.2', subclass: 'sort'},
     {name: 'store', type: 'store', title: '库存', wrapperStyle: 'flex: 1.2', subclass: ''},
     {name: 'isPutAwayStr', type: '', title: '商品状态', wrapperStyle: 'flex: 1.1', subclass: 'green-dot'},
     {name: 'createdAt', type: '', title: '创建时间', wrapperStyle: 'flex: 1.2', subclass: ''},
@@ -96,14 +96,15 @@
         manageList: [],
         showNull: false,
         page: 1,
-        limit: 10,
+        limit: 1,
         currentGoods: null,
         confirmType: '',
         pageDetails: {
           total: 1, // 总数量
           per_page: 1, // 每一页的条数
           total_page: 1 // 总页数
-        }
+        },
+        sortType: {}
       }
     },
     created() {
@@ -133,7 +134,7 @@
       _getGoodsList(data) {
         const {page, limit} = this
         const type = this.GoodsType
-        Goods.getGoodsList({page, limit, type, ...data}).then(res => {
+        Goods.getGoodsList({page, limit, type, order_by: this.sortType, ...data}).then(res => {
           this.showNull = +res.meta.total <= 0
           this.manageList = res.data
           this.pageDetails = {
@@ -154,31 +155,27 @@
       // 排序
       sortHandle(item) {
         this._resetListStatus(item.type)
+        let data = {}
         if (item.subclass.includes(`top-active`)) {
           item.subclass = 'sort bottom-active' // 下面亮灯:从大倒下
-          this._sortApi(item.type, 'desc')
+          data[item.type] = 'desc'
+          this.sortType = data
         } else {
           item.subclass = 'sort top-active' // 上面亮灯:从小到大
-          this._sortApi(item.type, 'asc')
+          data[item.type] = 'asc'
+          this.sortType = data
         }
+        this._getGoodsList()
       },
       _resetListStatus(type) {
+        if (!type) {
+          this.sortType = {}
+        }
         this.listArr.forEach(item => {
           if (type !== item.type && item.subclass.includes('sort')) {
             item.subclass = 'sort'
           }
         })
-      },
-      _sortApi(sortKey, sortValue) {
-        let data = {
-          'order_by': [
-            {
-              'sort_key': sortKey,
-              'sort_value': sortValue
-            }
-          ]
-        }
-        this._getGoodsList(data)
       },
       // 上下架
       upDownHandle(item) {
