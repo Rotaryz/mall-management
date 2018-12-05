@@ -96,7 +96,7 @@
         manageList: [],
         showNull: false,
         page: 1,
-        limit: 1,
+        limit: 10,
         currentGoods: null,
         confirmType: '',
         pageDetails: {
