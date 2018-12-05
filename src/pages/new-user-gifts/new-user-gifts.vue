@@ -442,7 +442,7 @@
         return this.msg.price && MONEYREG.test(this.msg.price)
       },
       beansReg() {
-        return this.msg.planting_beans && COUNTREG.test(this.msg.planting_beans)
+        return this.msg.planting_beans && RATE.test(this.msg.planting_beans)
       },
       rateReg() {
         return this.msg.commission_rate && RATE.test(this.msg.commission_rate)

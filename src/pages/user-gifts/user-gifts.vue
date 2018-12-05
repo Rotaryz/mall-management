@@ -59,7 +59,7 @@
           {title: '创建时间', class: 'item', name: ''},
           {title: '操作', class: 'item list-handle flex2', name: '', show: 'last'}
         ],
-        arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+        arr: [],
         popType: 'open',
         grey: true,
         pageDetails: {
