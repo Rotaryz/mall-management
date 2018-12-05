@@ -82,7 +82,7 @@ function _resolveGoodsDetailData(res) {
     merchantDiscount: +resData.store_discount,
     credits: +resData.planting_beans || '',
     platformPrice: +sku0.price || '',
-    store: resData.stock || '',
+    store: '' + resData.stock || '',
     goodsId: resData.id,
     isRecommend: +resData.is_recommended,
     commission: +resData.commission_rate || '',
