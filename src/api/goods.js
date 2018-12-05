@@ -48,7 +48,7 @@ function _resolveGoodsListData(res) {
       platformPrice: item.price,
       browseCount: item.browse_count,
       saleCount: item.sale_count,
-      store: (item.goods_sku[0] && item.goods_sku[0].goods_sku_stock),
+      store: item.stock,
       createdAt: item.created_at,
       goodsId: item.id
     }
@@ -82,7 +82,7 @@ function _resolveGoodsDetailData(res) {
     merchantDiscount: +resData.store_discount,
     credits: +resData.planting_beans || '',
     platformPrice: +sku0.price || '',
-    store: +sku0.goods_sku_stock || '',
+    store: resData.stock || '',
     goodsId: resData.id,
     isRecommend: +resData.is_recommended,
     commission: +resData.commission_rate || '',

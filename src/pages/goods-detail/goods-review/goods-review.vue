@@ -16,7 +16,7 @@
           <div class="price">
             <ul class="p-wrapper">
               <li class="unit" v-if="hasPrice">¥</li>
-              <li class="money" v-if="hasPrice">{{goodsInfo.platformPrice}}</li>
+              <li class="money" v-if="hasPrice">{{price}}</li>
               <li class="credits">{{hasPrice&&hasCredits?'+':''}}{{hasCredits?goodsInfo.credits:''}}</li>
               <li class="c-text" v-if="hasCredits">播豆</li>
             </ul>
@@ -54,7 +54,8 @@
       return {
         isShow: false,
         showActive: false,
-        timer: null
+        timer: null,
+        price: 0
       }
     },
     destroyed() {
@@ -69,6 +70,7 @@
           clearTimeout(this.timer)
           this.timer = null
         }, 500)
+        this._showPrice()
       },
       hide() {
         if (this.timer) return
@@ -78,6 +80,16 @@
           clearTimeout(this.timer)
           this.timer = null
         }, 500)
+      },
+      _showPrice() {
+        let arr = []
+        let {userDisPrice, merchantDisPrice, platformPrice} = this.goodsInfo
+        if (this.goodsInfo.isMoneyPage) {
+          arr.push(userDisPrice, merchantDisPrice)
+        } else {
+          arr.push(platformPrice)
+        }
+        this.price = Math.min(...arr)
       }
     },
     computed: {
@@ -91,7 +103,7 @@
         return this.goodsInfo.credits && +this.goodsInfo.credits > 0
       },
       hasPrice() {
-        return this.goodsInfo.platformPrice && +this.goodsInfo.platformPrice > 0
+        return this.goodsInfo.isMoneyPage || (this.goodsInfo.platformPrice && +this.goodsInfo.platformPrice > 0)
       }
     }
   }

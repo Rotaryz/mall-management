@@ -411,7 +411,8 @@
       },
       // 商品信息
       goodsInfo() {
-        return {...this.$data, isMoneyPage: this.isMoneyPage}
+        let {userDisPrice, merchantDisPrice} = this
+        return {...this.$data, isMoneyPage: this.isMoneyPage, userDisPrice, merchantDisPrice}
       }
     }
   }
@@ -514,7 +515,6 @@
                   position :absolute
                   right :-1px
                   top:1px
-                  background :red
                   z-index :10
                 label
                   width :90px
