@@ -13,7 +13,7 @@
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
             <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className" v-if="index1 != (listArr.length - 1)">
               <span class="dot-box green-dot" v-if="item1.showType === 'dot' && item[item1.name] === '已开通'"></span>
-              <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
+              <span class="dot-box red-dot" v-else-if="item1.showType === 'dot'"></span>
               <span v-if="item1.showType !== 'img'">{{item[item1.name]}}</span>
               <img v-if="index1 === 0" class="avatar" :src="item[item1.name]"/>
             </div>

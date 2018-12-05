@@ -59,14 +59,14 @@ function _resolveGoodsListData(res) {
 // 解析商品详情数量
 function _resolveGoodsDetailData(res) {
   let resData = res.data
-  let goodsImages = resData.goods_images.map(item => {
+  let goodsImages = resData.goods_banner_images.map(item => {
     return {
       id: item.id,
       imageId: item.image_id,
       imageURL: item.image_url
     }
   })
-  let detailImages = resData.goods_banner_images.map(item => {
+  let detailImages = resData.goods_images.map(item => {
     return {
       id: item.id,
       imageId: item.image_id,
@@ -96,13 +96,13 @@ function _resolveGoodsDetailData(res) {
 }
 // 格式化创建商品数据
 function _formatCreateGoodsData(data) {
-  let goodsImages = data.goodsImages.map(item => {
+  let goodsImages = data.detailImages.map(item => {
     return {
       'id': item.id,
       'image_id': item.imageId
     }
   })
-  let bannerImages = data.detailImages.map(item => {
+  let bannerImages = data.goodsImages.map(item => {
     return {
       'id': item.id,
       'image_id': item.imageId

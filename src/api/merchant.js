@@ -12,6 +12,7 @@ const DEFAULT_VALUE = '未知'
 function resolveListData(res) {
   let data = res.data.map(item => {
     let store = item.store || {}
+    console.log(store)
     return {
       logo: store.logo || DEFAULT_IMG,
       shopName: store.name || DEFAULT_VALUE,
@@ -20,7 +21,7 @@ function resolveListData(res) {
       region: store.region || DEFAULT_VALUE,
       address: store.address || DEFAULT_VALUE,
       isGiftPack: store.is_gift_pack ? '已开通' : '未开通',
-      createdAt: ('' + store.created_at).split(' ')[0] || DEFAULT_VALUE,
+      createdAt: store.created_at ? ('' + store.created_at).split(' ')[0] : DEFAULT_VALUE,
       shopQrCode: DEFAULT_LOGO // todo
     }
   })
