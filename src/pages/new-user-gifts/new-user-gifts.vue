@@ -18,29 +18,13 @@
             <label>
               <div class="update-image hand">
                 <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'banner')" accept="image/*">
+                <input class="sub-img" type="file" @change="_fileChange($event)" accept="image/*">
                 <img :src="bannerSrc" v-if="bannerSrc"  class="img">
                 <!--<div class="img" v-if="bannerSrc" :style="{backgroundImage: 'url(' + bannerSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>-->
                 <img v-if="bannerSrc" @click.stop="deleteImg($event, 'banner')" class="delete" src="./icon-del.png" alt="">
               </div>
             </label>
             <em class="tip">上传图片的最佳尺寸：4:3，其他尺寸会影响页效果，格式png，jpeg，jpg，大小不超过2M。</em>
-          </div>
-        </div>
-        <div class="item">
-          <span class="label top">图片详情</span>
-          <div class="box">
-            <label>
-              <div class="update-image hand">
-                <span class="text">选择图片</span>
-                <input class="sub-img" type="file" @change="_fileChange($event, 'detail')" accept="image/*">
-                <img :src="detailSrc" v-if="detailSrc" class="img">
-                <!--<div class="img" v-if="detailSrc" :style="{backgroundImage: 'url(' + detailSrc + ')',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}"></div>-->
-                <img v-if="detailSrc" @click.stop="deleteImg($event, 'detail')" class="delete" src="./icon-del.png" alt="">
-              </div>
-            </label>
-
-            <em class="tip">上传图片的格式png，jpeg，jpg，大小不超过2M。</em>
           </div>
         </div>
         <div class="item">
@@ -148,7 +132,6 @@
           type: 1, // 用户大礼包
           is_open: 0,
           giftpack_banner_images: [], // 大礼包banner图
-          giftpack_images: [], // 大礼包详情图
           gift_packs_stock: '', // 大礼包库存
           price: '',
           planting_beans: '', // 播豆数
@@ -164,7 +147,6 @@
         ],
         goodsArr: [],
         bannerSrc: '',
-        detailSrc: '',
         disabledCover: false,
         willDelGoods: '',
         showGoodsList: false,
@@ -191,7 +173,6 @@
               type: 1,
               is_open: 0,
               giftpack_banner_images: [data.gift_packs_banner_images],
-              giftpack_images: [data.gift_packs_images],
               gift_packs_stock: data.stock,
               price: data.price,
               planting_beans: parseInt(data.planting_beans),
@@ -205,7 +186,6 @@
               return item
             })
             this.bannerSrc = data.gift_packs_banner_images && data.gift_packs_banner_images.image_url_thumb
-            this.detailSrc = data.gift_packs_images && data.gift_packs_images.image_url_thumb
             this.goodsArr = data.gift_packs_goods_sku.map(item => {
               item.goods_sku_stock = item.origin_sku_stock
               item.checked = true
@@ -213,60 +193,32 @@
             })
           })
       },
-      _fileChange(e, type) { // 上传图片
+      _fileChange(e) { // 上传图片
         let arr = Array.from(e.target.files)
         if (arr.length < 1) {
           return
         }
-        switch (type) {
-          case 'banner' :
-            this.$loading.show('图片上传中...')
-            this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
-              this.$loading.hide()
-              if (resArr[0].error !== this.$ERR_OK) {
-                return this.$toast.show(resArr[0].message)
-              }
-              let obj = {
-                image_id: resArr[0].data.id,
-                image_url: resArr[0].data.url,
-                id: 0
-              }
-              this.msg.image_id = resArr[0].data.id
-              this.bannerSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_banner_images.splice(0, 1, obj)
-            })
-            break
-          case 'detail' :
-            this.$loading.show('图片上传中...')
-            this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
-              this.$loading.hide()
-              if (resArr[0].error !== this.$ERR_OK) {
-                return this.$toast.show(resArr[0].message)
-              }
-              let obj = {
-                image_id: resArr[0].data.id,
-                image_url: resArr[0].data.url,
-                id: 0
-              }
-              this.detailSrc = resArr[0].data.image_url_thumb
-              this.msg.giftpack_images.splice(0, 1, obj)
-            })
-            break
-        }
+        this.$loading.show('图片上传中...')
+        this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
+          this.$loading.hide()
+          if (resArr[0].error !== this.$ERR_OK) {
+            return this.$toast.show(resArr[0].message)
+          }
+          let obj = {
+            image_id: resArr[0].data.id,
+            image_url: resArr[0].data.url,
+            id: 0
+          }
+          this.msg.image_id = resArr[0].data.id
+          this.bannerSrc = resArr[0].data.image_url_thumb
+          this.msg.giftpack_banner_images.splice(0, 1, obj)
+        })
       },
-      deleteImg(e, type) {
+      deleteImg(e) {
         e.preventDefault()
-        switch (type) {
-          case 'banner':
-            this.bannerSrc = ''
-            this.msg.image_id = ''
-            this.msg.giftpack_banner_images = []
-            break
-          case 'detail':
-            this.detailSrc = ''
-            this.msg.giftpack_images = []
-            break
-        }
+        this.bannerSrc = ''
+        this.msg.image_id = ''
+        this.msg.giftpack_banner_images = []
       },
       selectGoods(selectArr) { // 添加大礼包商品
         let arr = this._compareList(this.goodsArr, selectArr)
@@ -350,7 +302,6 @@
         let arr = [
           {value: this.titleReg, txt: '请填写标题'},
           {value: this.bannerReg, txt: '请选择Banner图'},
-          {value: this.detailReg, txt: '请选择大礼包详情图'},
           {value: this.stockReg, txt: '请输入合法的库存数量'},
           {value: this.priceReg, txt: '请输入合法的价格'},
           {value: this.beansReg, txt: '请输入合法的播豆数量'},
@@ -431,9 +382,6 @@
       },
       bannerReg() {
         return this.msg.image_id
-      },
-      detailReg() {
-        return this.msg.giftpack_images.length > 0
       },
       stockReg() {
         return this.msg.gift_packs_stock && COUNTREG.test(this.msg.gift_packs_stock)
