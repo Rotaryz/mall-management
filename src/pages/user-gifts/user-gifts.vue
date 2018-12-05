@@ -63,9 +63,9 @@
         popType: 'open',
         grey: true,
         pageDetails: {
-          total: 100, // 总数量
+          total: 0, // 总数量
           per_page: 10, // 一页条数
-          total_page: 10 // 总页数
+          total_page: 1 // 总页数
         },
         hasOther: true,
         handleItem: '',
