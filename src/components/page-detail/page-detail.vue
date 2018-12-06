@@ -1,6 +1,6 @@
 <template>
   <div class="total">
-    <div>每页{{pageDtail.per_page}}条，共{{pageDtail.total}}条数据</div>
+    <div>{{pageDtail.per_page}}条/页，共{{pageDtail.total}}条数据</div>
     <div class="page">
       <div class="page-icon" @click="subtract" :style="{'cursor': isHand.handLeft}" @mouseenter="notAllowed">
       </div>
@@ -278,7 +278,7 @@
         .page-child-active
           border: 0.5px solid transparent
           transition: all 0.3s ease-out
-          color: $color-4985FC
+          color: $color-FF533C
           &:after
             border-color: $color-4985FC
             transition: all 0.3s ease-out
@@ -298,7 +298,7 @@
       .page-icon
         cursor: pointer
         icon-image('icon-before')
-        margin-right: 10px
+        margin-right: 8px
         height: 25px
         width: 25px
         transition: all 0.3s
@@ -313,7 +313,7 @@
           icon-image('icon-later_hover')
       .border-page
         display: flex
-        line-height: 25px
+        line-height: 26px
         border-radius: 3px
         margin: 0 10px
         border: 0.5px solid $color-ccc
@@ -321,12 +321,12 @@
       div.border-page
         margin-right: 0
         padding: 0 15px
-        height: 25px
-        line-height: 27px
+        height: 26px
+        line-height: 28px
         cursor: pointer
       div.page-total
         cursor: pointer
-        padding-right: 33px
+        padding-right: 24px
         position: relative
         margin: 0
         border-animate($color-text-999, 3px)
@@ -334,28 +334,23 @@
           position: absolute
           right: 0
           top: 0
-          height: 23px
+          height: 26px
           display: inline-block
-          width: 18px
-          border-left: 1px solid $color-ccc
+          width: 24px
           .page-top
-            row-center()
-            top: 44%
-            display: inline-block
-            height: 0
-            border: 5px solid $color-text-main
-            border-bottom: 5px solid transparent
-            border-left: 5px solid transparent
-            border-right: 5px solid transparent
-            transform-origin: 0.5px 2px
-            transform: rotate(0deg) translateX(-43%)
+            position: absolute
+            left: 50%
+            top: 50%
+            margin-left: -4px
+            margin-top: -5.5px
+            width: 8px
+            height: 11px
+            background: url("./icon-pressed_down.png")
+            background-size: 100% 100%
             transition: all 0.2s
+            transform: rotate(0deg)
           .page-bottom
-            display: inline-block
-            height: 0
-            transform-origin: 0.5px 2px
-            transform: rotate(180deg) translateX(-43%)
-            transition: all 0.2s
+            transform: rotate(180deg)
         .page-list
           position: absolute
           width: 100%
@@ -388,8 +383,8 @@
         input.border-page
           position: relative
           z-index: 10
-          height: 25px
-          width: 39px
+          height: 26px
+          width: 46px
           margin: 0
           text-align: center
           transition: all 0.4s ease-out
@@ -398,7 +393,7 @@
           border-bottom: 0.5px solid transparent
           position: absolute
           z-index: 5
-          height: 27px
+          height: 28px
           width: 0
           right: 0
           top: -1px
@@ -411,7 +406,7 @@
           position: absolute
           z-index: 5
           height: 0
-          width: 41px
+          width: 48px
           bottom: 0
           left: -1px
           box-sizing: content-box
@@ -424,19 +419,19 @@
           .after
             border-color: $color-text-999
             transition: all 0.4s ease-out
-            width: 41px
+            width: 48px
           .before
             border-color: $color-text-999
             transition: all 0.4s ease-out
-            height: 27px
+            height: 28px
       .input-box
         white-space: nowrap
         display: flex
         height: 29px
         align-items: center
-        margin-right: 10px
+        margin-right: 8px
       .page-box
-        min-width: 85px
-        height: 29px
+        min-width: 64px
+        height: 26px
         margin-right: 10px
 </style>

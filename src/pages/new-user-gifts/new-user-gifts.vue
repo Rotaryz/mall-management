@@ -88,7 +88,7 @@
               </div>
               <span class="item">{{item.original_price}}</span>
               <div class="counter item">
-                <span class="sub text hand" @click="subCount(index)">-</span>
+                <span class="sub text hand" :class="{'grey': +item.stock === 1}" @click="subCount(index)">-</span>
                 <input type="number" class="number text" v-model="item.stock">
                 <span class="add text hand" @click="addCount(index)">+</span>
               </div>
@@ -616,7 +616,7 @@
                 color: $color-text-sub
                 font-size: 12px
                 height: 22px
-                line-height: 19px
+                line-height: 16px
                 text-align: center
                 display: block
                 font-family: $font-family-medium
@@ -626,16 +626,20 @@
                 margin-right: 5px
                 user-select: none
               .sub
-                font-size: 17px
+                font-size: 26px
                 width: 22px
+                color: $color-text-sub
+                background: $color-white
               .number
                 width: 50px
                 color: $color-text-sub
               .add
                 width: 22px
+                font-size: 21px
                 color: $color-white
                 background: $color-text-sub
-
+              .grey
+                color: #BEBEBE
             .main
               color: $color-main
               user-select: none

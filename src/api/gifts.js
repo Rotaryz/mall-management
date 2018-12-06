@@ -34,6 +34,14 @@ export default {
     return defaultProcess('delete', url, {}, loading)
   },
   /**
+   * 检查有无大礼包开通
+   * @returns {*}
+   */
+  checkGifts (data, loading = false) {
+    let url = `api/admin/gift_packs_has_opened`
+    return defaultProcess('get', url, data, loading)
+  },
+  /**
    * 创建大礼包
    * @returns {*}
    */
