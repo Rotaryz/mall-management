@@ -58,6 +58,9 @@
   @import '~common/stylus/variable'
   @import '~common/stylus/mixin'
 
+  .el-input__icon.el-range__close-icon
+    z-index :50
+
   .border-el-date-picker
     position: relative
     &:after

@@ -3,7 +3,8 @@
     <div slot="content" class="review-wrapper" :class="showActive ? 'model-active' : 'model-un-active'">
       <header>预览效果</header>
       <section class="wrapper">
-        <figure class="goods-images" v-if="goodsImage[0]" :style="{backgroundImage: 'url(' + goodsImage[0].imageURL +')'} ">
+        <figure class="goods-images">
+          <img class="img" v-if="goodsImage[0]" :src="goodsImage[0].imageURL" alt="">
           <div>1<span>/</span>{{goodsImage.length}}</div>
         </figure>
         <article class="content">
@@ -15,7 +16,7 @@
           <div class="price">
             <ul class="p-wrapper">
               <li class="unit" v-if="hasPrice">¥</li>
-              <li class="money" v-if="hasPrice">{{goodsInfo.platformPrice}}</li>
+              <li class="money" v-if="hasPrice">{{price}}</li>
               <li class="credits">{{hasPrice&&hasCredits?'+':''}}{{hasCredits?goodsInfo.credits:''}}</li>
               <li class="c-text" v-if="hasCredits">播豆</li>
             </ul>
@@ -53,7 +54,8 @@
       return {
         isShow: false,
         showActive: false,
-        timer: null
+        timer: null,
+        price: 0
       }
     },
     destroyed() {
@@ -68,6 +70,7 @@
           clearTimeout(this.timer)
           this.timer = null
         }, 500)
+        this._showPrice()
       },
       hide() {
         if (this.timer) return
@@ -77,6 +80,16 @@
           clearTimeout(this.timer)
           this.timer = null
         }, 500)
+      },
+      _showPrice() {
+        let arr = []
+        let {userDisPrice, merchantDisPrice, platformPrice} = this.goodsInfo
+        if (this.goodsInfo.isMoneyPage) {
+          arr.push(userDisPrice, merchantDisPrice)
+        } else {
+          arr.push(platformPrice)
+        }
+        this.price = Math.min(...arr)
       }
     },
     computed: {
@@ -90,7 +103,7 @@
         return this.goodsInfo.credits && +this.goodsInfo.credits > 0
       },
       hasPrice() {
-        return this.goodsInfo.platformPrice && +this.goodsInfo.platformPrice > 0
+        return this.goodsInfo.isMoneyPage || (this.goodsInfo.platformPrice && +this.goodsInfo.platformPrice > 0)
       }
     }
   }
@@ -177,10 +190,12 @@
       .goods-images
         width :$wrapper-width
         height :@width
-        background-position :center center
-        background-size: cover
-        background-repeat :no-repeat
         position :relative
+        .img
+          position :relative
+          width :100%
+          height :100%
+          object-fit :cover
         div
           height :20px
           position :absolute

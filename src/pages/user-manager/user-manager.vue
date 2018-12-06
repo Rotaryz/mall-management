@@ -13,9 +13,9 @@
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
             <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className">
               <span class="dot-box green-dot" v-if="index1 == 6 && item[item1.name] === '已开通'"></span>
-              <span class="dot-box red-dot" v-if="index1 == 6"></span>
+              <span class="dot-box red-dot" v-else-if="index1 == 6"></span>
               <span v-if="index1 !== 0">{{item[item1.name]}}</span>
-              <div class="avatar" :style="{backgroundImage: 'url(' + item[item1.name] +')'}" v-if="index1 == 0"></div>
+              <img v-if="index1 === 0"class="avatar" :src="item[item1.name]" />
             </div>
           </div>
         </div>
@@ -183,9 +183,7 @@
           border: 1px solid #d9d9d9
           border-raidus: 2px
           margin-left: 8px
-          background-repeat :no-repeat
-          background-position :center center
-          background-size :cover
+          object-fit :cover
         &.flex1
           flex: 1
         &.flex2

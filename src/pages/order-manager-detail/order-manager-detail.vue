@@ -44,7 +44,7 @@
         <ul class="container">
           <li class="container-item" v-for="(item, index) in goodsInfo">
             <section class="goods-wrapper goods-item">
-              <div class="goods-image" :style="{backgroundImage: 'url(' + item.imageURL + ')'}"></div>
+              <img class="goods-image" :src="item.imageURL"/>
               <span class="goods-name">{{item.goodsName}}</span>
             </section>
             <span class="money goods-item">{{item.money}}</span>
@@ -194,9 +194,7 @@
                   margin-bottom :30px
                   border: 1px solid #E8E8E8;
                   border-radius: 2px;
-                  background-repeat :no-repeat
-                  background-size: cover
-                  background-position :center center
+                  object-fit :cover
                 .goods-name
                   width :60%
                   line-height:1.2

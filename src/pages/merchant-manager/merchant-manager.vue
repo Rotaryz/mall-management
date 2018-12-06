@@ -13,9 +13,9 @@
           <div class="list-item" v-for="(item, index) in manageList" :key="index">
             <div class="list-item-row" v-for="(item1, index1) in listArr" :key="index1" :class="item1.className" v-if="index1 != (listArr.length - 1)">
               <span class="dot-box green-dot" v-if="item1.showType === 'dot' && item[item1.name] === '已开通'"></span>
-              <span class="dot-box red-dot" v-if="item1.showType === 'dot'"></span>
+              <span class="dot-box red-dot" v-else-if="item1.showType === 'dot'"></span>
               <span v-if="item1.showType !== 'img'">{{item[item1.name]}}</span>
-              <div class="avatar" :style="{backgroundImage: 'url(' + item[item1.name] +')'}" v-if="item1.showType === 'img'"></div>
+              <img v-if="index1 === 0" class="avatar" :src="item[item1.name]"/>
             </div>
             <div class="list-item-row red-item flex1 hand" @click="showModal(item)">查看店铺</div>
           </div>
@@ -30,7 +30,7 @@
             <img src="./icon-close@2x.png" class="close-btn hand" @click="hideModal">
           </div>
           <figure class="cover-down">
-            <div class="qr-code" :style="{backgroundImage: 'url(' + currentMerchant.shopQrCode + ')'}"></div>
+            <img class="qr-code" :src="currentMerchant.shopQrCode"/>
           </figure>
         </div>
       </div>
@@ -247,9 +247,7 @@
           border: 1px solid #d9d9d9
           border-raidus: 2px
           margin-left: 8px
-          background-repeat :no-repeat
-          background-position :center center
-          background-size :cover
+          object-fit: cover
         &.flex1
           flex: 1
         &.flex2
@@ -293,7 +291,5 @@
         height: 130px
         border: 2px solid #ededed
         border-radius: 2px
-        background-repeat :no-repeat
-        background-position :center center
-        background-size :cover
+        object-fit :cover
 </style>

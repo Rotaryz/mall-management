@@ -3,7 +3,7 @@
     <div class="content">
       <header>
         <section class="userInfo-wrapper" @mouseenter="showLogoutHandle" @mouseleave="hideLogoutHandle">
-          <div :style="{backgroundImage: 'url(' + userInfo.avatar + ')'}"></div>
+          <img class="img" :src="userInfo.avatar" />
           <p>{{userInfo.name}}</p>
           <em></em>
           <transition name="fade">
@@ -110,14 +110,12 @@
             font-size: 14px
             color: #666
             padding: 0 4px 0 13px
-          & > div
+          & > .img
             width: 43px
             height: @width
             border-radius: 50%
             background: #eee
-            background-position: center center
-            background-repeat: no-repeat
-            background-size: cover
+            object-fit :cover
             border: 3px solid #FFFFFF;
             box-shadow: 0 2px 4px 0 rgba(51, 51, 51, 0.10)
           & > em
