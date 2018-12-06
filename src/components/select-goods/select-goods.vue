@@ -179,7 +179,7 @@
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           this._getGoodsList(this.searchText)
-        }, 1000)
+        }, 500)
       },
       goodsCheck(index, item) {
         if (item.noHandle) return
