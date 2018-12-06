@@ -50,7 +50,7 @@
     {name: 'managerName', title: '店长', className: 'flex1-p20'},
     {name: 'mobile', title: '手机号', className: 'flex1'},
     {name: 'region', title: '地区', className: 'flex1-p20'},
-    {name: 'address', title: '详细地址', className: 'flex1-p20'},
+    {name: 'address', title: '详细地址', className: 'flex2-p20'},
     {name: 'isGiftPack', title: '大礼包', className: 'flex1', showType: 'dot'},
     {name: 'createdAt', title: '开店时间', className: 'flex1'},
     {name: '操作', title: '操作', className: 'flex1'}
@@ -182,6 +182,9 @@
 
   .flex1-p20
     flex: 1
+    padding-right :20px
+  .flex2-p20
+    flex: 2
     padding-right :20px
 
   .merchant-manager
