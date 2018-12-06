@@ -16,7 +16,7 @@
         <div class="passward input-box" :class="{'input-height': focusPass}">
           <span class="input-icon"></span>
           <input class="inputs" type="password"
-                 placeholder="请输入密码" v-model="password"/>
+                 placeholder="请输入密码" v-model="password" @keyup.enter="login"/>
         </div>
       </div>
       <!--<div class="remenber hand" @click="remenberPassWord">-->
@@ -42,13 +42,6 @@
         password: '',
         remenber: true,
         isShowMore: false
-      }
-    },
-    created() {
-      window.onkeydown = (e) => {
-        if (e.keyCode === 13) {
-          this.login()
-        }
       }
     },
     computed: {

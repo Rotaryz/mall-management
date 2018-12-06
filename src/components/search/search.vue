@@ -3,7 +3,7 @@
     <div class="input-box-big">
       <span class="after"></span>
       <form autocomplete="off">
-        <input type="text" class="input-box" v-model="txt" :placeholder="placeholerTxt" autocomplete="off">
+        <input type="text" class="input-box" v-model="txt" @keyup.enter="searchFn" :placeholder="placeholerTxt" autocomplete="off">
       </form>
       <span class="before"></span>
     </div>
