@@ -83,7 +83,7 @@
             <div class="right"><p>{{merchantDisPrice}}</p>元</div>
           </section>
           <section v-else>
-            <p class="left">播豆</p>
+            <p class="left key-point">播豆</p>
             <div class="middle common">
               <div class="before"></div>
               <input type="number" v-model="credits">
