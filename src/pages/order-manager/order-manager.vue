@@ -12,7 +12,7 @@
           </section>
           <section>
             <p>订单号</p>
-            <search @search="search" placeholerTxt="请输入" ref="search"></search>
+            <search @search="search" placeholerTxt="请输入订单号" ref="search"></search>
           </section>
           <section>
             <a :href="excelUrl" class="excel animate-hover" target="_blank">导出Excel</a>

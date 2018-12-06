@@ -4,7 +4,7 @@
       <div slot="content">
         <div class="search-top">
           <p class="top-title">手机号</p>
-          <search @search="search" placeholerTxt="请输入" ref="search"></search>
+          <search @search="search" placeholerTxt="请输入手机号" ref="search"></search>
         </div>
         <div class="list-content">
           <div class="list-head">

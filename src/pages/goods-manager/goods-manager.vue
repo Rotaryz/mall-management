@@ -5,7 +5,7 @@
         <header>
           <p>商品名</p>
           <section>
-            <search @search="search" placeholerTxt="请输入" ref="search"></search>
+            <search @search="search" placeholerTxt="请输入商品名称" ref="search"></search>
           </section>
           <router-link :to="'goods-detail'" class="btn" append>
             <div>
