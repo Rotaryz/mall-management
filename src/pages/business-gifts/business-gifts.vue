@@ -68,7 +68,6 @@
           per_page: 10, // 一页条数
           total_page: 1 // 总页数
         },
-        hasOther: true,
         handleItem: '',
         page: 1,
         showNull: false
@@ -94,13 +93,16 @@
         this.handleItem = item
         switch (type) {
           case 'open':
-            if (this.hasOther) {
-              this.popType = 'open1'
-              this.$refs.confirm.showConfirm('已有开启的大礼包，请关闭')
-            } else {
-              this.popType = 'open2'
-              this.$refs.confirm.showConfirm('确定要开启大礼包吗？')
-            }
+            Gifts.checkGifts({type: 2})
+              .then(res => {
+                if (res.data.has_opened) {
+                  this.popType = 'open1'
+                  this.$refs.confirm.showConfirm('已有开启的大礼包，请先关闭')
+                } else {
+                  this.popType = 'open2'
+                  this.$refs.confirm.showConfirm('确定要开启大礼包吗？')
+                }
+              })
             break
           case 'close':
             this.popType = 'close'
@@ -114,7 +116,7 @@
         }
       },
       confirm() {
-        if (this.popType === 'open1') {
+        if (this.popType === 'open2') {
           Gifts.handleGifts({id: this.handleItem.id, status: 1})
             .then(res => {
               this.$toast.show('开启成功')

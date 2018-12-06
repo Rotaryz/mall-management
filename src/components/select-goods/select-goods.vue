@@ -9,16 +9,16 @@
           <span class="after"></span>
         </div>
       </div>
-      <div class="list-header">
+      <div class="list-header" :style="{paddingRight: arr.length > 4 ? '17px' : '0'}">
         <div class="header-key" v-for="item in headerList">
           <span class="contxt">{{item}}</span>
         </div>
       </div>
       <div class="goods-box" ref="goodsBox" @mousewheel="boxWheel">
         <div class="list-content" ref="content">
-          <div class="list-item" v-for="(item, index) in arr">
+          <div class="list-item" :class="{'bg-color': item.checked}" v-for="(item, index) in arr" :key="index" @click="goodsCheck(index, item)">
             <div class="item">
-              <span class="checkbox hand" :class="{'checked': item.checked, 'no-handle': item.noHandle}" @click="goodsCheck(index, item)"></span>
+              <span class="checkbox hand" :class="{'checked': item.checked, 'no-handle': item.noHandle}"></span>
             </div>
             <div class="item flex1">
               <img class="head" :src="item.image_url_thumb" alt="">
@@ -27,9 +27,9 @@
             </div>
             <span class="item">{{item.original_price}}</span>
             <div class="counter item">
-              <span class="sub text hand" @click="subCount(index)">-</span>
-              <input type="number" class="number text" v-model="item.stock">
-              <span class="add  text hand" @click="addCount(index)">+</span>
+              <span class="sub text hand" :class="{'grey': +item.stock === 1}" @click.stop="subCount(index)">-</span>
+              <input type="number" class="number text" @click.stop v-model="item.stock">
+              <span class="add  text hand" @click.stop="addCount(index)">+</span>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@
               return item
             })
             if (!this.goodsArr.length) { // 如果没有已选择商品，直接赋值
-              this.arr = res.data
+              this.arr = arr
               return
             }
             // 查找已选商品
@@ -319,7 +319,6 @@
       background: $color-FAFAFA
       height: 50px
       line-height: 50px
-      padding-right: 17px
       font-family: $font-family-medium
       display: flex
       text-align: left
@@ -336,7 +335,7 @@
           text-indent: 23px
     .goods-box
       height: 240px
-      overflow-y: scroll
+      overflow-y: auto
     .list-content
       .list-item
         height: 60px
@@ -392,7 +391,7 @@
             color: $color-text-sub
             font-size: 12px
             height: 22px
-            line-height: 19px
+            line-height: 16px
             text-align: center
             display: block
             font-family: $font-family-medium
@@ -402,20 +401,27 @@
             margin-right: 5px
             user-select: none
           .sub
-            font-size: 17px
+            font-size: 26px
             width: 22px
+            color: $color-text-sub
+            background: $color-white
           .number
             width: 50px
             color: $color-text-sub
           .add
             width: 22px
+            font-size: 21px
             color: $color-white
             background: $color-text-sub
+          .grey
+            color: #BEBEBE
 
           .main
             color: $color-text-main
         .flex1
           width: 280px
+      .bg-color
+        background: #FFFBFB
     .btn-group
       text-align: center
       display: flex
